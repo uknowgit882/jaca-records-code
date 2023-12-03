@@ -1,6 +1,7 @@
 ﻿namespace Capstone.Service;
 using Capstone.Models;
 using RestSharp;
+using RestSharp.Authenticators;
 using System.Net.Http;
 
 
@@ -23,10 +24,14 @@ public class RecordService : IRecordService
     }
     public RecordClient GetRecord(int release_id)
     {
+        //OAuth1Authenticator oAuth1 = OAuth1Authenticator.ForAccessToken(
+        //    consumerKey: )
         RecordClient getRecord = new RecordClient();
 
         //api.discogs.com/releases/relase_id (249504) worked okay - returned 200 
         RestRequest request = new RestRequest(BaseURL + release_id);
+
+
         IRestResponse<RecordClient> response = client.Get<RecordClient>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
         {
