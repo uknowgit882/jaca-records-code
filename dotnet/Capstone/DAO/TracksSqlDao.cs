@@ -17,7 +17,7 @@ namespace Capstone.DAO
         {
             connectionString = dbConnectionString;
         }
-        public Tracks AddTrack(int artistId, string title, string position, string duration)
+        public bool AddTrack(Track track)
         {
             throw new NotImplementedException();
         }

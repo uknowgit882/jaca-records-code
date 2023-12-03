@@ -10,7 +10,7 @@ namespace Capstone.DAO
         {
             connectionString = dbConnectionString;
         }
-        public bool AddLabel()
+        public bool AddLabel(Label label)
         {
             throw new NotImplementedException();
         }
