@@ -18,6 +18,9 @@ GO
 CREATE TABLE users (
 	user_id int IDENTITY(1,1) NOT NULL,
 	username varchar(50) NOT NULL,
+	first_name NVARCHAR(50) NOT NULL,
+	last_name NVARCHAR(200) NOT NULL,
+	email_address NVARCHAR(200) NOT NULL,
 	password_hash varchar(200) NOT NULL,
 	salt varchar(200) NOT NULL,
 	user_role varchar(50) NOT NULL,
@@ -26,12 +29,13 @@ CREATE TABLE users (
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	last_login DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_user PRIMARY KEY (user_id),
-	CONSTRAINT UQ_username UNIQUE (username)
+	CONSTRAINT UQ_username UNIQUE (username),
+	CONSTRAINT CK_role CHECK (user_role = 'free' OR user_role = 'premium' OR user_role = 'jacapreme')
 )
 
 --populate default data
-INSERT INTO users (username, password_hash, salt, user_role) VALUES ('user','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','user');
-INSERT INTO users (username, password_hash, salt, user_role) VALUES ('admin','YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','admin');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('user', 'userFirst', 'userLast', 'user@user.com', 'Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','free');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('jacapreme', 'adminFirst', 'adminLast', 'admin@admin.com', '`YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','jacapreme');
 
 CREATE TABLE friends (
 	friend_id int IDENTITY (1, 1) NOT NULL,
