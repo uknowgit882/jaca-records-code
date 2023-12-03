@@ -4,9 +4,9 @@ using RestSharp;
 using System.Net.Http;
 
 
+
+public class RecordService : IRecordService
 {
-    public class RecordService : IRecordService
-    {
     // Taking in external URL from the API 
 
     protected static RestClient client = null;
@@ -37,5 +37,5 @@ using System.Net.Http;
         }
         return response.Data;
     }
-    }
 }
+
