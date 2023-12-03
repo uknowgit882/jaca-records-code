@@ -1,6 +1,8 @@
 ﻿namespace Capstone.Service;
 using Capstone.Models;
 using RestSharp;
+using RestSharp.Authenticators;
+using RestSharp.Authenticators.OAuth;
 using System.Net.Http;
 
 
@@ -8,9 +10,15 @@ using System.Net.Http;
 public class RecordService : IRecordService
 {
     // Taking in external URL from the API 
-    protected readonly string BaseURL = "https://api.discogs.com/releases/";
+    private readonly string BaseURL = "https://api.discogs.com/releases/";
+    private readonly OAuth1Authenticator oAuth1 = OAuth1Authenticator.ForAccessToken(
+            consumerKey: "wZrDHJlTdpkgyYiwrGVM",
+            consumerSecret: "dbpFfprjUhyGYcGNzxwRFPDMmPQCynTg",
+            token: "VMEflxvRfgFRGpIxvlkzghtvmjzUMUqZzzeAaOLZ",
+            tokenSecret: "LdfHmiuMYrhgDiXtSkJuBVAqiNjtVPKxvPpOdUfe",
+            OAuthSignatureMethod.PlainText);
 
-    protected static RestClient client = null;
+    private static RestClient client = null;
 
     public RecordService()
     {
@@ -22,11 +30,13 @@ public class RecordService : IRecordService
         }
     }
     public RecordClient GetRecord(int release_id)
-    {
+    { 
+        client.Authenticator = oAuth1;
         RecordClient getRecord = new RecordClient();
 
         //api.discogs.com/releases/relase_id (249504) worked okay - returned 200 
         RestRequest request = new RestRequest(BaseURL + release_id);
+
         IRestResponse<RecordClient> response = client.Get<RecordClient>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
         {
