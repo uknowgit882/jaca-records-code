@@ -13,11 +13,11 @@ namespace Capstone.Controllers
         public TestController() { }
 
         [HttpGet("GetRecord/{recordId}")]
-        public ActionResult<Record> GetRecordById(int recordId)
+        public ActionResult<RecordClient> GetRecordById(int recordId)
         {
             try
             {
-                Record output = null;
+                RecordClient output = null;
                 output = recordService.GetRecord(recordId);
                 if(output != null)
                 {
