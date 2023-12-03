@@ -8,6 +8,7 @@ using System.Net.Http;
 public class RecordService : IRecordService
 {
     // Taking in external URL from the API 
+    protected readonly string BaseURL = "https://api.discogs.com/releases/";
 
     protected static RestClient client = null;
 
@@ -20,13 +21,13 @@ public class RecordService : IRecordService
             client = new RestClient();
         }
     }
-    public Record GetRecord(int release_id)
+    public RecordClient GetRecord(int release_id)
     {
-        Record getRecord = new Record();
+        RecordClient getRecord = new RecordClient();
 
         //api.discogs.com/releases/relase_id (249504) worked okay - returned 200 
-        RestRequest request = new RestRequest("discogs.com/releases/" + release_id);
-        IRestResponse<Record> response = client.Get<Record>(request);
+        RestRequest request = new RestRequest(BaseURL + release_id);
+        IRestResponse<RecordClient> response = client.Get<RecordClient>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
         {
             throw new HttpRequestException("Error occured - unable to reach server,", response.ErrorException);

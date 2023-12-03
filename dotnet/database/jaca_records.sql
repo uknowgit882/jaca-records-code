@@ -80,14 +80,12 @@ CREATE TABLE formats(
 
 CREATE TABLE artists (
 	artist_id int IDENTITY(1,1) NOT NULL,
-	genre_id int NULL,
 	name NVARCHAR(100) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_artists PRIMARY KEY (artist_id),
 	CONSTRAINT UQ_artist_name UNIQUE(name),
-	CONSTRAINT FK_artists_genre FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
 )
 
 CREATE TABLE tracks (
@@ -105,6 +103,7 @@ CREATE TABLE tracks (
 
 CREATE TABLE records (
 	record_id int IDENTITY(1, 1) NOT NULL,
+	discogs_id int NOT NULL,
 	artist_id int NOT NULL,
 	genre_id int NOT NULL,
 	label_id int NOT NULL,
@@ -120,6 +119,7 @@ CREATE TABLE records (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_records PRIMARY KEY (record_id),
+	CONSTRAINT UQ_discogs_id UNIQUE (discogs_id),
 	CONSTRAINT FK_records_artists FOREIGN KEY (artist_id) REFERENCES artists (artist_id),
 	CONSTRAINT FK_records_genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id),
 	CONSTRAINT FK_records_labels FOREIGN KEY (label_id) REFERENCES labels (label_id),

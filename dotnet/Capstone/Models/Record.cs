@@ -1,20 +1,58 @@
-﻿namespace Capstone.Models
-{
-    public class Record
-    {
-        public Artist Artists { get; set; }
-        public string Title { get; set; }
-        public string[] Genres { get; set; }
-        public Identifier Identifiers { get; set; }
-        public Label[] Labels { get; set; }
-        public Image[] Images { get; set; }
-        public string Country { get; set; }
-        public Format[] Formats { get; set; }
-        public string Released { get; set; }
-        public Artist[] ExtraArtists { get; set; }
-        public string URI { get; set; }
-        public string Notes { get; set; }
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
+namespace Capstone.Models
+{
+    public class RecordClient
+    {
+        public int id { get; set; }
+        public string URI { get; set; }
+        public List<Artist> Artists { get; set; } = new List<Artist>();
+        public List<Label> Labels { get; set; } = new List<Label>();
+        public List<Format> Formats { get; set; } = new List<Format>();
+        public string Title { get; set; }
+        public string Country { get; set; }
+        public string Released { get; set; }
+        public List<Identifier> Identifiers { get; set; } = new List<Identifier>();
+        public List<string> Genres { get; set; } = new List<string>();
+        public List<string> Styles { get; set; } = new List<string>();
+        public List<Track> Tracklist { get; set; } = new List<Track>();
+        public List<Artist> ExtraArtists { get; set; } = new List<Artist>();
+        public List<Image> Images { get; set; } = new List<Image>();
+        public string Notes { get; set; }
+        public override string ToString()
+        {
+            return Title + " | " + Tracklist.Count + " Tracks";
+        }
+    }
+
+    public class Artist
+    {
+        public string Name { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    public class Label
+    {
+        public string Name { get; set; }
+        public string Resource_Url { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    public class Format
+    {
+        public string Name { get; set; }
+        public string Qty { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class Identifier
@@ -22,17 +60,18 @@
         public string Type { get; set; }
         public string Value { get; set; }
     }
-
-    public class Artist
+    public class Track
     {
-        public string Name { get; set; }
+        public string Position { get; set; }
+        public string Type_ { get; set; }
+        public string Title { get; set; }
+        public string Duration { get; set; }
+        public override string ToString()
+        {
+            return Position + " | " + Title ;
+        }
     }
 
-    public class Label
-    {
-        public string Name { get; set; }
-        public string ResourceUrl { get; set; }
-    }
 
     public class Image
     {
@@ -41,11 +80,6 @@
         public int Width { get; set; }
     }
 
-    public class Format
-    {
-        public string Name { get; set; }
-        public string Qty { get; set; }
-        public string[] Descriptions { get; set; }
-    }
+    
 
 }
