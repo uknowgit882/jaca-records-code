@@ -16,7 +16,7 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByDiscogsId(int discogsId)
         {
             RecordTableData output = null;
-            string sql = "SELECT record_id, discogs_id, country, img_url, released, url, notes, discogs_date_changed " +
+            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed " +
                 "FROM records " +
                 "WHERE discogs_id = @discogsId";
             try
@@ -44,9 +44,9 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
-            string sql = "SELECT record_id, discogs_id, country, img_url, released, url, notes, discogs_date_changed " +
+            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed " +
                 "FROM records " +
-                "WHERE recordId = @recordId";
+                "WHERE record_id = @recordId";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -73,7 +73,7 @@ namespace Capstone.DAO
         {
             RecordTableData output = null;
 
-            string sql = "INSERT INTO records (discogs_id, country, img_url, released, url, notes, discogs_date_changed) " +
+            string sql = "INSERT INTO records (discogs_id, country, notes, released, title, url, discogs_date_changed) " +
                 "OUTPUT INSERTED.record_id " +
                 "VALUES(@discogsId, @country, @notes, @released, @title, @url, @discogsDateChanged)";
 
@@ -106,6 +106,7 @@ namespace Capstone.DAO
             }
             return output;
         }
+         
 
         private RecordTableData MapRowToRecordTableData(SqlDataReader reader)
         {

@@ -107,20 +107,20 @@ CREATE TABLE records (
 
 CREATE TABLE barcodes (
 	barcode_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	type NVARCHAR(20) NOT NULL,
-	value NVARCHAR(20) NOT NULL,
+	value NVARCHAR(50) NOT NULL,
 	description NVARCHAR(50) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_barcodes PRIMARY KEY (barcode_id),
-	CONSTRAINT FK_barcodes_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+	CONSTRAINT FK_barcodes_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 )
 
 CREATE TABLE images (
 	image_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	uri NVARCHAR(500) NULL,
 	height int NULL,
 	width int NULL,
@@ -128,12 +128,12 @@ CREATE TABLE images (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_images PRIMARY KEY (image_id),
-	CONSTRAINT FK_images_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+	CONSTRAINT FK_images_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 )
 
 CREATE TABLE tracks (
 	track_id int IDENTITY(1,1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	title NVARCHAR(100) NOT NULL,
 	position NVARCHAR(10) NOT NULL,
 	duration NVARCHAR(10) NOT NULL,
@@ -141,51 +141,51 @@ CREATE TABLE tracks (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_tracks PRIMARY KEY (track_id),
-	CONSTRAINT FK_tracks_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+	CONSTRAINT FK_tracks_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 )
 
 CREATE TABLE records_artists(
 	records_artists_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	artist_id int NOT NULL,
-	CONSTRAINT PK_records_artists PRIMARY KEY (record_id, artist_id),
-	CONSTRAINT FK_records_artists_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT PK_records_artists PRIMARY KEY (discogs_id, artist_id),
+	CONSTRAINT FK_records_artists_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
 	CONSTRAINT FK_records_artists_artists FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
 )
 
 CREATE TABLE records_extra_artists(
 	records_extra_artists_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	extra_artist_id int NOT NULL,
-	CONSTRAINT PK_records_extra_artists PRIMARY KEY (record_id, extra_artist_id),
-	CONSTRAINT FK_records_extra_artists_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT PK_records_extra_artists PRIMARY KEY (discogs_id, extra_artist_id),
+	CONSTRAINT FK_records_extra_artists_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
 	CONSTRAINT FK_records_extra_artists_artists FOREIGN KEY (extra_artist_id) REFERENCES artists (artist_id)
 )
 
 CREATE TABLE records_genres(
 	records_genres_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	genre_id int NOT NULL,
-	CONSTRAINT PK_records_genres PRIMARY KEY (record_id, genre_id),
-	CONSTRAINT FK_records_genres_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT PK_records_genres PRIMARY KEY (discogs_id, genre_id),
+	CONSTRAINT FK_records_genres_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
 	CONSTRAINT FK_records_genres_genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
 )
 
 CREATE TABLE records_labels(
 	records_labels_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	label_id int NOT NULL,
-	CONSTRAINT PK_records_labels PRIMARY KEY (record_id, label_id),
-	CONSTRAINT FK_records_labels_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT PK_records_labels PRIMARY KEY (discogs_id, label_id),
+	CONSTRAINT FK_records_labels_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
 	CONSTRAINT FK_records_labels_labels FOREIGN KEY (label_id) REFERENCES labels (label_id)
 )
 
 CREATE TABLE records_formats(
 	records_formats_id int IDENTITY (1, 1) NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	format_id int NOT NULL,
-	CONSTRAINT PK_records_formats PRIMARY KEY (record_id, format_id),
-	CONSTRAINT FK_records_formats_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT PK_records_formats PRIMARY KEY (discogs_id, format_id),
+	CONSTRAINT FK_records_formats_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
 	CONSTRAINT FK_records_formats_formats FOREIGN KEY (format_id) REFERENCES formats (format_id)
 )
 
@@ -193,7 +193,7 @@ CREATE TABLE records_formats(
 CREATE TABLE libraries (
 	library_id int IDENTITY(1, 1) NOT NULL,
 	user_id int NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	notes NVARCHAR(1000) DEFAULT '' NULL,
 	quantity int DEFAULT 1 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
@@ -201,14 +201,14 @@ CREATE TABLE libraries (
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_libraries PRIMARY KEY (library_id),
 	CONSTRAINT FK_libraries_users FOREIGN KEY (user_id) REFERENCES users (user_id),
-	CONSTRAINT FK_libraries_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+	CONSTRAINT FK_libraries_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 
 )
 
 CREATE TABLE collections (
 	collection_id int IDENTITY(1, 1) NOT NULL,
 	library_id int NOT NULL,
-	record_id int NOT NULL,
+	discogs_id int NOT NULL,
 	name NVARCHAR(50) NOT NULL,
 	is_private BIT DEFAULT 0 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
@@ -217,7 +217,7 @@ CREATE TABLE collections (
 	CONSTRAINT PK_collections PRIMARY KEY (collection_id),
 	CONSTRAINT UQ_collection_name UNIQUE(name),
 	CONSTRAINT FK_collections_libraries FOREIGN KEY (library_id) REFERENCES libraries (library_id),
-	CONSTRAINT FK_collections_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+	CONSTRAINT FK_collections_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 
 	
 )

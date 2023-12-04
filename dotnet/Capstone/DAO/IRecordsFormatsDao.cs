@@ -4,6 +4,6 @@ namespace Capstone.DAO
 {
     public interface IRecordsFormatsDao
     {
-        public bool AddRecordFormat(int recordId, int formatId);
+        public bool AddRecordFormat(int discogsId, int formatId);
     }
 }

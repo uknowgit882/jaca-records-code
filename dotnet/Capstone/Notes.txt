@@ -3,7 +3,7 @@ Delete tertiary to primary
 
 PRIMARY
 	users
-	genres
+	genres + styles
 	labels
 	formats
 
@@ -31,6 +31,7 @@ PENTERNARY
 TODO:
 add user last_login method upon login (maybe need its own user functions dao)
 do we need an update function for the database?
+figure out how to handle if you load the record, then another sub-table load fails, how do you start all over?
 
 USERREGISTRATIONINFO:
 {

@@ -17,9 +17,9 @@ namespace Capstone.DAO
         public Image GetImageInfo(Image image)
         {
             Image output = null;
-            string sql = "SELECT image_id, record_id, uri, height, width " +
+            string sql = "SELECT image_id, discogs_id, uri, height, width " +
                 "FROM images " +
-                "WHERE record_id = @recordId AND uri = @uri AND height = @height AND width = @width";
+                "WHERE discogs_id = @discogsId AND uri = @uri AND height = @height AND width = @width";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -27,7 +27,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", image.Record_Id);
+                    cmd.Parameters.AddWithValue("@discogsId", image.Discogs_Id);
                     cmd.Parameters.AddWithValue("@uri", image.Uri);
                     cmd.Parameters.AddWithValue("@height", image.Height);
                     cmd.Parameters.AddWithValue("@width", image.Width);
@@ -54,16 +54,16 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            string sql = "INSERT INTO images (record_id, uri, height, width) " +
+            string sql = "INSERT INTO images (discogs_id, uri, height, width) " +
                 "OUTPUT INSERTED.image_id " +
-                "VALUES (@recordId, @uri, @height, @width);";
+                "VALUES (@discogsId, @uri, @height, @width);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", image.Record_Id);
+                    cmd.Parameters.AddWithValue("@discogsId", image.Discogs_Id);
                     cmd.Parameters.AddWithValue("@uri", image.Uri);
                     cmd.Parameters.AddWithValue("@height", image.Height);
                     cmd.Parameters.AddWithValue("@width", image.Width);
@@ -81,7 +81,7 @@ namespace Capstone.DAO
         {
             Image output = new Image();
             output.Image_Id = Convert.ToInt32(reader["image_id"]);
-            output.Record_Id = Convert.ToInt32(reader["record_id"]);
+            output.Discogs_Id = Convert.ToInt32(reader["discogs_id"]);
             if (reader["uri"] is DBNull)
             {
                 output.Uri = "";

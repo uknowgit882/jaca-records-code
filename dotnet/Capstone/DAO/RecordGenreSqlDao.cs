@@ -18,22 +18,22 @@ namespace Capstone.DAO
         /// Supply the recordId. Then find the genre ID and supply that here too.
         /// Either it adds it and is successful or errors out
         /// </summary>
-        /// <param name="recordId">From the record</param>
+        /// <param name="discogsId">From the record</param>
         /// <param name="genreId">From the genre table - use GetGenre</param>
         /// <returns>True if successful</returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecordGenre(int recordId, int genreId)
+        public bool AddRecordGenre(int discogsId, int genreId)
         {
-            string sql = "INSERT INTO records_genres (record_id, genre_id) " +
+            string sql = "INSERT INTO records_genres (discogs_id, genre_id) " +
                 "OUTPUT INSERTED.records_genres_id " +
-                "VALUES (@recordId, @genreId);";
+                "VALUES (@discogsId, @genreId);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", recordId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@genreId", genreId);
                     cmd.ExecuteScalar();
                     return true;

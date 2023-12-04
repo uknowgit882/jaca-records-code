@@ -18,22 +18,22 @@ namespace Capstone.DAO
         /// Supply the recordId. Then find the label ID and supply that here too.
         /// Either it adds it and is successful or errors out
         /// </summary>
-        /// <param name="recordId">From the record</param>
+        /// <param name="discogsId">From the record</param>
         /// <param name="labelId">From the label table - use GetLabel</param>
         /// <returns>True if successful</returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecordLabel(int recordId, int labelId)
+        public bool AddRecordLabel(int discogsId, int labelId)
         {
-            string sql = "INSERT INTO records_labels (record_id, label_id) " +
+            string sql = "INSERT INTO records_labels (discogs_id, label_id) " +
                 "OUTPUT INSERTED.records_labels_id " +
-                "VALUES (@recordId, @labelId);";
+                "VALUES (@discogsId, @labelId);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", recordId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@labelId", labelId);
                     cmd.ExecuteScalar();
                     return true;

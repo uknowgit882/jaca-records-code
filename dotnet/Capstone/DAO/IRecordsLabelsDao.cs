@@ -4,6 +4,6 @@ namespace Capstone.DAO
 {
     public interface IRecordsGenresDao
     {
-        public bool AddRecordGenre(int recordId, int genreId);
+        public bool AddRecordGenre(int discogsId, int genreId);
     }
 }

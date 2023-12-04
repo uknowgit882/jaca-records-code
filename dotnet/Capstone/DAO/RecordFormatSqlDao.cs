@@ -18,22 +18,22 @@ namespace Capstone.DAO
         /// Supply the recordId. Then find the format ID and supply that here too.
         /// Either it adds it and is successful or errors out
         /// </summary>
-        /// <param name="recordId">From the record</param>
+        /// <param name="discogsId">From the record</param>
         /// <param name="formatId">From the format table - use GetFormat</param>
         /// <returns>True if successful</returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecordFormat(int recordId, int formatId)
+        public bool AddRecordFormat(int discogsId, int formatId)
         {
-            string sql = "INSERT INTO records_formats (record_id, format_id) " +
+            string sql = "INSERT INTO records_formats (discogs_id, format_id) " +
                 "OUTPUT INSERTED.records_formats_id " +
-                "VALUES (@recordId, @formatId);";
+                "VALUES (@discogsId, @formatId);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", recordId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@formatId", formatId);
                     cmd.ExecuteScalar();
                     return true;

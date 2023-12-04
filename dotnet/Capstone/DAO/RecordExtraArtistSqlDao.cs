@@ -19,22 +19,22 @@ namespace Capstone.DAO
         /// This adds to the Extra Artist join table, separate from the main artist.
         /// Either it adds it and is successful or errors out
         /// </summary>
-        /// <param name="recordId">From the record</param>
+        /// <param name="discogsId">From the record</param>
         /// <param name="extraArtistId">From the artist table - use GetArtist</param>
         /// <returns>True if successful</returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecordExtraArtist(int recordId, int extraArtistId)
+        public bool AddRecordExtraArtist(int discogsId, int extraArtistId)
         {
-            string sql = "INSERT INTO records_extra_artists (record_id, extra_artist_id) " +
+            string sql = "INSERT INTO records_extra_artists (discogs_id, extra_artist_id) " +
                 "OUTPUT INSERTED.records_extra_artists_id " +
-                "VALUES (@recordId, @extraArtistId);";
+                "VALUES (@discogsId, @extraArtistId);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", recordId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@extraArtistId", extraArtistId);
                     cmd.ExecuteScalar();
                     return true;

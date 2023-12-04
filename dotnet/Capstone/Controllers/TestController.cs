@@ -3,6 +3,7 @@ using Capstone.Models;
 using Capstone.Service;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace Capstone.Controllers
 {
@@ -53,6 +54,9 @@ namespace Capstone.Controllers
         {
             // this might be atrocious for performance but I am not sure how else to do this
             RecordClient output = null;
+
+            int reverseAddition = 0;
+
             try
             {
                 // get the record from the client
@@ -74,29 +78,52 @@ namespace Capstone.Controllers
                     return BadRequest("This record does not contain any vinyl. We're a vinyl only shop. Try again.");
                 }
 
-
                 // check if it's in the record table first
                 // if yes, just need to check if we should update the database
                 //      check if the date_changes is different in discogs from the last time we pulled
                 //      if yes, update
                 // if not in our database, add to it
-                RecordTableData existingRecord = _recordBuilderDao.GetRecordByDiscogsId(output.Id);
+
+                // need to refactor this so that if a downstream table load fails, it'll still go through the new created pathway
+                // maybe extra column that says "fully loaded 1/0" and that only gets updated once all the things parse?
+                RecordTableData existingRecord = _recordBuilderDao.GetRecordByDiscogsId(recordId);
 
                 if (existingRecord == null)
                 {
                     // do the add if it doesn't exist
+                    // can build this out first
+                    RecordTableData newRecord = _recordBuilderDao.AddRecord(clientSuppliedRecord);
+                    reverseAddition = newRecord.Record_Id;
 
                     // build out the preceding primary tables
                     // if count is zero, no need for the sql dao for this particular table
                     if (clientSuppliedRecord.Genres.Count != 0)
                     {
-
+                        foreach(string genre in clientSuppliedRecord.Genres)
+                        {
+                            _genresDao.AddGenre(genre);
+                            Genre genreReturned = _genresDao.GetGenre(genre);
+                            _recordsGenresDao.AddRecordGenre(clientSuppliedRecord.Id, genreReturned.Genre_Id);
+                        }
                     }
+                    if (clientSuppliedRecord.Styles.Count != 0)
+                    {
+                        // we're just lumping genres and styles (sub genre it seems) into one
+                        // so repeate the method call
+                        foreach (string style in clientSuppliedRecord.Styles)
+                        {
+                            _genresDao.AddGenre(style);
+                            Genre genreReturned = _genresDao.GetGenre(style);
+                            _recordsGenresDao.AddRecordGenre(clientSuppliedRecord.Id, genreReturned.Genre_Id);
+                        }
+                    } 
                     if (clientSuppliedRecord.Labels.Count != 0)
                     {
                         foreach (Label item in clientSuppliedRecord.Labels)
                         {
                             _labelsDao.AddLabel(item);
+                            Label returnedLabel = _labelsDao.GetLabel(item);
+                            _recordsLabelsDao.AddRecordLabel(clientSuppliedRecord.Id, returnedLabel.Label_Id);
                         }
                     }
                     if (clientSuppliedRecord.Formats.Count != 0)
@@ -110,58 +137,59 @@ namespace Capstone.Controllers
                                 foreach (string description in item.Descriptions)
                                 {
                                     _formatsDao.AddFormat(description);
+                                    Format returnedFormat = _formatsDao.GetFormat(description);
+                                    _recordsFormatsDao.AddRecordFormat(clientSuppliedRecord.Id, returnedFormat.Format_Id);
                                 }
                             }
                         }
                     }
                     if (clientSuppliedRecord.Artists.Count != 0)
                     {
-
+                        foreach(Artist artist in clientSuppliedRecord.Artists)
+                        {
+                            _artistsDao.AddArtist(artist);
+                            Artist returnedArtist = _artistsDao.GetArtist(artist);
+                            _recordsArtistsDao.AddRecordArtist(clientSuppliedRecord.Id, returnedArtist.Artist_Id);
+                        }
                     }
-                    // once those primary tables have been built, build the record itself
-                    RecordTableData newRecord = _recordBuilderDao.AddRecord(clientSuppliedRecord);
+                    if (clientSuppliedRecord.ExtraArtists.Count != 0)
+                    {
+                        // same thing for extra artists
+                        foreach (Artist extraArtist in clientSuppliedRecord.ExtraArtists)
+                        {
+                            _artistsDao.AddArtist(extraArtist);
+                            Artist returnedArtist = _artistsDao.GetArtist(extraArtist);
+                            _recordsExtraArtistsDao.AddRecordExtraArtist(clientSuppliedRecord.Id, returnedArtist.Artist_Id);
+                        }
+                    }
+                    
 
                     // then do the other downstream builds
                     if (clientSuppliedRecord.Identifiers.Count != 0)
                     {
-
+                        foreach(Identifier identifier in clientSuppliedRecord.Identifiers)
+                        {
+                            identifier.Discogs_Id = clientSuppliedRecord.Id;
+                            _barcodesDao.AddIdentifier(identifier);
+                        }
                     }
                     if (clientSuppliedRecord.Images.Count != 0)
                     {
-
+                        foreach (Image image in clientSuppliedRecord.Images)
+                        {
+                            image.Discogs_Id = clientSuppliedRecord.Id;
+                            _imagesDao.AddImage(image);
+                        }
                     }
                     if (clientSuppliedRecord.Tracklist.Count != 0)
                     {
-
+                        foreach (Track track in clientSuppliedRecord.Tracklist)
+                        {
+                            track.Discogs_Id = clientSuppliedRecord.Id;
+                            _tracksDao.AddTrack(track);
+                        }
                     }
-
-                    // then do the join associations
-                    if (clientSuppliedRecord.Artists.Count != 0)
-                    {
-
-                    }
-                    if (clientSuppliedRecord.ExtraArtists.Count != 0)
-                    {
-
-                    }
-                    if (clientSuppliedRecord.Formats.Count != 0)
-                    {
-
-                    }
-                    if (clientSuppliedRecord.Genres.Count != 0)
-                    {
-
-                    }
-                    if (clientSuppliedRecord.Styles.Count != 0)
-                    {
-                        // we're just lumping genres and styles (sub genre it seems) into one
-                        // so repeate the method call
-
-                    }
-                    if (clientSuppliedRecord.Labels.Count != 0)
-                    {
-
-                    }
+                    return Created("https://localhost:44315/", newRecord);
                 }
                 else if (clientSuppliedRecord.Date_Changed != existingRecord.Discogs_Date_Changed)
                 {
@@ -173,20 +201,11 @@ namespace Capstone.Controllers
                     // TODO update this
                     return Ok("This record already exists in our database");
                 }
-
-
-
-                if (output != null)
-                {
-                    return Ok(output);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                 
             }
             catch (Exception e)
             {
+                
                 return BadRequest(e.Message);
             }
         }

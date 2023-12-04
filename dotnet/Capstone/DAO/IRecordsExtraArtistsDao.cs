@@ -4,6 +4,6 @@ namespace Capstone.DAO
 {
     public interface IRecordsExtraArtistsDao
     {
-        public bool AddRecordExtraArtist(int recordId, int extraArtistId);
+        public bool AddRecordExtraArtist(int discogsId, int extraArtistId);
     }
 }

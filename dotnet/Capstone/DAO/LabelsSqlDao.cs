@@ -16,7 +16,7 @@ namespace Capstone.DAO
         public Label GetLabel(Label label)
         {
             Label output = null;
-            string sql = "SELECT label_id, name, url, is_active, created_date, updated_date, FROM labels " +
+            string sql = "SELECT label_id, name, url, is_active, created_date, updated_date FROM labels " +
                 "WHERE name = @name";
             try
             {

@@ -17,9 +17,9 @@ namespace Capstone.DAO
         public Identifier GetIdentifier(Identifier identifier)
         {
             Identifier output = null;
-            string sql = "SELECT barcode_id, record_id, type, value, description " +
+            string sql = "SELECT barcode_id, discogs_id, type, value, description " +
                 "FROM barcodes " +
-                "WHERE record_id = @recordId AND type = @type AND value = @value AND description = @description";
+                "WHERE discogs_id = @discogsId AND type = @type AND value = @value AND description = @description";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -27,10 +27,10 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", identifier.Record_Id);
+                    cmd.Parameters.AddWithValue("@discogsId", identifier.Discogs_Id);
                     cmd.Parameters.AddWithValue("@type", identifier.Type);
                     cmd.Parameters.AddWithValue("@value", identifier.Value);
-                    cmd.Parameters.AddWithValue("@description", identifier.Description);
+                    cmd.Parameters.AddWithValue("@description", string.IsNullOrEmpty(identifier.Description) ? "" : identifier.Description);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -54,19 +54,19 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            string sql = "INSERT INTO barcodes (record_id, type, value, description) " +
+            string sql = "INSERT INTO barcodes (discogs_id, type, value, description) " +
                 "OUTPUT INSERTED.barcode_id " +
-                "VALUES (@recordId, @type, @value, @description);";
+                "VALUES (@discogsId, @type, @value, @description);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordId", identifier.Record_Id);
+                    cmd.Parameters.AddWithValue("@discogsId", identifier.Discogs_Id);
                     cmd.Parameters.AddWithValue("@type", identifier.Type);
                     cmd.Parameters.AddWithValue("@value", identifier.Value);
-                    cmd.Parameters.AddWithValue("@description", identifier.Description);
+                    cmd.Parameters.AddWithValue("@description", string.IsNullOrEmpty(identifier.Description) ? "" : identifier.Description);
                     cmd.ExecuteScalar();
                     return true;
                 }
@@ -81,7 +81,7 @@ namespace Capstone.DAO
         {
             Identifier output = new Identifier();
             output.Barcode_Id = Convert.ToInt32(reader["barcode_id"]);
-            output.Record_Id = Convert.ToInt32(reader["record_id"]);
+            output.Discogs_Id = Convert.ToInt32(reader["discogs_id"]);
             output.Type = Convert.ToString(reader["type"]);
             output.Value = Convert.ToString(reader["value"]);
             output.Description = Convert.ToString(reader["description"]);
