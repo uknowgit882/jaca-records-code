@@ -72,16 +72,16 @@ namespace Capstone.Models
     }
     public class Track
     {
-        public string Position { get; set; }
-        public string Type_ { get; set; }
+        public int Track_Id { get; set; }
+        public int Record_Id { get; set; }
         public string Title { get; set; }
+        public string Position { get; set; }
         public string Duration { get; set; }
         public override string ToString()
         {
             return Position + " | " + Title ;
         }
     }
-
 
     public class Image
     {

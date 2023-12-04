@@ -6,7 +6,7 @@ namespace Capstone.DAO
 {
     public interface IGenresDao
     {
-        public string GetGenre(string genre);
-        public bool AddGenre(string genre);
+        public Genre GetGenre(Genre genre);
+        public bool AddGenre(Genre genre);
     }
 }
