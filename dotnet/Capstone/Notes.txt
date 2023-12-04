@@ -10,12 +10,12 @@ PRIMARY
 SECONDARY
 	friends
 	artists
-	tracks
 
 TERTIARY
 	records
 
 QUANTERNARY
+	tracks
 	libraries
 
 PENTERNARY

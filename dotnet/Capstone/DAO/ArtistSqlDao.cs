@@ -17,7 +17,7 @@ namespace Capstone.DAO
         public Artist GetArtist(Artist artist)
         {
             Artist output = null;
-            string sql = "SELECT name " +
+            string sql = "SELECT artist_id, name " +
                 "FROM artists " +
                 "WHERE name = @name";
             try
@@ -74,6 +74,7 @@ namespace Capstone.DAO
         private Artist MapRowToArtist(SqlDataReader reader)
         {
             Artist output = new Artist();
+            output.Artist_Id = Convert.ToInt32(reader["artist_id"]);
             output.Name = Convert.ToString(reader["name"]);
             return output;
         }

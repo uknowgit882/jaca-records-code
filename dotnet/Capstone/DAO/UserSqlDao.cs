@@ -22,7 +22,7 @@ namespace Capstone.DAO
         {
             IList<User> users = new List<User>();
 
-            string sql = "SELECT user_id, username, password_hash, salt, user_role FROM users";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role FROM users";
 
             try
             {
@@ -52,7 +52,7 @@ namespace Capstone.DAO
         {
             User user = null;
 
-            string sql = "SELECT user_id, username, password_hash, salt, user_role FROM users WHERE user_id = @user_id";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role FROM users WHERE user_id = @user_id";
 
             try
             {
@@ -82,7 +82,7 @@ namespace Capstone.DAO
         {
             User user = null;
 
-            string sql = "SELECT user_id, username, password_hash, salt, user_role FROM users WHERE username = @username";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role FROM users WHERE username = @username";
 
             try
             {
