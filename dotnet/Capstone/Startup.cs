@@ -64,6 +64,12 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
+            services.AddTransient<IArtistsDao>(m => new ArtistSqlDao(connectionString));
+            services.AddTransient<IFormatsDao>(m => new FormatSqlDao(connectionString));
+            services.AddTransient<IFriendsDao>(m => new FriendSqlDao(connectionString));
+            services.AddTransient<IGenresDao>(m => new GenreSqlDao(connectionString));
+            services.AddTransient<ILabelsDao>(m => new LabelsSqlDao(connectionString));
+            services.AddTransient<ITracksDao>(m => new TracksSqlDao(connectionString));
 
             // Swagger set up
             services.AddSwaggerGen(s => {

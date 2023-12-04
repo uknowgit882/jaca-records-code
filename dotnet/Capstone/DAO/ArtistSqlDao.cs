@@ -1,22 +1,24 @@
 ﻿using Capstone.Exceptions;
 using Capstone.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Capstone.DAO
 {
-    public class LabelsSqlDao : ILabelsDao
+    public class ArtistSqlDao : IArtistsDao
     {
         private readonly string connectionString;
-        public LabelsSqlDao(string dbConnectionString)
+        public ArtistSqlDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
 
-        public Label GetLabel(Label label)
+        public Artist GetArtist(Artist artist)
         {
-            Label output = null;
-            string sql = "SELECT label_id, name, url, is_active, created_date, updated_date, FROM labels " +
+            Artist output = null;
+            string sql = "SELECT artist_id, name " +
+                "FROM artists " +
                 "WHERE name = @name";
             try
             {
@@ -25,12 +27,12 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", label.Name);
+                    cmd.Parameters.AddWithValue("@name", artist.Name);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        output = MapRowToLabel(reader);
+                        output = MapRowToArtist(reader);
                     }
                 }
             }
@@ -41,25 +43,24 @@ namespace Capstone.DAO
 
             return output;
         }
-        public bool AddLabel(Label label)
+        public bool AddArtist(Artist artist)
         {
-            Label checkedLabel = GetLabel(label);
+            Artist checkedArtist = GetArtist(artist);
 
-            if (checkedLabel != null)
+            if (checkedArtist != null)
             {
                 return false;
             }
-            string sql = "INSERT INTO labels (name, url) " +
-                "OUTPUT INSERTED.label_id " +
-                "VALUES (@name, @url);";
+            string sql = "INSERT INTO artists (name) " +
+                "OUTPUT INSERTED.artist_id " +
+                "VALUES (@name);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", label.Name);
-                    cmd.Parameters.AddWithValue("@url", label.Resource_Url);
+                    cmd.Parameters.AddWithValue("@name", artist.Name);
                     cmd.ExecuteScalar();
                     return true;
                 }
@@ -70,12 +71,12 @@ namespace Capstone.DAO
             }
         }
 
-        private Label MapRowToLabel(SqlDataReader reader)
+        private Artist MapRowToArtist(SqlDataReader reader)
         {
-            Label label = new Label();
-            label.Label_Id = Convert.ToInt32(reader["label_id"]);
-            label.Name = Convert.ToString(reader["name"]);
-            return label;
+            Artist output = new Artist();
+            output.Artist_Id = Convert.ToInt32(reader["artist_id"]);
+            output.Name = Convert.ToString(reader["name"]);
+            return output;
         }
     }
 }

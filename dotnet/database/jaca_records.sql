@@ -30,6 +30,7 @@ CREATE TABLE users (
 	last_login DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_user PRIMARY KEY (user_id),
 	CONSTRAINT UQ_username UNIQUE (username),
+	CONSTRAINT UQ_email UNIQUE (email_address),
 	CONSTRAINT CK_role CHECK (user_role = 'free' OR user_role = 'premium' OR user_role = 'jacapreme')
 )
 
@@ -40,9 +41,11 @@ INSERT INTO users (username, first_name, last_name, email_address, password_hash
 CREATE TABLE friends (
 	friend_id int IDENTITY (1, 1) NOT NULL,
 	user_id int NOT NULL,
+	friends_user_id int NOT NULL,
 
-	CONSTRAINT PK_friend PRIMARY KEY (friend_id),
-	CONSTRAINT FK_friends_users FOREIGN KEY (user_id) REFERENCES users (user_id)
+	CONSTRAINT PK_users_friends PRIMARY KEY (user_id, friends_user_id),
+	CONSTRAINT FK_friends_users FOREIGN KEY (user_id) REFERENCES users (user_id),
+	CONSTRAINT FK_friends_users_friend FOREIGN KEY (friends_user_id) REFERENCES users (user_id)
 )
 
 CREATE TABLE genres (
@@ -68,9 +71,7 @@ CREATE TABLE labels (
 
 CREATE TABLE formats(
 	format_id int IDENTITY(1, 1) NOT NULL,
-	size NVARCHAR(10) NOT NULL,
 	type NVARCHAR(10) NOT NULL,
-	rpm NVARCHAR(10) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -88,28 +89,9 @@ CREATE TABLE artists (
 	CONSTRAINT UQ_artist_name UNIQUE(name),
 )
 
-CREATE TABLE tracks (
-	track_id int IDENTITY(1,1) NOT NULL,
-	artist_id int NOT NULL,
-	title NVARCHAR(100) NOT NULL,
-	position NVARCHAR(10) NOT NULL,
-	duration NVARCHAR(10) NOT NULL,
-	is_active BIT DEFAULT 1 NOT NULL,
-	created_date DATETIME DEFAULT getdate() NOT NULL,
-	updated_date DATETIME DEFAULT getdate() NOT NULL,
-	CONSTRAINT PK_tracks PRIMARY KEY (track_id),
-	CONSTRAINT FK_tracks_artists FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
-)
-
 CREATE TABLE records (
 	record_id int IDENTITY(1, 1) NOT NULL,
 	discogs_id int NOT NULL,
-	artist_id int NOT NULL,
-	genre_id int NOT NULL,
-	label_id int NOT NULL,
-	format_id int NOT NULL,
-	barcode NVARCHAR(20) NOT NULL,
-	extra_artist_id int NULL,
 	country NVARCHAR(50) NULL,
 	img_url NVARCHAR(500) NULL,
 	released NVARCHAR(10) NOT NULL,
@@ -120,12 +102,92 @@ CREATE TABLE records (
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_records PRIMARY KEY (record_id),
 	CONSTRAINT UQ_discogs_id UNIQUE (discogs_id),
-	CONSTRAINT FK_records_artists FOREIGN KEY (artist_id) REFERENCES artists (artist_id),
-	CONSTRAINT FK_records_genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id),
-	CONSTRAINT FK_records_labels FOREIGN KEY (label_id) REFERENCES labels (label_id),
-	CONSTRAINT FK_records_format FOREIGN KEY (format_id) REFERENCES formats (format_id),
-	CONSTRAINT FK_records_extra_artists FOREIGN KEY (extra_artist_id) REFERENCES artists (artist_id)
 )
+
+CREATE TABLE barcodes (
+	barcode_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	type NVARCHAR(20) NOT NULL,
+	value NVARCHAR(20) NOT NULL,
+	description NVARCHAR(50) NOT NULL,
+	is_active BIT DEFAULT 1 NOT NULL,
+	created_date DATETIME DEFAULT getdate() NOT NULL,
+	updated_date DATETIME DEFAULT getdate() NOT NULL,
+	CONSTRAINT PK_barcodes PRIMARY KEY (barcode_id),
+	CONSTRAINT FK_barcodes_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+)
+
+CREATE TABLE images (
+	image_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	uri NVARCHAR(500) NULL,
+	height int NULL,
+	width int NULL,
+	is_active BIT DEFAULT 1 NOT NULL,
+	created_date DATETIME DEFAULT getdate() NOT NULL,
+	updated_date DATETIME DEFAULT getdate() NOT NULL,
+	CONSTRAINT PK_images PRIMARY KEY (image_id),
+	CONSTRAINT FK_images_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+)
+
+CREATE TABLE tracks (
+	track_id int IDENTITY(1,1) NOT NULL,
+	record_id int NOT NULL,
+	title NVARCHAR(100) NOT NULL,
+	position NVARCHAR(10) NOT NULL,
+	duration NVARCHAR(10) NOT NULL,
+	is_active BIT DEFAULT 1 NOT NULL,
+	created_date DATETIME DEFAULT getdate() NOT NULL,
+	updated_date DATETIME DEFAULT getdate() NOT NULL,
+	CONSTRAINT PK_tracks PRIMARY KEY (track_id),
+	CONSTRAINT FK_tracks_records FOREIGN KEY (record_id) REFERENCES records (record_id)
+)
+
+CREATE TABLE records_artists(
+	records_artists_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	artist_id int NOT NULL,
+	CONSTRAINT PK_records_artists PRIMARY KEY (record_id, artist_id),
+	CONSTRAINT FK_records_artists_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT FK_records_artists_artists FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
+)
+
+CREATE TABLE records_extra_artists(
+	records_extra_artists_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	extra_artist_id int NOT NULL,
+	CONSTRAINT PK_records_extra_artists PRIMARY KEY (record_id, extra_artist_id),
+	CONSTRAINT FK_records_extra_artists_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT FK_records_extra_artists_artists FOREIGN KEY (extra_artist_id) REFERENCES artists (artist_id)
+)
+
+CREATE TABLE records_genres(
+	records_genres_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	genre_id int NOT NULL,
+	CONSTRAINT PK_records_genres PRIMARY KEY (record_id, genre_id),
+	CONSTRAINT FK_records_genres_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT FK_records_genres_genres FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
+)
+
+CREATE TABLE records_labels(
+	records_labels_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	label_id int NOT NULL,
+	CONSTRAINT PK_records_labels PRIMARY KEY (record_id, label_id),
+	CONSTRAINT FK_records_labels_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT FK_records_labels_labels FOREIGN KEY (label_id) REFERENCES labels (label_id)
+)
+
+CREATE TABLE records_formats(
+	records_formats_id int IDENTITY (1, 1) NOT NULL,
+	record_id int NOT NULL,
+	format_id int NOT NULL,
+	CONSTRAINT PK_records_formats PRIMARY KEY (record_id, format_id),
+	CONSTRAINT FK_records_formats_records FOREIGN KEY (record_id) REFERENCES records (record_id),
+	CONSTRAINT FK_records_formats_formats FOREIGN KEY (format_id) REFERENCES formats (format_id)
+)
+
 
 CREATE TABLE libraries (
 	library_id int IDENTITY(1, 1) NOT NULL,

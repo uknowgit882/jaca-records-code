@@ -5,7 +5,7 @@ namespace Capstone.Models
 {
     public class RecordClient
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string URI { get; set; }
         public List<Artist> Artists { get; set; } = new List<Artist>();
         public List<Label> Labels { get; set; } = new List<Label>();
@@ -28,6 +28,7 @@ namespace Capstone.Models
 
     public class Artist
     {
+        public int Artist_Id { get; set; }
         public string Name { get; set; }
         public override string ToString()
         {
@@ -37,6 +38,7 @@ namespace Capstone.Models
 
     public class Label
     {
+        public int Label_Id { get; set; }
         public string Name { get; set; }
         public string Resource_Url { get; set; }
         public override string ToString()
@@ -47,8 +49,10 @@ namespace Capstone.Models
 
     public class Format
     {
+        public int Format_Id { get; set; }
         public string Name { get; set; }
         public string Qty { get; set; }
+        public List<string> Descriptions { get; set; }
         public override string ToString()
         {
             return Name;
@@ -59,6 +63,7 @@ namespace Capstone.Models
     {
         public string Type { get; set; }
         public string Value { get; set; }
+        public string Description { get; set; }
     }
     public class Track
     {
