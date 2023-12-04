@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Capstone.Models
@@ -6,12 +7,14 @@ namespace Capstone.Models
     public class RecordClient
     {
         public int Id { get; set; }
+        public int Record_Id { get; set; }
         public string URI { get; set; }
         public List<Artist> Artists { get; set; } = new List<Artist>();
         public List<Label> Labels { get; set; } = new List<Label>();
         public List<Format> Formats { get; set; } = new List<Format>();
         public string Title { get; set; }
         public string Country { get; set; }
+        public DateTime Date_Changed { get; set; }
         public string Released { get; set; }
         public List<Identifier> Identifiers { get; set; } = new List<Identifier>();
         public List<string> Genres { get; set; } = new List<string>();
@@ -61,6 +64,8 @@ namespace Capstone.Models
 
     public class Identifier
     {
+        public int Barcode_Id { get; set; }
+        public int Record_Id { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }
         public string Description { get; set; }
@@ -80,6 +85,8 @@ namespace Capstone.Models
 
     public class Image
     {
+        public int Image_Id { get; set; }
+        public int Record_Id { get; set; }
         public string Uri { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }

@@ -15,7 +15,14 @@ TERTIARY
 	records
 
 QUANTERNARY
+	barcodes
+	images
 	tracks
+	records_artists
+	records_extra_artists
+	records_formats
+	records_genres
+	records_labels
 	libraries
 
 PENTERNARY
@@ -23,8 +30,7 @@ PENTERNARY
 
 TODO:
 add user last_login method upon login (maybe need its own user functions dao)
-Update recordservice to take dependency injection
-
+do we need an update function for the database?
 
 USERREGISTRATIONINFO:
 {

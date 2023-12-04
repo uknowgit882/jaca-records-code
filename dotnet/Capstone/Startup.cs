@@ -65,10 +65,18 @@ namespace Capstone
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
             services.AddTransient<IArtistsDao>(m => new ArtistSqlDao(connectionString));
+            services.AddTransient<IBarcodesDao>(m => new BarcodeSqlDao(connectionString));
             services.AddTransient<IFormatsDao>(m => new FormatSqlDao(connectionString));
             services.AddTransient<IFriendsDao>(m => new FriendSqlDao(connectionString));
             services.AddTransient<IGenresDao>(m => new GenreSqlDao(connectionString));
+            services.AddTransient<IImagesDao>(m => new ImageSqlDao(connectionString));
             services.AddTransient<ILabelsDao>(m => new LabelsSqlDao(connectionString));
+            services.AddTransient<IRecordBuilderDao>(m => new RecordBuilderSqlDao(connectionString));
+            services.AddTransient<IRecordsArtistsDao>(m => new RecordArtistSqlDao(connectionString));
+            services.AddTransient<IRecordsExtraArtistsDao>(m => new RecordExtraArtistSqlDao(connectionString));
+            services.AddTransient<IRecordsFormatsDao>(m => new RecordFormatSqlDao(connectionString));
+            services.AddTransient<IRecordsGenresDao>(m => new RecordGenreSqlDao(connectionString));
+            services.AddTransient<IRecordsLabelsDao>(m => new RecordLabelSqlDao(connectionString));
             services.AddTransient<ITracksDao>(m => new TracksSqlDao(connectionString));
 
             // Swagger set up
