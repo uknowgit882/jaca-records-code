@@ -5,6 +5,7 @@ namespace Capstone.DAO
 {
     public interface ILabelsDao
     {
-        bool AddLabel(Label label);
+        public Label GetLabel(Label label);
+        public bool AddLabel(Label label);
     }
 }

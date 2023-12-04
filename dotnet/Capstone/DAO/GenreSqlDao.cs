@@ -9,9 +9,15 @@
             connectionString = dbConnectionString;
         }
 
+        public bool GetGenre(string genre)
+        {
+            
+            return true;
+        }
         public bool AddGenre(string genre)
         {
             return true;
         }
+
     }
 }
