@@ -33,5 +33,26 @@ namespace Capstone.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet("search")]
+        public ActionResult<RecordClient> Search(string q, string artist, string title, string genre, string year, string country, string label)
+        {
+            try
+            {
+                RecordClient output = null;
+                if (output != null)
+                {
+                    return Ok(output);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
