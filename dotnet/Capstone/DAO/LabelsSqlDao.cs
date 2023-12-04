@@ -38,7 +38,6 @@ namespace Capstone.DAO
             {
                 throw new DaoException("Sql exception occured", ex);
             }
-
             return output;
         }
         public bool AddLabel(Label label)
