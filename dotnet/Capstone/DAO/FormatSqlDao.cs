@@ -20,11 +20,11 @@ namespace Capstone.DAO
         /// In the incoming Record object, this is under the Descriptions list
         /// </summary>
         /// <param name="description">In the database, named "type"</param>
-        /// <returns>String "type" of format</returns>
+        /// <returns>Format object with ID and type, under "Name"</returns>
         /// <exception cref="DaoException"></exception>
-        public string GetFormat(string description)
+        public Format GetFormat(string description)
         {
-            string output = null;
+            Format output = null;
             string sql = "SELECT type " +
                 "FROM formats " +
                 "WHERE type = @type";
@@ -40,7 +40,7 @@ namespace Capstone.DAO
 
                     if (reader.Read())
                     {
-                        output = Convert.ToString(reader["type"]);
+                        output = MapRowToFormat(reader);
                     }
                 }
             }
@@ -53,7 +53,7 @@ namespace Capstone.DAO
         }
         public bool AddFormat(string description)
         {
-            string checkedArtist = GetFormat(description);
+            Format checkedArtist = GetFormat(description);
 
             if (checkedArtist != null)
             {
@@ -78,6 +78,12 @@ namespace Capstone.DAO
                 throw new DaoException("exception occurred", e);
             }
         }
-         
+        private Format MapRowToFormat(SqlDataReader reader)
+        {
+            Format output = new Format();
+            output.Format_Id = Convert.ToInt32(reader["format_id"]);
+            output.Name = Convert.ToString(reader["type"]);
+            return output;
+        }
     }
 }
