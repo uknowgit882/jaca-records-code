@@ -73,6 +73,7 @@ namespace Capstone.DAO
         private Label MapRowToLabel(SqlDataReader reader)
         {
             Label label = new Label();
+            label.Label_Id = Convert.ToInt32(reader["label_id"]);
             label.Name = Convert.ToString(reader["name"]);
             return label;
         }
