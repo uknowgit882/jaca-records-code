@@ -47,10 +47,11 @@ namespace Capstone.DAO
             return true;
         }
 
-        //private string MapToRowGenre(SqlDataReader reader)
-        //{
-        //    string genre = null;
-            
-        //}
+        private string MapToRowGenre(SqlDataReader reader)
+        {
+            string genre = null;
+            return genre;
+
+        }
     }
 }
