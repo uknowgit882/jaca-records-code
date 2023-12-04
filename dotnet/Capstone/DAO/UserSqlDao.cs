@@ -108,16 +108,16 @@ namespace Capstone.DAO
             return user;
         }
 
-        public User CreateUser(string username, string password, string role)
+        public User CreateUser(RegisterUser userParam)
         {
             User newUser = null;
 
             IPasswordHasher passwordHasher = new PasswordHasher();
-            PasswordHash hash = passwordHasher.ComputeHash(password);
+            PasswordHash hash = passwordHasher.ComputeHash(userParam.Password);
 
-            string sql = "INSERT INTO users (username, password_hash, salt, user_role) " +
+            string sql = "INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) " +
                          "OUTPUT INSERTED.user_id " +
-                         "VALUES (@username, @password_hash, @salt, @user_role)";
+                         "VALUES (@username, @first_name, @last_name, @email_address, @password_hash, @salt, @user_role)";
 
             int newUserId = 0;
             try
@@ -127,10 +127,13 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@username", userParam.Username);
+                    cmd.Parameters.AddWithValue("@first_name", userParam.First_Name);
+                    cmd.Parameters.AddWithValue("@last_name", userParam.Last_Name);
+                    cmd.Parameters.AddWithValue("@email_address", userParam.Email_Address);
                     cmd.Parameters.AddWithValue("@password_hash", hash.Password);
                     cmd.Parameters.AddWithValue("@salt", hash.Salt);
-                    cmd.Parameters.AddWithValue("@user_role", role);
+                    cmd.Parameters.AddWithValue("@user_role", userParam.Role);
 
                     newUserId = Convert.ToInt32(cmd.ExecuteScalar());
                     
