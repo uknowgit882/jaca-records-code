@@ -1,5 +1,6 @@
 ﻿namespace Capstone.Service;
 using Capstone.Models;
+using Microsoft.Extensions.Configuration;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Authenticators.OAuth;
@@ -10,6 +11,7 @@ using System.Net.Http;
 public class RecordService : IRecordService
 {
     // Taking in external URL from the API 
+    // should I update this so it works with a dependency injection?
     private readonly string BaseURL = "https://api.discogs.com/releases/";
     private readonly OAuth1Authenticator oAuth1 = OAuth1Authenticator.ForAccessToken(
             consumerKey: "wZrDHJlTdpkgyYiwrGVM",
@@ -30,7 +32,7 @@ public class RecordService : IRecordService
         }
     }
     public RecordClient GetRecord(int release_id)
-    { 
+    {   
         client.Authenticator = oAuth1;
         RecordClient getRecord = new RecordClient();
 

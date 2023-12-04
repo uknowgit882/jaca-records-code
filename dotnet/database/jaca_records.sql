@@ -30,6 +30,7 @@ CREATE TABLE users (
 	last_login DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_user PRIMARY KEY (user_id),
 	CONSTRAINT UQ_username UNIQUE (username),
+	CONSTRAINT UQ_email UNIQUE (email_address),
 	CONSTRAINT CK_role CHECK (user_role = 'free' OR user_role = 'premium' OR user_role = 'jacapreme')
 )
 
@@ -40,9 +41,11 @@ INSERT INTO users (username, first_name, last_name, email_address, password_hash
 CREATE TABLE friends (
 	friend_id int IDENTITY (1, 1) NOT NULL,
 	user_id int NOT NULL,
+	friends_user_id int NOT NULL,
 
 	CONSTRAINT PK_friend PRIMARY KEY (friend_id),
-	CONSTRAINT FK_friends_users FOREIGN KEY (user_id) REFERENCES users (user_id)
+	CONSTRAINT FK_friends_users FOREIGN KEY (user_id) REFERENCES users (user_id),
+	CONSTRAINT FK_friends_users_friend FOREIGN KEY (friends_user_id) REFERENCES users (user_id)
 )
 
 CREATE TABLE genres (
@@ -68,9 +71,7 @@ CREATE TABLE labels (
 
 CREATE TABLE formats(
 	format_id int IDENTITY(1, 1) NOT NULL,
-	size NVARCHAR(10) NOT NULL,
 	type NVARCHAR(10) NOT NULL,
-	rpm NVARCHAR(10) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
