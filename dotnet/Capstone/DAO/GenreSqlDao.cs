@@ -9,10 +9,10 @@
             connectionString = dbConnectionString;
         }
 
-        public bool GetGenre(string genre)
+        public string GetGenre(string genre)
         {
             
-            return true;
+            return genre;
         }
         public bool AddGenre(string genre)
         {
