@@ -27,12 +27,12 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", genre);
 
-                    SqlDataAdapter reader = cmd.ExecuteReader();
+                    //SqlDataAdapter reader = cmd.ExecuteReader();
 
-                    if (reader.read())
-                    {
-                        output = MapToRowGenre(reader);
-                    }
+                    //if (reader.Read())
+                    //{
+                    //    //output = MapToRowGenre(reader);
+                    //}
                 }
             }
             catch (System.Exception)
@@ -47,9 +47,10 @@ namespace Capstone.DAO
             return true;
         }
 
-        private string MapToRowGenre(SqlDataReader reader)
-        {
+        //private string MapToRowGenre(SqlDataReader reader)
+        //{
+        //    string genre = null;
             
-        }
+        //}
     }
 }
