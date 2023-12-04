@@ -17,9 +17,15 @@ namespace Capstone.DAO
         {
             connectionString = dbConnectionString;
         }
+        public Track GetTrack(Track track)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool AddTrack(Track track)
         {
             throw new NotImplementedException();
         }
+
     }
 }

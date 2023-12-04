@@ -4,7 +4,7 @@ namespace Capstone.DAO
 {
     public interface ITracksDao
     {
-        public bool GetTrack(Track track);
+        public Track GetTrack(Track track);
         public bool AddTrack(Track track);
     }
 }
