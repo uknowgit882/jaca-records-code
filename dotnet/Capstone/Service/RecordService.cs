@@ -12,7 +12,7 @@ public class RecordService : IRecordService
 {
     // Taking in external URL from the API 
     // should I update this so it works with a dependency injection?
-    private readonly string BaseURL = "https://api.discogs.com/releases/";
+    private readonly string BaseURL = "https://api.discogs.com/";
     private readonly OAuth1Authenticator oAuth1 = OAuth1Authenticator.ForAccessToken(
             consumerKey: "wZrDHJlTdpkgyYiwrGVM",
             consumerSecret: "dbpFfprjUhyGYcGNzxwRFPDMmPQCynTg",
@@ -37,7 +37,7 @@ public class RecordService : IRecordService
         RecordClient getRecord = new RecordClient();
 
         //api.discogs.com/releases/relase_id (249504) worked okay - returned 200 
-        RestRequest request = new RestRequest(BaseURL + release_id);
+        RestRequest request = new RestRequest(BaseURL + $"releases/{release_id}");
 
         IRestResponse<RecordClient> response = client.Get<RecordClient>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
@@ -122,7 +122,7 @@ public class RecordService : IRecordService
 
         //string searchParameterString = $"q={searchObject.Query}&artist={searchObject.Artist}&release_title={searchObject.Title}&genre={searchObject.Genre}&year={searchObject.Year}&country={searchObject.Country}&label={searchObject.Label}";
 
-        RestRequest request = new RestRequest(BaseURL);
+        RestRequest request = new RestRequest(BaseURL + "/database/search");
         request.AddParameter("q", searchObject.Query);
         request.AddParameter("artist", searchObject.Artist);
         request.AddParameter("release_title", searchObject.Title);

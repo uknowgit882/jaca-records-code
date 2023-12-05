@@ -6,6 +6,9 @@ export function createStore(currentToken, currentUser) {
     state: {
       token: currentToken || '',
       user: currentUser || {},
+      searchResults: [
+     
+      ],
       records: [
         { 
           id: 1,
@@ -39,7 +42,7 @@ export function createStore(currentToken, currentUser) {
         },
         {
           id: 6,
-          album_cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnZkYz84xKijvcMH3GdzxWMGGL0ahf27xalvW4l3F4W20ZxABHRh1I9t7jIPf6yBeAdmI&usqp=CAU",
+          album_cover: "https://poprescue.files.wordpress.com/2014/10/o-town-2001-o-town-album.jpg",
           title: "We fit together",
           artist:"O-town"
         },
@@ -76,6 +79,7 @@ export function createStore(currentToken, currentUser) {
 
       ]
     },
+
     mutations: {
       SET_AUTH_TOKEN(state, token) {
         state.token = token;
@@ -92,8 +96,12 @@ export function createStore(currentToken, currentUser) {
         state.token = '';
         state.user = {};
         axios.defaults.headers.common = {};
+      },
+      ADD_SEARCH_RESULT(state, result){
+        state.searchResults = result;
       }
     },
+
   });
   return store;
 }
