@@ -54,6 +54,7 @@ namespace Capstone.Controllers
         [HttpPost("Artist/")]
         public ActionResult<bool> AddArtist(Artist newArtist)
         {
+            string username = User.Identity.Name;
             try
             {
                 bool output = false;
@@ -138,7 +139,7 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Something went wrong adding your friend. Perhaps you are already friends?");
             }
@@ -159,7 +160,7 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Something went wrong removing your friend. Perhaps you are already broke up?");
             }
