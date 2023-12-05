@@ -17,7 +17,7 @@ GO
 --create tables
 CREATE TABLE users (
 	user_id int IDENTITY(1,1) NOT NULL,
-	username varchar(50) NOT NULL,
+	username NVARCHAR(50) NOT NULL,
 	first_name NVARCHAR(50) NOT NULL,
 	last_name NVARCHAR(200) NOT NULL,
 	email_address NVARCHAR(200) NOT NULL,
@@ -192,7 +192,7 @@ CREATE TABLE records_formats(
 
 CREATE TABLE libraries (
 	library_id int IDENTITY(1, 1) NOT NULL,
-	user_id int NOT NULL,
+	username NVARCHAR(50) NOT NULL,
 	discogs_id int NOT NULL,
 	notes NVARCHAR(1000) DEFAULT '' NULL,
 	quantity int DEFAULT 1 NOT NULL,
@@ -200,8 +200,9 @@ CREATE TABLE libraries (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_libraries PRIMARY KEY (library_id),
-	CONSTRAINT FK_libraries_users FOREIGN KEY (user_id) REFERENCES users (user_id),
-	CONSTRAINT FK_libraries_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
+	CONSTRAINT FK_libraries_users FOREIGN KEY (username) REFERENCES users (username),
+	CONSTRAINT FK_libraries_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
+	CONSTRAINT UQ_library_username UNIQUE (username)
 
 )
 
