@@ -52,7 +52,7 @@ public class RecordService : IRecordService
     }
 
 
-    public SearchResult SearchForRecord(SearchRequest searchObject)
+    public SearchResult SearchForRecordsDiscogs(SearchRequest searchObject)
     {
         client.Authenticator = oAuth1;
         SearchResult searchedRecord = new SearchResult();
@@ -119,8 +119,15 @@ public class RecordService : IRecordService
             searchObject.Label = "";
         }
 
+        if(searchObject.Barcode != null)
+        {
+            searchObject.Barcode = searchObject.Barcode.Replace(' ', '+');
+        }
+        else
+        {
+            searchObject.Barcode = "";
+        }
 
-        //string searchParameterString = $"q={searchObject.Query}&artist={searchObject.Artist}&release_title={searchObject.Title}&genre={searchObject.Genre}&year={searchObject.Year}&country={searchObject.Country}&label={searchObject.Label}";
 
         RestRequest request = new RestRequest(BaseURL + "/database/search");
         request.AddParameter("q", searchObject.Query);
@@ -130,6 +137,8 @@ public class RecordService : IRecordService
         request.AddParameter("year", searchObject.Year);
         request.AddParameter("country", searchObject.Country);
         request.AddParameter("label", searchObject.Label);
+        request.AddParameter("barcode", searchObject.Barcode);
+        request.AddParameter("format", "vinyl");
 
         IRestResponse<SearchResult> response = client.Get<SearchResult>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
@@ -143,5 +152,14 @@ public class RecordService : IRecordService
 
         return response.Data;
     }
+
+    //public SearchResult SearchForRecordsInLibrary(SearchRequest searchObject)
+    //{
+    //    SearchResult searchedRecord = new SearchResult();
+
+
+
+    //    return searchedRecord;
+    //}
 }
 
