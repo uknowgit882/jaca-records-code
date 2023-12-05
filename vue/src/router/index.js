@@ -7,7 +7,7 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import SearchView from '../views/Search.vue';
-
+import Library from'../views/Library.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -53,6 +53,14 @@ const routes = [
     path: "/search",
     name: "search",
     component: SearchView,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path:"/library",
+    name: "Library",
+    component: Library,
     meta: {
       requiresAuth: false
     }
