@@ -18,6 +18,7 @@ namespace Capstone.Controllers
         private readonly ILabelsDao _labelsDao;
         private readonly ITracksDao _tracksDao;
         private readonly IUserDao _userDao;
+        public readonly ISearchService searchService = new SearchService();
         public TestController(IArtistsDao artistsDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao, ILabelsDao labelsDao, ITracksDao tracksDao, IUserDao userDao)
         {
             _artistsDao = artistsDao;
@@ -166,11 +167,20 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("search")]
-        public ActionResult<RecordClient> Search(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
         {
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.Query = q;
+            searchRequest.Artist = artist;
+            searchRequest.Title = title;
+            searchRequest.Genre = genre;
+            searchRequest.Year = year;
+            searchRequest.Country = country;
+            searchRequest.Label = label;
             try
             {
-                RecordClient output = null;
+                SearchResult output = null;
+                output = searchService.SearchForRecord(searchRequest);
                 if (output != null)
                 {
                     return Ok(output);
