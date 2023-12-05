@@ -56,7 +56,6 @@ namespace Capstone.Controllers
             // this might be atrocious for performance but I am not sure how else to do this
             RecordClient output = null;
 
-            int reverseAddition = 0;
 
             try
             {
@@ -89,18 +88,24 @@ namespace Capstone.Controllers
                 // maybe extra column that says "fully loaded 1/0" and that only gets updated once all the things parse?
                 RecordTableData existingRecord = _recordBuilderDao.GetRecordByDiscogsId(recordId);
 
-                if (existingRecord == null)
+                // checks if you have an existing record
+                // if you don't, add
+                // if you do, check if it's active. If not active, assumed something in here failed
+                if (existingRecord == null || existingRecord.Is_Active == false)
                 {
                     // do the add if it doesn't exist
                     // can build this out first
-                    RecordTableData newRecord = _recordBuilderDao.AddRecord(clientSuppliedRecord);
-                    reverseAddition = newRecord.Record_Id;
+                    RecordTableData newRecord = null;
+                    if (existingRecord == null)
+                    {
+                        newRecord = _recordBuilderDao.AddRecord(clientSuppliedRecord);
+                    }
 
                     // build out the preceding primary tables
                     // if count is zero, no need for the sql dao for this particular table
                     if (clientSuppliedRecord.Genres.Count != 0)
                     {
-                        foreach(string genre in clientSuppliedRecord.Genres)
+                        foreach (string genre in clientSuppliedRecord.Genres)
                         {
                             _genresDao.AddGenre(genre);
                             Genre genreReturned = _genresDao.GetGenre(genre);
@@ -117,7 +122,7 @@ namespace Capstone.Controllers
                             Genre genreReturned = _genresDao.GetGenre(style);
                             _recordsGenresDao.AddRecordGenre(clientSuppliedRecord.Id, genreReturned.Genre_Id);
                         }
-                    } 
+                    }
                     if (clientSuppliedRecord.Labels.Count != 0)
                     {
                         foreach (Label item in clientSuppliedRecord.Labels)
@@ -146,7 +151,7 @@ namespace Capstone.Controllers
                     }
                     if (clientSuppliedRecord.Artists.Count != 0)
                     {
-                        foreach(Artist artist in clientSuppliedRecord.Artists)
+                        foreach (Artist artist in clientSuppliedRecord.Artists)
                         {
                             _artistsDao.AddArtist(artist);
                             Artist returnedArtist = _artistsDao.GetArtist(artist);
@@ -163,12 +168,12 @@ namespace Capstone.Controllers
                             _recordsExtraArtistsDao.AddRecordExtraArtist(clientSuppliedRecord.Id, returnedArtist.Artist_Id);
                         }
                     }
-                    
+
 
                     // then do the other downstream builds
                     if (clientSuppliedRecord.Identifiers.Count != 0)
                     {
-                        foreach(Identifier identifier in clientSuppliedRecord.Identifiers)
+                        foreach (Identifier identifier in clientSuppliedRecord.Identifiers)
                         {
                             identifier.Discogs_Id = clientSuppliedRecord.Id;
                             _barcodesDao.AddIdentifier(identifier);
@@ -190,6 +195,19 @@ namespace Capstone.Controllers
                             _tracksDao.AddTrack(track);
                         }
                     }
+                    // if you get here, assume that everything went well
+                    // activate the record
+                    // if you have an existing record, activate that
+                    // if you have a new record, activate that
+                    if (existingRecord != null)
+                    {
+                        _recordBuilderDao.ActivateRecord(existingRecord.Discogs_Id);
+                    }
+                    else
+                    {
+                        _recordBuilderDao.ActivateRecord(newRecord.Discogs_Id);
+                    }
+
                     return Created("https://localhost:44315/", newRecord);
                 }
                 else if (clientSuppliedRecord.Date_Changed != existingRecord.Discogs_Date_Changed)
@@ -202,11 +220,11 @@ namespace Capstone.Controllers
                     // TODO update this
                     return Ok("This record already exists in our database");
                 }
-                 
+
             }
             catch (Exception e)
             {
-                
+
                 return BadRequest(e.Message);
             }
         }
