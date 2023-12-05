@@ -16,7 +16,7 @@ namespace Capstone.DAO
         public Track GetTrack(Track track)
         {
             Track output = null;
-            string sql = "SELECT track_id, record_id, title, position, duration, is_active, created_date, updated_date FROM tracks " +
+            string sql = "SELECT track_id, discogs_id, title, position, duration FROM tracks " +
                 "WHERE title = @title;";
             try
             {
@@ -49,9 +49,9 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            string sql = "INSERT INTO tracks (record_id, title, position, duration) " +
+            string sql = "INSERT INTO tracks (discogs_id, title, position, duration) " +
                 "OUTPUT INSERTED.track_id " +
-                "VALUES (@record_id, @title, @position, @duration);";
+                "VALUES (@discogs_id, @title, @position, @duration);";
 
             try
             {
@@ -59,7 +59,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("record_id", track.Record_Id);
+                    cmd.Parameters.AddWithValue("discogs_id", track.Discogs_Id);
                     cmd.Parameters.AddWithValue("title", track.Title);
                     cmd.Parameters.AddWithValue("position", track.Position);
                     cmd.Parameters.AddWithValue("duration", track.Duration);
@@ -76,7 +76,7 @@ namespace Capstone.DAO
         private Track MapToTrack(SqlDataReader reader)
         {
             Track track = new Track();
-            track.Record_Id = Convert.ToInt32(reader["record_id"]);
+            track.Discogs_Id = Convert.ToInt32(reader["discogs_id"]);
             track.Title = Convert.ToString(reader["title"]);
             track.Position = Convert.ToString(reader["position"]);
             track.Duration = Convert.ToString(reader["duration"]);
