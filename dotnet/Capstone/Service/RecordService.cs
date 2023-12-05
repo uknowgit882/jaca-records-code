@@ -32,7 +32,7 @@ public class RecordService : IRecordService
         }
     }
     public RecordClient GetRecord(int release_id)
-    {   
+    {
         client.Authenticator = oAuth1;
         RecordClient getRecord = new RecordClient();
 

@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace Capstone.DAO
 {
-    public class FormatSqlDao : IFormatsDao
+    public class FormatSqlDao: IFormatsDao
     {
         private readonly string connectionString;
         public FormatSqlDao(string dbConnectionString)
