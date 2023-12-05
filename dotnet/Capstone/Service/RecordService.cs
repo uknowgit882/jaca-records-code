@@ -12,7 +12,6 @@ public class RecordService : IRecordService
 {
     // Taking in external URL from the API 
     // should I update this so it works with a dependency injection?
-    //private readonly string BaseURL = "https://api.discogs.com/releases/";
     private readonly string BaseURL = "https://api.discogs.com/";
     private readonly OAuth1Authenticator oAuth1 = OAuth1Authenticator.ForAccessToken(
             consumerKey: "wZrDHJlTdpkgyYiwrGVM",
@@ -128,6 +127,7 @@ public class RecordService : IRecordService
         {
             searchObject.Barcode = "";
         }
+
 
         RestRequest request = new RestRequest(BaseURL + "/database/search");
         request.AddParameter("q", searchObject.Query);

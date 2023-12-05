@@ -14,11 +14,11 @@ export default {
 </script>
 
 <style scoped>
-.Record{
+.record-image{
+height: 250px;
+width: 250px;
+display: flex;
+flex-wrap: wrap;
 
-  width: 250px;
-  height: 550px;
-  margin: 20px;
-  position: relative;
 }
 </style>
