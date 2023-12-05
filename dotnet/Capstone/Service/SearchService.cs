@@ -96,10 +96,16 @@ namespace Capstone.Service
             }
 
 
-            string searchParameterString =
-                $"q={searchObject.Query}&artist={searchObject.Artist}&release_title={searchObject.Title}&genre={searchObject.Genre}&year={searchObject.Year}&country={searchObject.Country}&label={searchObject.Label}";
+            //string searchParameterString = $"q={searchObject.Query}&artist={searchObject.Artist}&release_title={searchObject.Title}&genre={searchObject.Genre}&year={searchObject.Year}&country={searchObject.Country}&label={searchObject.Label}";
 
-            RestRequest request = new RestRequest(BaseURL + "?" + searchParameterString);
+            RestRequest request = new RestRequest(BaseURL);
+            request.AddParameter("q", searchObject.Query);
+            request.AddParameter("artist", searchObject.Artist);
+            request.AddParameter("release_title", searchObject.Title);
+            request.AddParameter("genre", searchObject.Genre);
+            request.AddParameter("year", searchObject.Year);
+            request.AddParameter("country", searchObject.Country);
+            request.AddParameter("label", searchObject.Label);
 
             IRestResponse<SearchResult> response = client.Get<SearchResult>(request);
             if (response.ResponseStatus != ResponseStatus.Completed)

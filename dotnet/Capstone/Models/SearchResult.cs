@@ -4,6 +4,11 @@ namespace Capstone.Models
 {
     public class SearchResult
     {
+        public List<Result> Results { get; set; } = new List<Result>();
+    }
+
+    public class Result
+    {
         public string Country { get; set; }
         public string Year { get; set; }
         public List<string> Format { get; set; } = new List<string>();
@@ -23,7 +28,6 @@ namespace Capstone.Models
         public string CoverImage { get; set; }
         public string ResourceUrl { get; set; }
         // public Community Community
-
 
     }
 }
