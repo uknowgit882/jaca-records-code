@@ -4,7 +4,17 @@ namespace Capstone.Models
 {
     public class SearchResult
     {
+        public Pagination Pagination { get; set; }
         public List<Result> Results { get; set; } = new List<Result>();
+    }
+
+    public class Pagination
+    {
+        public int Page { get; set; }
+        public int Pages { get; set; }
+        public int PerPage { get; set; }
+        public int Items { get; set; }
+        public URLs Urls { get; set; }
     }
 
     public class Result
@@ -18,7 +28,7 @@ namespace Capstone.Models
         public List<string> Style { get; set; } = new List<string>();
         public int Id { get; set; }
         public List<string> Barcode { get; set; } = new List<string>();
-        // public UserData UserData { get; set; }
+        public UserData UserData { get; set; }
         public int MasterId { get; set; }
         public string MasterUrl { get; set; }
         public string Uri { get; set; }
@@ -27,7 +37,24 @@ namespace Capstone.Models
         public string Thumb { get; set; }
         public string CoverImage { get; set; }
         public string ResourceUrl { get; set; }
-        // public Community Community
+        public Community Community { get; set; }
+    }
 
+    public class UserData
+    {
+        public bool InWantlist { get; set; }
+        public bool InCollection { get; set; }
+    }
+
+    public class Community
+    {
+        public int Want { get; set; }
+        public int Have { get; set; }
+    }
+
+    public class URLs
+    {
+        public string Last { get; set; }
+        public string Next { get; set; }
     }
 }
