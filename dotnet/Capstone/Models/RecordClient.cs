@@ -6,6 +6,8 @@ namespace Capstone.Models
 {
     public class RecordClient
     {
+        public int Record_Id { get; set; }
+        // this is the discogs_id
         public int Id { get; set; }
         public string URI { get; set; }
         public List<Artist> Artists { get; set; } = new List<Artist>();
@@ -13,6 +15,7 @@ namespace Capstone.Models
         public List<Format> Formats { get; set; } = new List<Format>();
         public string Title { get; set; }
         public string Country { get; set; }
+        public DateTime Date_Changed { get; set; }
         public string Released { get; set; }
         public List<Identifier> Identifiers { get; set; } = new List<Identifier>();
         public List<string> Genres { get; set; } = new List<string>();
@@ -62,6 +65,8 @@ namespace Capstone.Models
 
     public class Identifier
     {
+        public int Barcode_Id { get; set; }
+        public int Discogs_Id { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }
         public string Description { get; set; }
@@ -69,7 +74,7 @@ namespace Capstone.Models
     public class Track
     {
         public int Track_Id { get; set; }
-        public int Record_Id { get; set; }
+        public int Discogs_Id { get; set; }
         public string Title { get; set; }
         public string Position { get; set; }
         public string Duration { get; set; }
@@ -81,6 +86,8 @@ namespace Capstone.Models
 
     public class Image
     {
+        public int Image_Id { get; set; }
+        public int Discogs_Id { get; set; }
         public string Uri { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
