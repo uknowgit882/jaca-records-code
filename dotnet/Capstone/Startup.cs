@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Capstone.DAO;
 using Capstone.Security;
 using Microsoft.OpenApi.Models;
+using Capstone.Service;
 
 namespace Capstone
 {
@@ -77,6 +78,7 @@ namespace Capstone
             services.AddTransient<IRecordsFormatsDao>(m => new RecordFormatSqlDao(connectionString));
             services.AddTransient<IRecordsGenresDao>(m => new RecordGenreSqlDao(connectionString));
             services.AddTransient<IRecordsLabelsDao>(m => new RecordLabelSqlDao(connectionString));
+            services.AddTransient<IRecordService>(m => new RecordService());
             services.AddTransient<ITracksDao>(m => new TracksSqlDao(connectionString));
 
             // Swagger set up
