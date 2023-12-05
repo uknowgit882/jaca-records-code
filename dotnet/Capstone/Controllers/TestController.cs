@@ -225,24 +225,44 @@ namespace Capstone.Controllers
             searchRequest.Year = year;
             searchRequest.Country = country;
             searchRequest.Label = label;
-            try
+            searchRequest.Barcode = "";
+            searchRequest.TypeOfSearch = "All";
+
+            SearchResult output = null;
+            if (searchRequest.TypeOfSearch == "All")
             {
-                SearchResult output = null;
-                output = _recordService.SearchForRecord(searchRequest);
-                if (output != null)
+                try
                 {
-                    return Ok(output);
+                    output = _recordService.SearchForRecordsDiscogs(searchRequest);
+                    if (output != null)
+                    {
+                        return Ok(output);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    return NotFound();
+                    return BadRequest(e.Message);
                 }
             }
-            catch (Exception e)
+            else if (searchRequest.TypeOfSearch == "Library")
             {
-                return BadRequest(e.Message);
+
+            } else if (searchRequest.TypeOfSearch == "Collections")
+            {
+
             }
+            return output;
         }
 
+        //[HttpGet("results")]
+        //public ActionResult<bool> DisplaySearchResults(SearchResult resultsOfSearch)
+        //{
+
+        //    return false;
+        //}
     }
 }

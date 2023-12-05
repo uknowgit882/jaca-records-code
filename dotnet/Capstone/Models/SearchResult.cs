@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Capstone.Models
 {
@@ -21,22 +22,33 @@ namespace Capstone.Models
     {
         public string Country { get; set; }
         public string Year { get; set; }
+        [JsonIgnore]
         public List<string> Format { get; set; } = new List<string>();
         public List<string> Label { get; set; } = new List<string>();
+        [JsonIgnore]
         public string Type { get; set; }
         public List<string> Genre { get; set; } = new List<string>();
         public List<string> Style { get; set; } = new List<string>();
+        [JsonIgnore]
         public int Id { get; set; }
         public List<string> Barcode { get; set; } = new List<string>();
+        [JsonIgnore]
         public UserData UserData { get; set; }
+        [JsonIgnore]
         public int MasterId { get; set; }
+        [JsonIgnore]
         public string MasterUrl { get; set; }
+        [JsonIgnore]
         public string Uri { get; set; }
+        [JsonIgnore]
         public string Catno { get; set; } // Category Number
         public string Title { get; set; }
         public string Thumb { get; set; }
+        [JsonIgnore]
         public string CoverImage { get; set; }
+        [JsonIgnore]
         public string ResourceUrl { get; set; }
+        [JsonIgnore]
         public Community Community { get; set; }
     }
 
