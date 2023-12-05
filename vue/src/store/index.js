@@ -6,6 +6,9 @@ export function createStore(currentToken, currentUser) {
     state: {
       token: currentToken || '',
       user: currentUser || {},
+      searchResults: [
+     
+      ],
       records: [
         { 
           id: 1,
@@ -76,6 +79,7 @@ export function createStore(currentToken, currentUser) {
 
       ]
     },
+
     mutations: {
       SET_AUTH_TOKEN(state, token) {
         state.token = token;
@@ -92,8 +96,12 @@ export function createStore(currentToken, currentUser) {
         state.token = '';
         state.user = {};
         axios.defaults.headers.common = {};
+      },
+      ADD_SEARCH_RESULT(state, result){
+        state.searchResults = result;
       }
     },
+
   });
   return store;
 }
