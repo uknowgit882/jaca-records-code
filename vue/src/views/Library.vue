@@ -23,7 +23,8 @@ export default{
     display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  background-color: black;
+  /* background-color: black; */
+
 }
 
 </style>

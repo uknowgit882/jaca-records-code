@@ -61,12 +61,11 @@ export default {
 </script>
 
 <style scoped>
-
-
 .form-input-group {
   margin-bottom: 1rem;
 }
 label {
   margin-right: 0.5rem;
 }
+
 </style>
