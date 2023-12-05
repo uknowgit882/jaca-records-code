@@ -1,0 +1,47 @@
+Load primary to tertiary tables
+Delete tertiary to primary
+
+PRIMARY
+	users
+	genres
+	labels
+	formats
+
+SECONDARY
+	friends
+	artists
+
+TERTIARY
+	records
+
+QUANTERNARY
+	tracks
+	libraries
+
+PENTERNARY
+	collections
+
+TODO:
+add user last_login method upon login (maybe need its own user functions dao)
+Update recordservice to take dependency injection
+
+
+USERREGISTRATIONINFO:
+{
+  "username": "aseelt",
+  "first_Name": "aseelt",
+  "last_Name": "aseelt",
+  "email_Address": "aseelt@aseelt.com",
+  "password": "aseeltaseelt",
+  "confirmPassword": "aseeltaseelt",
+  "role": "jacapreme"
+}
+{
+  "username": "basilt",
+  "first_Name": "basilt",
+  "last_Name": "basilt",
+  "email_Address": "basilt@basilt.com",
+  "password": "basiltbasilt",
+  "confirmPassword": "basiltbasilt",
+  "role": "free"
+}
