@@ -8,14 +8,21 @@ import AuthService from '../services/AuthService'
 export default{
     data(){
         return {
-            search: {
-                general: 'queen'
+            Search: {
+                General: "",
+                Artist: "queen",
+                Title: "",
+                Genre: "",
+                Year: "",
+                Country: "",
+                Label: ""
+
             }
         }
     },
     methods: {
         searchRecord(){
-            AuthService.search(this.search)
+            AuthService.search(this.Search)
             .then ( response => {
                 this.$store.commit('ADD_SEARCH_RESULT', response)
             })
