@@ -15,10 +15,10 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Genre GetGenre(Genre genre)
+        public Genre GetGenre(string genre)
         {
             Genre output = null;
-            string sql = "SELECT genre_id, name, is_active, created_date, updated_date FROM genres " +
+            string sql = "SELECT genre_id, name FROM genres " +
                 "WHERE name = @name;";
             try
             {
@@ -42,7 +42,7 @@ namespace Capstone.DAO
             }
             return output;
         }
-        public bool AddGenre(Genre genre)
+        public bool AddGenre(string genre)
         {
             Genre checkedGenre = GetGenre(genre);
 
@@ -50,17 +50,16 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            string sql = "INSERT INTO genres (name, is_active) " +
+            string sql = "INSERT INTO genres (name) " +
                 "OUTPUT INSERTED.genre_id " +
-                "VALUES (@name, @is_active);";
+                "VALUES (@name);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", genre.Name);
-                    cmd.Parameters.AddWithValue("@is_active", genre.IsActive);
+                    cmd.Parameters.AddWithValue("@name", genre);
                     cmd.ExecuteScalar();
                     return true;
                 }
@@ -76,9 +75,6 @@ namespace Capstone.DAO
             Genre genre = new Genre();
             genre.Genre_Id = Convert.ToInt32(reader["genre_id"]);
             genre.Name = Convert.ToString(reader["name"]);
-            genre.IsActive = Convert.ToBoolean(reader["is_active"]);
-            genre.Created_Date = Convert.ToDateTime(reader["created_date"]);
-            genre.Updated_Date = Convert.ToDateTime(reader["updated_date"]);
             return genre;
 
         }

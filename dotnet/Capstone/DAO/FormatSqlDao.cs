@@ -25,7 +25,7 @@ namespace Capstone.DAO
         public Format GetFormat(string description)
         {
             Format output = null;
-            string sql = "SELECT type " +
+            string sql = "SELECT format_id, type " +
                 "FROM formats " +
                 "WHERE type = @type";
             try
@@ -62,6 +62,7 @@ namespace Capstone.DAO
             string sql = "INSERT INTO formats (type) " +
                 "OUTPUT INSERTED.format_id " +
                 "VALUES (@type);";
+            
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -69,7 +70,9 @@ namespace Capstone.DAO
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@type", description);
-                    cmd.ExecuteScalar();
+                    
+                    Convert.ToInt32(cmd.ExecuteScalar());
+
                     return true;
                 }
             }
