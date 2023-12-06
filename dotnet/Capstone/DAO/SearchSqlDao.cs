@@ -18,7 +18,7 @@ namespace Capstone.DAO
         {
             List<int> recordIDs = new List<int>();
 
-            string sql = "SELECT * " +
+            string sql = "SELECT records.discogs_id " +
                 "FROM records " +
                 "JOIN records_artists ON records.discogs_id = records_artists.discogs_id " +
                 "JOIN artists ON records_artists.artist_id = artists.artist_id " +

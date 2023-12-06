@@ -271,15 +271,20 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("searchDatabase")]
-        public ActionResult<SearchResult> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<List<RecordTableData>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
         {
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
 
-            SearchResult output = null;
+            List<RecordTableData> output = new List<RecordTableData>();
             List<int> recordIds = new List<int>();
             try
             {
                 recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
+                RecordTableData recordToAddToResultsList = null;
+                foreach(int recordId in recordIds)
+                {
+
+                }
                 if (output != null)
                 {
                     return Ok(output);
