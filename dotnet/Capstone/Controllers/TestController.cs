@@ -57,10 +57,6 @@ namespace Capstone.Controllers
             // this might be atrocious for performance but I am not sure how else to do this
             RecordClient output = null;
 
-            List<int> input = new List<int>() { 81013, 3110951 };
-
-            List<string> genreNames = _genresDao.GetGenreByDiscogsId(input);
-
             try
             {
                 // get the record from the client

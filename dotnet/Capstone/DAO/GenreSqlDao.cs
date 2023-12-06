@@ -45,6 +45,37 @@ namespace Capstone.DAO
             }
             return output;
         }
+
+        public List<string> GetGenresByDiscogsId(int discogId)
+        {
+            List<string> output = new List<string>();
+            string sql = "SELECT name " +
+                "FROM genres " +
+                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+                "WHERE discogs_id = @discogId";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output.Add(Convert.ToString(reader["name"]));
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
         public bool AddGenre(string genre)
         {
             Genre checkedGenre = GetGenre(genre);
@@ -72,53 +103,60 @@ namespace Capstone.DAO
                 throw new DaoException("Exception occurred", e);
             }
         }
-        public List<string> GetGenreByDiscogsId(List<int> discogsIds)
-        {
-            List<string> output = new List<string>();
 
-            // if the incoming list has nothing in it, return empty list 
-            if(discogsIds.Count == 0 || discogsIds == null)
-            {
-                return output;
-            }
+        /// <summary>
+        /// Ignore this method for now. Wrote it and don't need it. Might come in handy for pulling information from multiple discogIds at once, in aggregate
+        /// </summary>
+        /// <param name="discogsIds"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        //public List<string> GetGenreByDiscogsId(List<int> discogsIds)
+        //{
+        //    List<string> output = new List<string>();
 
-            string sql = "SELECT name " +
-                "FROM genres " +
-                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
-                "WHERE discogs_id IN ({0})";
+        //    // if the incoming list has nothing in it, return empty list 
+        //    if(discogsIds.Count == 0 || discogsIds == null)
+        //    {
+        //        return output;
+        //    }
 
-            // this seems to be some kind of for loop that makes the number of tags needed
-            // got this from stack overflow...
-            string[] paramNames = discogsIds.Select((s, i) => "@tag" + i.ToString()).ToArray();
-            string inClause = string.Join(", ", paramNames);
+        //    string sql = "SELECT name " +
+        //        "FROM genres " +
+        //        "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+        //        "WHERE discogs_id IN ({0})";
 
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+        //    // this seems to be some kind of for loop that makes the number of tags needed
+        //    // got this from stack overflow...
+        //    string[] paramNames = discogsIds.Select((s, i) => "@tag" + i.ToString()).ToArray();
+        //    string inClause = string.Join(", ", paramNames);
 
-                    SqlCommand cmd = new SqlCommand(string.Format(sql, inClause), conn);
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+
+        //            SqlCommand cmd = new SqlCommand(string.Format(sql, inClause), conn);
                     
-                    // continued stack overflow idea
-                    for(int i = 0; i < paramNames.Length; i++)
-                    {
-                        cmd.Parameters.AddWithValue(paramNames[i], discogsIds[i]);
-                    }
-                    SqlDataReader reader = cmd.ExecuteReader();
+        //            // continued stack overflow idea
+        //            for(int i = 0; i < paramNames.Length; i++)
+        //            {
+        //                cmd.Parameters.AddWithValue(paramNames[i], discogsIds[i]);
+        //            }
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                        output.Add(Convert.ToString(reader["name"]));
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new DaoException("Sql exception occurred", ex);
-            }
-            return output;
-        }
+        //            while (reader.Read())
+        //            {
+        //                output.Add(Convert.ToString(reader["name"]));
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occurred", ex);
+        //    }
+        //    return output;
+        //}
 
         private Genre MapRowToGenre(SqlDataReader reader)
         {
