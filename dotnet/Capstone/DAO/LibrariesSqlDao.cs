@@ -43,13 +43,24 @@ namespace Capstone.DAO
             }
             return output;
         }
-        public bool AddRecord(int discogId, string username, string notes)
+        public bool AddRecord(int discogsId, string username, string notes)
         {
             int libraryId = 0;
 
-            string sql = "INSERT INTO libraries (username, discog_id, notes, quantity) " +
-                "OUTPUTED INSERTED.library_id " +
-                "VALUES (@username, @discog_id, @notes, @quantity);";
+            Library output = new Library();
+
+            if (output == null)
+            {
+                return false;
+            }
+            else if (output.IsActive == false)
+            {
+                return false;
+            }
+
+            string sql = "INSERT INTO libraries (username, discogs_id, notes, quantity) " +
+                "OUTPUT INSERTED.library_id " +
+                "VALUES (@username, @discogs_id, @notes, @quantity);";
 
             try
             {
@@ -59,7 +70,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@discog_id", discogId);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
                     cmd.Parameters.AddWithValue("@notes", notes);
                     cmd.Parameters.AddWithValue("@quantity", 1);
 
@@ -72,38 +83,260 @@ namespace Capstone.DAO
             }
             return true;
         }
-        public bool RemoveRecord(string library)
+        public bool RemoveRecord(int discogsId, string username)
         {
-            throw new System.NotImplementedException();
+            int numberOfRows = 0;
+
+            string userSql = "DELETE FROM library " +
+                "WHERE username = @username AND discogs_id = @discogs_id";
+                    
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(userSql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    numberOfRows = cmd.ExecuteNonQuery();
+                    if (numberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows is impacted");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("RemoveRecord() not implemented", ex);
+            }
+            return true;
         }
 
-        public bool ChangeNote(string library)
+        public string GetNote(string username, int discogsId)
         {
-            throw new System.NotImplementedException();
+            string output = null;
+
+            string sql = "SELECT notes FROM libraries " +
+                "WHERE username = @username AND discogs_id = @discogs_id";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToString(reader["notes"]);
+                    }
+
+                }
+            }
+            catch (DaoException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
         }
 
-        public bool ChangeQuantity(string library)
+        public string ChangeNote(string username, int discogsId, string notes)
         {
-            throw new System.NotImplementedException();
+            int numberOfRows = 0;
+
+            string chngNote = null;
+
+            string sql = "UPDATE libraries " +
+                "SET notes = @notes, updated_date = @updated_date " +
+                "WHERE username = @username AND discogs_id = @discogs_id;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    cmd.Parameters.AddWithValue("@notes", notes);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+
+                    if (numberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows is impacted");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("Exception occurred", e);
+            }
+            return chngNote;
         }
 
-        public bool DeactivateLibrary(string library)
+        public int GetQuantity(string username, int discogsId)
         {
-            throw new System.NotImplementedException();
+            int output = 0;
+
+            string sql = "SELECT quantity FROM libraries " +
+                "WHERE username = @username AND discogs_id = @discogs_id;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["quantity"]);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+        public int ChangeQuantity(string username, int discogsId, int quantity)
+        {
+            int numberOfRows = 0;
+
+            int chngQuantity = 0;
+
+            int currentQuantity = GetQuantity(username, discogsId);
+
+            if (currentQuantity + quantity < 0)
+            {
+                throw new DaoException("You can't subtract more than you have");
+            }
+
+            string sql = "UPDATE libraries " +
+                "SET quantity = @quantity, updated_date = @updated_date " +
+                "WHERE username = @username AND discogs_id = @discogs_id";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+
+                    if (numberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows is impacted");
+                    }
+
+                }
+                chngQuantity = GetQuantity(username, discogsId);
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Something went wrong", ex);
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("Exception occurred", e);
+            }
+            return chngQuantity;
+        }
+
+        public bool DeactivateLibrary(string username)
+        {
+            int numberOfRows = 0;
+
+            List<Library> libraryNotActive = GetLibrary(username);
+
+            string sql = "UPDATE libraries " +
+                "SET is_active = 0, updated_date = @updated_date " +
+                "WHERE username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+                    if (numberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows is impacted");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DaoException("Something went wrong", ex);
+            }
+
+            return true;
         }
 
 
-        public bool ReactivateLibrary(string library)
+        public bool ReactivateLibrary(string username)
         {
-            throw new System.NotImplementedException();
+            int numberOfRows = 0;
+
+            List<Library> libraryActive = GetLibrary(username);
+
+            string sql = "UPDATE libraries " +
+                "SET is_active = 1, updated_date = @updated_date " +
+                "WHERE username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+                    if (numberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows is impacted");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new DaoException("Something went wrong");
+            }
+            return true;
+
         }
 
         private Library MapToLibrary(SqlDataReader reader)
         {
             Library library = new Library();
             library.Library_Id = Convert.ToInt32(reader["library_id"]);
-            library.Username = Convert.ToInt32(reader["user_id"]);
-            library.Discog_Id = Convert.ToInt32(reader["record_id"]);
+            library.Username = Convert.ToInt32(reader["username"]);
+            library.Discog_Id = Convert.ToInt32(reader["discogs_id"]);
             library.Notes = Convert.ToString(reader["notes"]);
             library.Quantity = Convert.ToInt32(reader["quantity"]);
             library.IsActive = Convert.ToBoolean(reader["is_active"]);

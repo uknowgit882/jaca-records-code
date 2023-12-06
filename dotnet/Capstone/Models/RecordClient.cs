@@ -92,28 +92,4 @@ namespace Capstone.Models
         public int Height { get; set; }
         public int Width { get; set; }
     }
-
-    public class Library
-    {
-        public int Library_Id { get; set; }
-        public int Username { get; set; }
-        public int Discog_Id { get; set; }
-        public string Notes { get; set; }
-        public int Quantity { get; set; } = 1;
-        public bool IsActive { get; set; }
-        public DateTime Created_Date { get; set; }
-        public DateTime Updated_Date { get; set; }
-    }
-
-    public class Collection
-    {
-        public int Collection_Id { get; set; }
-        public int Username_Id { get; set; }
-        public int Discog_Id { get; set; }
-        public string Name { get; set; }
-        public bool IsPrivate { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime Created_Date { get; set; }
-        public DateTime Updated_Date { get; set; }
-    }
 }
