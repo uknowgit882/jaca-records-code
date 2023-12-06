@@ -12,7 +12,7 @@ namespace Capstone.Models
         public string Title { get; set; }
         public string URL { get; set; }
         public DateTime Discogs_Date_Changed { get; set; }
-
+        public bool Is_Active { get; set; }
 
     }
 }

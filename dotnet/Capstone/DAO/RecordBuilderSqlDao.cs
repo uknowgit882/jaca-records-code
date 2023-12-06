@@ -16,7 +16,7 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByDiscogsId(int discogsId)
         {
             RecordTableData output = null;
-            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed " +
+            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed, is_active " +
                 "FROM records " +
                 "WHERE discogs_id = @discogsId";
             try
@@ -44,7 +44,7 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
-            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed " +
+            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed, is_active " +
                 "FROM records " +
                 "WHERE record_id = @recordId";
             try
@@ -69,13 +69,21 @@ namespace Capstone.DAO
             }
             return output;
         }
+
+        /// <summary>
+        /// Adds a record to the Records table. Marked inactive by default, intentionally.
+        /// Should only be activated once all dependent tables have their information loaded
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Inactivated record</returns>
+        /// <exception cref="DaoException"></exception>
         public RecordTableData AddRecord(RecordClient input)
         {
             RecordTableData output = null;
 
-            string sql = "INSERT INTO records (discogs_id, country, notes, released, title, url, discogs_date_changed) " +
+            string sql = "INSERT INTO records (discogs_id, country, notes, released, title, url, discogs_date_changed, is_active) " +
                 "OUTPUT INSERTED.record_id " +
-                "VALUES(@discogsId, @country, @notes, @released, @title, @url, @discogsDateChanged)";
+                "VALUES(@discogsId, @country, @notes, @released, @title, @url, @discogsDateChanged, @isActive)";
 
             int newRecordId = 0;
             try
@@ -92,6 +100,9 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@title", input.Title);
                     cmd.Parameters.AddWithValue("@url", input.URI);
                     cmd.Parameters.AddWithValue("@discogsDateChanged", input.Date_Changed);
+                    // default creation of record is false
+                    // only changed to active when record build is complete
+                    cmd.Parameters.AddWithValue("@isActive", 0);
                     
                     newRecordId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -99,6 +110,44 @@ namespace Capstone.DAO
 
                 output = GetRecordByRecordId(newRecordId);
 
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
+            return output;
+        }
+        /// <summary>
+        /// Used to activate the record only when the build is fully complete
+        /// </summary>
+        /// <param name="discogsId"></param>
+        /// <returns>Fully record table's information (no joins)</returns>
+        public RecordTableData ActivateRecord(int discogsId)
+        {
+            RecordTableData output = null;
+
+            string sql = "UPDATE records " +
+                "SET is_active = 1 " +
+                "WHERE discogs_id = @discogsId";
+
+            int numberOfRowsAffected = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    
+                    numberOfRowsAffected = cmd.ExecuteNonQuery();
+
+                    if (numberOfRowsAffected != 1)
+                    {
+                        throw new DaoException("The wrong number of rows were affected");
+                    }
+                }
+                output = GetRecordByDiscogsId(discogsId);
             }
             catch (SqlException ex)
             {
@@ -119,6 +168,8 @@ namespace Capstone.DAO
             output.Title = Convert.ToString(reader["title"]);
             output.URL = Convert.ToString(reader["url"]);
             output.Discogs_Date_Changed = Convert.ToDateTime(reader["discogs_date_changed"]);
+            output.Is_Active = Convert.ToBoolean(reader["is_active"]);
+
             return output;
         }
     }
