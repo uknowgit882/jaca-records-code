@@ -28,10 +28,11 @@ namespace Capstone.Controllers
         private readonly ITracksDao _tracksDao;
         private readonly IUserDao _userDao;
         public readonly IRecordService _recordService;
+        private readonly ISearchDao _searchDao;
 
         public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao,
             IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
-            IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao)
+            IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
         {
             _artistsDao = artistsDao;
             _barcodesDao = barcodesDao;
@@ -49,6 +50,7 @@ namespace Capstone.Controllers
             _recordService = recordService;
             _tracksDao = tracksDao;
             _userDao = userDao;
+            _searchDao = searchDao;
         }
 
         [HttpGet("AddRecordToDb/{discogsId}")]
@@ -238,16 +240,7 @@ namespace Capstone.Controllers
         [HttpGet("search")]
         public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
         {
-            SearchRequest searchRequest = new SearchRequest();
-            searchRequest.Query = q;
-            searchRequest.Artist = artist;
-            searchRequest.Title = title;
-            searchRequest.Genre = genre;
-            searchRequest.Year = year;
-            searchRequest.Country = country;
-            searchRequest.Label = label;
-            searchRequest.Barcode = "";
-            searchRequest.TypeOfSearch = "All";
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q,artist,title,genre,year,country,label);
 
             SearchResult output = null;
             if (searchRequest.TypeOfSearch == "All")
@@ -280,11 +273,38 @@ namespace Capstone.Controllers
             return output;
         }
 
-        //[HttpGet("results")]
-        //public ActionResult<bool> DisplaySearchResults(SearchResult resultsOfSearch)
-        //{
+        [HttpGet("searchDatabase")]
+        public ActionResult<List<RecordTableData>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
+        {
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
 
-        //    return false;
-        //}
+            List<RecordTableData> output = new List<RecordTableData>();
+            List<int> recordIds = new List<int>();
+            try
+            {
+                recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
+                RecordTableData recordToAddToResultsList = null;
+                foreach(int recordId in recordIds)
+                {
+
+                }
+                if (output != null)
+                {
+                    return Ok(output);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+            return output;
+        }
+
     }
 }

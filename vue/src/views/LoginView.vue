@@ -1,5 +1,6 @@
 <template>
   <div id="login">
+    <img src="img/logo2.png" />
     <form v-on:submit.prevent="login">
       <h1 >Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
@@ -67,5 +68,12 @@ export default {
 label {
   margin-right: 0.5rem;
 }
-
+div{
+  display: flex;
+  justify-content: center;
+}
+img{
+  width: 250px;
+  height: 250px;
+}
 </style>

@@ -91,6 +91,15 @@ const routes = [
     meta: {
       requiresAuth: false,
     } 
+    
+  },
+  {
+    path: "/Profile",
+    name: "Profile",
+    component: SearchResult,
+    meta: {
+      requiresAuth: false,
+    } 
   }
 ];
 
