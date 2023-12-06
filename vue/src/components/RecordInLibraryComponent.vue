@@ -10,6 +10,7 @@
 
 export default {
  props: ['record'],
+
 }
 </script>
 

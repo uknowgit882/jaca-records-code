@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import RecordInLibrary from './RecordInLibrary.vue';
+import RecordInLibrary from '@/components/RecordInLibraryComponent.vue';
 
 
 export default{
