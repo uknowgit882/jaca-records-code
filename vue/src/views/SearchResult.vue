@@ -1,7 +1,7 @@
 <template>
     <button v-on:click="searchRecord">Test</button>
 
-    <div class= "tableHead">
+    <div class= "tableHead" >
         <span class="thumb">Thumb</span>
         <span class="artist">Artist & Title</span>
         <span class="year">Year</span>
@@ -12,7 +12,7 @@
 
 
     </div>
-    <table v-if="isVisible">
+    <table v-if="isVisible" >
         <tr>
             <search-result-component v-for="result in this.$store.state.searchResults.data.results" 
             v-bind:key="result.id"

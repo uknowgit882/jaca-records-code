@@ -1,6 +1,6 @@
 <template>
-    <div class="Result table">
-        <img class="result-thumbnail" v-bind:src="result.thumb" /> 
+    <div class="Result table" >
+        <img class="result-thumbnail" v-bind:src="result.thumb"  /> 
         <span class="result-artist">{{ result.title }}</span>
         <span class="result-year">{{ result.year }}</span>
         <ul class ="result-genre">
