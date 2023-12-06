@@ -269,7 +269,8 @@ namespace Capstone.Controllers
             else if (searchRequest.TypeOfSearch == "Library")
             {
 
-            } else if (searchRequest.TypeOfSearch == "Collections")
+            }
+            else if (searchRequest.TypeOfSearch == "Collections")
             {
 
             }

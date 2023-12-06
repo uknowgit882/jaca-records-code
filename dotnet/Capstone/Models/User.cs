@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Models
@@ -78,5 +79,9 @@ namespace Capstone.Models
         public string PasswordHash { get; set; }
         public string Salt { get; set; }
         public string Role { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime Created_Date { get; set; }
+        public DateTime Updated_Date { get; set; }
+        public DateTime Last_Login { get; set; }
     }
 }
