@@ -1,5 +1,5 @@
 <template>
-    <button v-on:click="searchRecord">Test</button>
+   <!-- <button v-on:click="searchRecord">Test</button> -->
 
     <div class= "tableHead" >
         <span class="thumb">Thumb</span>
@@ -12,7 +12,7 @@
 
 
     </div>
-    <table v-if="isVisible" >
+    <table  >
         <tr>
             <search-result-component v-for="result in this.$store.state.searchResults.data.results" 
             v-bind:key="result.id"
@@ -22,24 +22,10 @@
 
     </table>
 
-    <!-- <table class="table">
-  <thead>
-    <tr>
-      <th><abbr title="thumb">Thumb</abbr></th>
-      <th>Artist & Title</th>
-      <th><abbr title="Year">Year</abbr></th>
-      <th><abbr title="Genre">Genre</abbr></th>
-      <th><abbr title="Country">Country</abbr></th>
-      <th><abbr title="Label">Label</abbr></th>
-      <th><abbr title="Barcode">Barcode</abbr></th>
-      
-    </tr>
-  </thead>
-  </table> -->
 </template>
 
 <script>
-import AuthService from '../services/AuthService'
+
 import SearchResultComponent from '@/components/SearchResultComponent.vue'
 
 
@@ -49,10 +35,11 @@ export default {
     },
     data() {
         return {
-            isVisible: false,
+            //isVisible: false,
+            // This is where user search item
             Search: {
                 General: "",
-                Artist: "queen",
+                Artist: "",
                 Title: "",
                 Genre: "",
                 Year: "",
@@ -63,18 +50,18 @@ export default {
             searchResults: [],
         }
     },
-    methods: {
-        searchRecord() {
-            AuthService.search(this.Search)
-                .then(response => {
-                    this.$store.commit('ADD_SEARCH_RESULT', response);
-                    this.isVisible = true;
-                })
-                .catch(error => {
+    // methods: {
+    //     searchRecord() {
+    //         AuthService.search(this.Search)
+    //             .then(response => {
+    //                 this.$store.commit('ADD_SEARCH_RESULT', response);
+    //                 //this.isVisible = true;
+    //             })
+    //             .catch(error => {
 
-                })
-        }
-    }
+    //             })
+    //     }
+    // }
 }
 </script>
 <style scoped>
