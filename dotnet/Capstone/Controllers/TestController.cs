@@ -215,7 +215,7 @@ namespace Capstone.Controllers
 
 
         [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
             SearchRequest searchRequest = new SearchRequest();
             searchRequest.Query = q;
@@ -225,7 +225,7 @@ namespace Capstone.Controllers
             searchRequest.Year = year;
             searchRequest.Country = country;
             searchRequest.Label = label;
-            searchRequest.Barcode = "";
+            searchRequest.Barcode = barcode;
             searchRequest.TypeOfSearch = "All";
 
             SearchResult output = null;
