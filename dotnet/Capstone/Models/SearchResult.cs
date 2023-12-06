@@ -29,7 +29,6 @@ namespace Capstone.Models
         public string Type { get; set; }
         public List<string> Genre { get; set; } = new List<string>();
         public List<string> Style { get; set; } = new List<string>();
-        [JsonIgnore]
         public int Id { get; set; }
         public List<string> Barcode { get; set; } = new List<string>();
         [JsonIgnore]

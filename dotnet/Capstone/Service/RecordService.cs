@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Authenticators.OAuth;
+using System.Diagnostics.Metrics;
 using System.Net.Http;
 
 
@@ -153,13 +154,20 @@ public class RecordService : IRecordService
         return response.Data;
     }
 
-    //public SearchResult SearchForRecordsInLibrary(SearchRequest searchObject)
-    //{
-    //    SearchResult searchedRecord = new SearchResult();
+    public SearchRequest GenerateRequestObject(string q, string artist, string title, string genre, string year, string country, string label)
+    {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.Query = q;
+        searchRequest.Artist = artist;
+        searchRequest.Title = title;
+        searchRequest.Genre = genre;
+        searchRequest.Year = year;
+        searchRequest.Country = country;
+        searchRequest.Label = label;
+        searchRequest.Barcode = "";
+        searchRequest.TypeOfSearch = "All";
 
-
-
-    //    return searchedRecord;
-    //}
+        return searchRequest;
+    }
 }
 

@@ -80,6 +80,7 @@ namespace Capstone
             services.AddTransient<IRecordsLabelsDao>(m => new RecordLabelSqlDao(connectionString));
             services.AddTransient<IRecordService>(m => new RecordService());
             services.AddTransient<ITracksDao>(m => new TracksSqlDao(connectionString));
+            services.AddTransient<ISearchDao>(m => new SearchSqlDao(connectionString));
 
             // Swagger set up
             services.AddSwaggerGen(s => {

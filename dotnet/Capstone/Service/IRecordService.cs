@@ -6,5 +6,7 @@ namespace Capstone.Service
     {
         public RecordClient GetRecord(int release_id);
         public SearchResult SearchForRecordsDiscogs(SearchRequest searchObject);
+        public SearchRequest GenerateRequestObject(string q, string artist, string title, string genre, string year, string country, string label);
+
     }
 }
