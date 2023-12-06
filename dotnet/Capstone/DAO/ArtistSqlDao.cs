@@ -1,4 +1,5 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,7 @@ namespace Capstone.DAO
                 throw new DaoException("exception occurred", e);
             }
         }
+
 
         private Artist MapRowToArtist(SqlDataReader reader)
         {

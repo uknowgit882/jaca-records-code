@@ -11,6 +11,7 @@ using Capstone.DAO;
 using Capstone.Security;
 using Microsoft.OpenApi.Models;
 using Capstone.Service;
+using Capstone.DAO.Interfaces;
 
 namespace Capstone
 {

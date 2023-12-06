@@ -1,4 +1,5 @@
-﻿using Capstone.Models;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Models;
 using System.Collections.Generic;
 
 namespace Capstone.DAO

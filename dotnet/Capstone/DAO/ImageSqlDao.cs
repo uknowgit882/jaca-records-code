@@ -2,6 +2,7 @@
 using Capstone.Models;
 using System.Data.SqlClient;
 using System;
+using Capstone.DAO.Interfaces;
 
 namespace Capstone.DAO
 {

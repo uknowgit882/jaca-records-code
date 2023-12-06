@@ -1,4 +1,5 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,41 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
+        public bool GetRecordArtistByRecordIdAndArtistId(int discogsId, int artistId)
+        {
+            string sql = "SELECT records_artists_id " +
+                "FROM records_artists " +
+                "WHERE discogs_id = @discogsId AND artist_id = @artistId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@artistId", artistId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        int foundDiscogId = Convert.ToInt32(reader["records_artists_id"]);
+
+                        if (foundDiscogId != 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
+            }
+            return false;
+        }
+
         /// <summary>
         /// Supply the recordId. Then find the artist ID and supply that here too.
         /// Either it adds it and is successful or errors out
@@ -24,6 +60,10 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public bool AddRecordArtist(int discogsId, int artistId)
         {
+            if (GetRecordArtistByRecordIdAndArtistId(discogsId, artistId))
+            {
+                return false;
+            }
             string sql = "INSERT INTO records_artists (discogs_id, artist_id) " +
                 "OUTPUT INSERTED.records_artists_id " +
                 "VALUES (@discogsId, @artistId);";

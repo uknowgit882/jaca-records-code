@@ -8,5 +8,6 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByRecordId(int recordId);
         public RecordTableData AddRecord(RecordClient input);
         public RecordTableData ActivateRecord(int discogsId);
+        public RecordTableData UpdateRecord(RecordClient input);
     }
 }

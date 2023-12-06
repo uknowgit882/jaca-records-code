@@ -1,9 +1,9 @@
 ﻿using Capstone.Models;
-using Capstone.DAO;
 using System.Data.SqlClient;
 using System;
 using Capstone.Exceptions;
 using System.Collections.Generic;
+using Capstone.DAO.Interfaces;
 
 namespace Capstone.DAO
 {

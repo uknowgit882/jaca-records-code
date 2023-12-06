@@ -92,10 +92,10 @@ CREATE TABLE artists (
 CREATE TABLE records (
 	record_id int IDENTITY(1, 1) NOT NULL,
 	discogs_id int NOT NULL,
+	title NVARCHAR(200) NOT NULL,
+	released NVARCHAR(10) NOT NULL,
 	country NVARCHAR(50) NULL,
 	notes NVARCHAR(1000) NULL,
-	released NVARCHAR(10) NOT NULL,
-	title NVARCHAR(200) NOT NULL,
 	url NVARCHAR(500) NULL,
 	discogs_date_changed DATETIME NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE barcodes (
 	discogs_id int NOT NULL,
 	type NVARCHAR(20) NOT NULL,
 	value NVARCHAR(50) NOT NULL,
-	description NVARCHAR(50) NOT NULL,
+	description NVARCHAR(200) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -202,7 +202,8 @@ CREATE TABLE libraries (
 	CONSTRAINT PK_libraries PRIMARY KEY (library_id),
 	CONSTRAINT FK_libraries_users FOREIGN KEY (username) REFERENCES users (username),
 	CONSTRAINT FK_libraries_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
-	CONSTRAINT UQ_library_username UNIQUE (username)
+	CONSTRAINT UQ_library_username UNIQUE (username),
+	CONSTRAINT CK_library_quantity CHECK (quantity > 1)
 
 )
 

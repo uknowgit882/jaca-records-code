@@ -1,6 +1,8 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Capstone.DAO
@@ -155,7 +157,59 @@ namespace Capstone.DAO
             }
             return output;
         }
-         
+
+        public RecordTableData UpdateRecord(RecordClient input)
+        {
+            // double check it exists (although should always exist if you're calling this method)
+            RecordTableData existenceCheck = GetRecordByDiscogsId(input.Id);
+            if(existenceCheck == null)
+            {
+                // if it doesn't exist, try and create it and send it back
+                return AddRecord(input);
+            }
+            
+            RecordTableData output = null;
+
+            string sql = "UPDATE records " +
+                "SET country = @country, notes = @notes, released = @released, title = @title, url = @url, discogs_date_changed = @discogsDateChanged, updated_date = @updatedDate " +
+                "WHERE discogs_id = @discogsId";
+
+            int numberOfRowsAffected = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // do the updates
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@country", input.Country);
+                    cmd.Parameters.AddWithValue("@notes", input.Notes);
+                    cmd.Parameters.AddWithValue("@released", input.Released);
+                    cmd.Parameters.AddWithValue("@title", input.Title);
+                    cmd.Parameters.AddWithValue("@url", input.URI);
+                    cmd.Parameters.AddWithValue("@discogsDateChanged", input.Date_Changed);
+                    cmd.Parameters.AddWithValue("@updatedDate", DateTime.UtcNow);
+
+                    cmd.Parameters.AddWithValue("@discogsId", input.Id);
+
+                    numberOfRowsAffected = cmd.ExecuteNonQuery();
+
+                    if(numberOfRowsAffected != 1)
+                    {
+                        throw new DaoException("The wrong number of rows were affected");
+                    }
+                }
+                // then get the updated record and sent it back
+                return GetRecordByDiscogsId(input.Id);
+
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
+            return output;
+        }
 
         private RecordTableData MapRowToRecordTableData(SqlDataReader reader)
         {

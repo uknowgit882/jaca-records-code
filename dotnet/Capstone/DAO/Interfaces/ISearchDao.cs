@@ -1,7 +1,5 @@
 ﻿using Capstone.Models;
-using System.Collections.Generic;
-
-namespace Capstone.DAO
+namespace Capstone.DAO.Interfaces
 {
     public interface ISearchDao
     {
