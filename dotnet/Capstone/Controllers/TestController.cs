@@ -282,7 +282,7 @@ namespace Capstone.Controllers
             List<int> recordIds = new List<int>();
             try
             {
-                recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
+                recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
                 RecordTableData recordToAddToResultsList = null;
                 foreach(int recordId in recordIds)
                 {
