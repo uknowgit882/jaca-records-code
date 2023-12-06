@@ -5,10 +5,10 @@
                 <img src="" width="112" height="28">
             </a> -->
             <p class="profile">
-                        <button class="button" href="/Profile">
-                            <strong><i class="fa-solid fa-circle-user"></i></strong>
-                        </button>
-                    </p>
+                <button class="button" href="/Profile">
+                    <strong><i class="fa-solid fa-circle-user"></i></strong>
+                </button>
+            </p>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-          
+ <SearchBoxVue/>
         </div>
 
     </nav>
@@ -75,11 +75,13 @@ export default {
 
     width: 200%;
 }
-.input{
+
+.input {
     /* TODO: how to make search bar longer without using pxs ( want to adjust correctly to every screen) */
 }
-.profile{
-margin-top: 15%;
-margin-left: 10%;
+
+.profile {
+    margin-top: 15%;
+    margin-left: 10%;
 }
 </style>
