@@ -1,4 +1,5 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
 using System.Data.SqlClient;

@@ -1,4 +1,5 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,40 @@ namespace Capstone.DAO
         {
             connectionString = dbConnectionString;
         }
+        public bool GetRecordLabelByLabelIdAndGenreId(int discogsId, int labelId)
+        {
+            string sql = "SELECT records_labels_id " +
+                "FROM records_labels " +
+                "WHERE discogs_id = @discogsId AND label_id = @labelId";
 
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@labelId", labelId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        int foundDiscogId = Convert.ToInt32(reader["records_labels_id"]);
+
+                        if (foundDiscogId != 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
+            }
+            return false;
+        }
         /// <summary>
         /// Supply the recordId. Then find the label ID and supply that here too.
         /// Either it adds it and is successful or errors out
@@ -24,6 +58,11 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public bool AddRecordLabel(int discogsId, int labelId)
         {
+            if (GetRecordLabelByLabelIdAndGenreId(discogsId, labelId))
+            {
+                return false;
+            }
+
             string sql = "INSERT INTO records_labels (discogs_id, label_id) " +
                 "OUTPUT INSERTED.records_labels_id " +
                 "VALUES (@discogsId, @labelId);";

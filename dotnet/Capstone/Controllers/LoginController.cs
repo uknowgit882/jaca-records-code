@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Capstone.DAO;
 using Capstone.Exceptions;
 using Capstone.Models;
 using Capstone.Security;
+using Capstone.DAO.Interfaces;
 
 namespace Capstone.Controllers
 {

@@ -20,3 +20,21 @@ JOIN formats ON records_formats.format_id = formats.format_id
 
 JOIN records_genres ON records.discogs_id = records_genres.discogs_id
 JOIN genres ON records_genres.genre_id = genres.genre_id
+
+BEGIN TRANSACTION
+UPDATE records 
+SET is_active = 0
+WHERE discogs_id = 249504
+
+SELECT *
+FROM records
+ROLLBACK
+
+BEGIN TRANSACTION
+UPDATE records 
+SET country = 'USAA', notes = 'who cares', released = '2023', title = 'Queenie 2, the Queenening', url = '', discogs_date_changed = getdate() 
+WHERE discogs_id = 3110951
+
+SELECT *
+FROM RECORDS
+ROLLBACK

@@ -1,5 +1,5 @@
 ﻿using Capstone.Models;
-namespace Capstone.DAO
+namespace Capstone.DAO.Interfaces
 {
     public interface ISearchDao
     {

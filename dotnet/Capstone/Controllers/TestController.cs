@@ -1,4 +1,5 @@
 ﻿using Capstone.DAO;
+using Capstone.DAO.Interfaces;
 using Capstone.Models;
 using Capstone.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -50,17 +51,20 @@ namespace Capstone.Controllers
             _userDao = userDao;
         }
 
-        [HttpGet("AddRecordToDb/{recordId}")]
-        public ActionResult<RecordClient> AddRecordToDbById(int recordId)
+        [HttpGet("AddRecordToDb/{discogsId}")]
+        public ActionResult<RecordClient> AddRecordToDbById(int discogsId)
         {
             // this might be atrocious for performance but I am not sure how else to do this
             RecordClient output = null;
 
+            List<int> input = new List<int>() { 81013, 3110951 };
+
+            List<string> genreNames = _genresDao.GetGenreByDiscogsId(input);
 
             try
             {
                 // get the record from the client
-                RecordClient clientSuppliedRecord = _recordService.GetRecord(recordId);
+                RecordClient clientSuppliedRecord = _recordService.GetRecord(discogsId);
 
                 // need to make sure the client supplied record is at least on vinyl once
                 int vinylCount = 0;
@@ -86,7 +90,7 @@ namespace Capstone.Controllers
 
                 // need to refactor this so that if a downstream table load fails, it'll still go through the new created pathway
                 // maybe extra column that says "fully loaded 1/0" and that only gets updated once all the things parse?
-                RecordTableData existingRecord = _recordBuilderDao.GetRecordByDiscogsId(recordId);
+                RecordTableData existingRecord = _recordBuilderDao.GetRecordByDiscogsId(discogsId);
 
                 // checks if you have an existing record
                 // if you don't, add
@@ -213,7 +217,10 @@ namespace Capstone.Controllers
                 else if (clientSuppliedRecord.Date_Changed != existingRecord.Discogs_Date_Changed)
                 {
                     //do an update
-                    return Ok();
+                    // update record
+                    _recordBuilderDao.UpdateRecord(clientSuppliedRecord);
+
+                    return Ok("Updated record");
                 }
                 else
                 {
@@ -225,7 +232,7 @@ namespace Capstone.Controllers
             catch (Exception e)
             {
 
-                return BadRequest(e.Message);
+                return BadRequest($"Something went wrong adding your record, id {discogsId}. Please contact an admin");
             }
         }
 

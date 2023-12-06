@@ -1,8 +1,11 @@
-﻿using Capstone.Exceptions;
+﻿using Capstone.DAO.Interfaces;
+using Capstone.Exceptions;
 using Capstone.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Linq;
 
 namespace Capstone.DAO
 {
@@ -68,6 +71,53 @@ namespace Capstone.DAO
             {
                 throw new DaoException("Exception occurred", e);
             }
+        }
+        public List<string> GetGenreByDiscogsId(List<int> discogsIds)
+        {
+            List<string> output = new List<string>();
+
+            // if the incoming list has nothing in it, return empty list 
+            if(discogsIds.Count == 0 || discogsIds == null)
+            {
+                return output;
+            }
+
+            string sql = "SELECT name " +
+                "FROM genres " +
+                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+                "WHERE discogs_id IN ({0})";
+
+            // this seems to be some kind of for loop that makes the number of tags needed
+            // got this from stack overflow...
+            string[] paramNames = discogsIds.Select((s, i) => "@tag" + i.ToString()).ToArray();
+            string inClause = string.Join(", ", paramNames);
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(string.Format(sql, inClause), conn);
+                    
+                    // continued stack overflow idea
+                    for(int i = 0; i < paramNames.Length; i++)
+                    {
+                        cmd.Parameters.AddWithValue(paramNames[i], discogsIds[i]);
+                    }
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output.Add(Convert.ToString(reader["name"]));
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
         }
 
         private Genre MapRowToGenre(SqlDataReader reader)
