@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System;
 using Capstone.DAO.Interfaces;
 using System.Collections.Generic;
+using Capstone.Utils;
 
 namespace Capstone.DAO
 {
@@ -178,14 +179,7 @@ namespace Capstone.DAO
             Image output = new Image();
             output.Image_Id = Convert.ToInt32(reader["image_id"]);
             output.Discogs_Id = Convert.ToInt32(reader["discogs_id"]);
-            if (reader["uri"] is DBNull)
-            {
-                output.Uri = "";
-            }
-            else
-            {
-                output.Uri = Convert.ToString(reader["uri"]);
-            }
+            output.Uri = SqlUtil.NullableString(reader["uri"]);
             if (reader["height"] is DBNull)
             {
                 output.Height = 0;

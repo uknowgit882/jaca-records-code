@@ -441,7 +441,7 @@ namespace Capstone.Controllers
 
 
         [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
             // need the username to search the library
             string username = User.Identity.Name;
@@ -457,7 +457,7 @@ namespace Capstone.Controllers
             {
                 try
                 {
-                    output = _recordService.SearchForRecordsDiscogs(searchRequest);
+                    output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
                     if (output != null)
                     {
                         return Ok(output);
@@ -536,17 +536,29 @@ namespace Capstone.Controllers
                 }
                 if (output != null)
                 {
-                    return Ok(output);
+                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
+                    if (output != null)
+                    {
+                        return Ok(output);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    return NotFound();
+                    return BadRequest(e.Message);
                 }
-            }
-            catch (Exception e)
+
+            } else
             {
-                return BadRequest(e.Message);
-            }
+                try
+                {
+                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
+                    //RecordTableData recordToAddToResultsList = null;
+                    //foreach (int recordId in recordIds)
+                    //{
 
         }
 

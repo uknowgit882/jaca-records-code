@@ -5,7 +5,7 @@
                 <input class="input" type="text" placeholder="Find a Record, Artist etc." v-model="Search.General">
             </p>
             <p class="control">
-                <button class="button" v-on:click="sendSearch()">
+                <button class="button" v-on:click="sendSearch()" >                   
                     Search
                 </button>
             </p>
@@ -15,12 +15,12 @@
                 </button>
             </p>
         </div>
+
         <div class="dropdown is-active" v-if="showForm">
-            <div class="dropdown-trigger">
-            </div>
+            <div class="dropdown-trigger"></div>
             <div class="dropdown-menu" id="advanced-search-dropdown" role="menu">
                 <div class="dropdown-content">
-                    <form v-show="showForm">
+                    <form class= "form" v-show="showForm">
                         <div class="field">
                             <label class="label">Artist</label>
                             <div class="control">
@@ -88,32 +88,46 @@
 </template>
 
 <script>
-import AuthService from '../services/AuthService';
+import SearchService from '../services/SearchService';
+
 export default {
+
+  
+
     data() {
         return {
+      
 
             Search: {
+               
                 General: "",
                 Artist: "",
                 Title: "",
                 Genre: "",
                 Year: "",
                 Country: "",
-                Label: ""
+                Label: "",
+                Barcode: ""
 
             },
             showForm: false,
-            searchResults: []
+            // searchResults: []
 
 
         }
     },
     methods: {
+        // C# sends found search results back to front end 
         sendSearch() {
-            AuthService.search(this.Search)
+            SearchService.search(this.Search)
                 .then((response) => {
-                    this.searchResults = response.data;
+                    //this.searchResults = response.data;
+                    //this.isVisible = true;
+                    if (response.status == 200){
+                        this.$router.push({name: "SearchResult"})
+                        this.$store.commit('ADD_SEARCH_RESULT', response);
+                    }
+
                 })
                 .catch((error) => {
                     this.handleErrorResponse(error, 'Search Query')
@@ -139,4 +153,5 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

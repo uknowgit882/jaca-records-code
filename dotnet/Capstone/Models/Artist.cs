@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 namespace Capstone.Models
 {
-    public class Genre
+    public class Artist
     {
         [JsonIgnore]
-        public int Genre_Id { get; set; }
+        public int Artist_Id { get; set; }
         public string Name { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
-
 }

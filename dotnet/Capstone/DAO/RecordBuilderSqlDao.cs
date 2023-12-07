@@ -1,6 +1,7 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -293,11 +294,11 @@ namespace Capstone.DAO
             RecordTableData output = new RecordTableData();
             output.Record_Id = Convert.ToInt32(reader["record_id"]);
             output.Discogs_Id = Convert.ToInt32(reader["discogs_id"]);
-            output.Country = Convert.ToString(reader["country"]);
-            output.Notes = Convert.ToString(reader["notes"]);
-            output.Released = Convert.ToString(reader["released"]);
             output.Title = Convert.ToString(reader["title"]);
-            output.URL = Convert.ToString(reader["url"]);
+            output.Released = Convert.ToString(reader["released"]);
+            output.Country = SqlUtil.NullableString(reader["country"]);
+            output.Notes = SqlUtil.NullableString(reader["notes"]);
+            output.URL = SqlUtil.NullableString(reader["url"]);
             output.Discogs_Date_Changed = Convert.ToDateTime(reader["discogs_date_changed"]);
             output.Is_Active = Convert.ToBoolean(reader["is_active"]);
 

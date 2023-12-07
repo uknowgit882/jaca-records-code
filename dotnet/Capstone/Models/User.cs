@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Models
