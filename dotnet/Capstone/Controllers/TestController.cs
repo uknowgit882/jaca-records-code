@@ -3,7 +3,6 @@ using Capstone.DAO.Interfaces;
 using Capstone.Models;
 using Capstone.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 
@@ -439,7 +438,7 @@ namespace Capstone.Controllers
         }
 
 
-        
+
 
         //[HttpGet("search")]
         //public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
@@ -471,7 +470,7 @@ namespace Capstone.Controllers
         //        {
         //            return BadRequest(e.Message);
         //        }
-            
+
         //    return output;
         //}
 
@@ -492,7 +491,7 @@ namespace Capstone.Controllers
             try
             {
                 List<int> recordIds = new List<int>();
-                if (!string.IsNullOrEmpty(searchRequest.Query))
+                if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
                 {
                     recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
                 }
@@ -546,7 +545,7 @@ namespace Capstone.Controllers
                 else
                 {
                     return NotFound();
-                } 
+                }
             }
             catch (Exception e)
             {
@@ -569,12 +568,19 @@ namespace Capstone.Controllers
 
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
             SearchResult discogsResult = null;
-            SearchResult libraryResult = null;
-            SearchResult collectionsResult = null;
+            //SearchResult libraryResult = null;
+            //List<RecordClient> recordsInLibrary = null;
+            //SearchResult collectionsResult = null;
+
+            if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
+            {
+                return BadRequest("Please enter a valid search");
+            }
 
             try
             {
                 discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+
                 if (discogsResult != null)
                 {
                     return Ok(discogsResult);
@@ -584,11 +590,15 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
 
+
+
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
+
+
 
 
             return allResults;
