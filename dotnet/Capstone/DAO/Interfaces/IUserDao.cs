@@ -15,7 +15,7 @@ namespace Capstone.DAO.Interfaces
         public bool DowngradeUser(string username);
         public bool UpgradeAdmin(string username);
         public bool DowngradeAdmin(string username);
-        public bool UpdateLastLogin(string username);
+        public bool UpdateLastLogin(string username); // don't expose in end point
 
     }
 }
