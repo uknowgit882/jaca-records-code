@@ -104,8 +104,8 @@ export function createStore(currentToken, currentUser) {
       ADD_SEARCH_RESULT(state, result){
         state.searchResults = result;
       },
-      ADD_RECORDS_TO_LIBRARY(state, result){
-        state.recordsInLibrary = result;
+      ADD_RECORDS_TO_LIBRARY(state, bibub){
+        state.recordsInLibrary = bibub;
       }
     },
 

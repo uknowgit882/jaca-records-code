@@ -11,6 +11,8 @@ import Library from'../views/Library.vue'
 import Collections from '@/views/Collections.vue'
 import Data from '@/views/Data.vue'
 import SearchResult from'@/views/SearchResult.vue'
+import Caorusel from '@/views/CaorusalView.vue'
+import ProfilePageView from '@/views/ProfilePageView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -96,7 +98,15 @@ const routes = [
   {
     path: "/Profile",
     name: "Profile",
-    component: SearchResult,
+    component: ProfilePageView,
+    meta: {
+      requiresAuth: false,
+    } 
+  },
+  {
+    path: "/Caorusel",
+    name: "Caorusel",
+    component: Caorusel,
     meta: {
       requiresAuth: false,
     } 

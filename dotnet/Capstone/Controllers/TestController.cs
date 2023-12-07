@@ -445,6 +445,7 @@ namespace Capstone.Controllers
         {
             // need the username to search the library
             string username = User.Identity.Name;
+            username = "user";
             if (username == null)
             {
                 return BadRequest("You must be logged in to search a library");

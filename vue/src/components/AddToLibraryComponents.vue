@@ -31,8 +31,10 @@ export default {
         clickedAdd() {
            AddToLibraryService.addToLibrary(this.id)
            .then((response) => {
-            if(response.status == 200){
+            if(response.status == 201){
                 this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
+                this.$router.push({name: "Library"})
+
             }
 
            })
