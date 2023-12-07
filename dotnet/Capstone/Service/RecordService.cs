@@ -53,7 +53,7 @@ public class RecordService : IRecordService
     }
 
 
-    public SearchResult SearchForRecordsDiscogs(SearchRequest searchObject)
+    public SearchResult SearchForRecordsDiscogs(SearchRequest searchObject, int pageNumber)
     {
         client.Authenticator = oAuth1;
         SearchResult searchedRecord = new SearchResult();
@@ -140,6 +140,7 @@ public class RecordService : IRecordService
         request.AddParameter("label", searchObject.Label);
         request.AddParameter("barcode", searchObject.Barcode);
         request.AddParameter("format", "vinyl");
+        request.AddParameter("page", pageNumber);
 
         IRestResponse<SearchResult> response = client.Get<SearchResult>(request);
         if (response.ResponseStatus != ResponseStatus.Completed)
@@ -154,7 +155,7 @@ public class RecordService : IRecordService
         return response.Data;
     }
 
-    public SearchRequest GenerateRequestObject(string q, string artist, string title, string genre, string year, string country, string label)
+    public SearchRequest GenerateRequestObject(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
     {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.Query = q;
@@ -164,7 +165,7 @@ public class RecordService : IRecordService
         searchRequest.Year = year;
         searchRequest.Country = country;
         searchRequest.Label = label;
-        searchRequest.Barcode = "";
+        searchRequest.Barcode = barcode;
         searchRequest.TypeOfSearch = "All";
 
         return searchRequest;

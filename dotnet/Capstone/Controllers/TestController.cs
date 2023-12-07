@@ -238,16 +238,16 @@ namespace Capstone.Controllers
 
 
         [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q,artist,title,genre,year,country,label);
-
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q,artist,title,genre,year,country,label,barcode);
+            int pageNumber = 1;
             SearchResult output = null;
             if (searchRequest.TypeOfSearch == "All")
             {
                 try
                 {
-                    output = _recordService.SearchForRecordsDiscogs(searchRequest);
+                    output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
                     if (output != null)
                     {
                         return Ok(output);
@@ -274,35 +274,57 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("searchDatabase")]
-        public ActionResult<List<RecordTableData>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<List<RecordTableData>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
             List<RecordTableData> output = new List<RecordTableData>();
             List<int> recordIds = new List<int>();
-            try
+
+            if (!string.IsNullOrEmpty(searchRequest.Query))
             {
-                recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
-                RecordTableData recordToAddToResultsList = null;
-                foreach(int recordId in recordIds)
+                try
                 {
+                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
+                    if (output != null)
+                    {
+                        return Ok(output);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
 
-                }
-                if (output != null)
-                {
-                    return Ok(output);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
+            } else
             {
-                return BadRequest(e.Message);
+                try
+                {
+                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
+                    //RecordTableData recordToAddToResultsList = null;
+                    //foreach (int recordId in recordIds)
+                    //{
+
+                    //}
+                    if (output != null)
+                    {
+                        return Ok(output);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+
             }
-
-
             return output;
         }
 
