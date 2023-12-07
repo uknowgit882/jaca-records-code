@@ -58,7 +58,8 @@ namespace Capstone.DAO
             string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
                 "FROM records " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
+                "WHERE records.discogs_id = @discogsId AND records.is_active = 1";
+                //"WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -67,7 +68,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogsId", discogsId);
-                    cmd.Parameters.AddWithValue("@username", username);
+                    // cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())

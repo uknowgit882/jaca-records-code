@@ -3,6 +3,7 @@ using Capstone.DAO.Interfaces;
 using Capstone.Models;
 using Capstone.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 
@@ -438,50 +439,41 @@ namespace Capstone.Controllers
         }
 
 
+        
 
+        //[HttpGet("search")]
+        //public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        //{
+        //    // need the username to search the library
+        //    string username = User.Identity.Name;
+        //    username = "user";
+        //    if (username == null)
+        //    {
+        //        return BadRequest("You must be logged in to search a library");
+        //    }
 
-        [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        {
-            // need the username to search the library
-            string username = User.Identity.Name;
-            if (username == null)
-            {
-                return BadRequest("You must be logged in to search a library");
-            }
+        //    SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
-
-            SearchResult output = null;
-            if (searchRequest.TypeOfSearch == "All")
-            {
-                try
-                {
-                    output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
-                    if (output != null)
-                    {
-                        return Ok(output);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }
-            }
-            else if (searchRequest.TypeOfSearch == "Library")
-            {
-
-            }
-            else if (searchRequest.TypeOfSearch == "Collections")
-            {
-
-            }
-            return output;
-        }
+        //    SearchResult output = null;
+        //        try
+        //        {
+        //            output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+        //            if (output != null)
+        //            {
+        //                return Ok(output);
+        //            }
+        //            else
+        //            {
+        //                return NotFound();
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return BadRequest(e.Message);
+        //        }
+            
+        //    return output;
+        //}
 
         [HttpGet("searchDatabase")]
         public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
@@ -561,6 +553,45 @@ namespace Capstone.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        [HttpGet("search")]
+        public ActionResult<List<SearchResult>> SearchAll(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        {
+            List<SearchResult> allResults = new List<SearchResult>();
+            // need the username to search the library
+            string username = User.Identity.Name;
+            username = "user";
+            if (username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
+
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+            SearchResult discogsResult = null;
+            SearchResult libraryResult = null;
+            SearchResult collectionsResult = null;
+
+            try
+            {
+                discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+                if (discogsResult != null)
+                {
+                    return Ok(discogsResult);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+            return allResults;
         }
 
     }
