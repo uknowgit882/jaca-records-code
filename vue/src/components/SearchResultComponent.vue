@@ -1,20 +1,64 @@
 <template>
-    <div class="Result table" >
-        <img class="result-thumbnail" v-bind:src="result.thumb"  /> 
+    <div class="Result-table">
+        <img class="result-thumbnail" v-bind:src="result.thumb" />
         <span class="result-artist">{{ result.title }}</span>
         <span class="result-year">{{ result.year }}</span>
-        <ul class ="result-genre">
+        <!-- First dropdown for genres -->
+        <div class="dropdown" :class="{ 'is-active': labelClick }">
+            <button class="button" @click="labelClick = !labelClick" aria-haspopup="true" aria-controls="dropdown-menu2">
+                <span>{{ result.genre[0] }}</span>
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+
+            <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                <div class="dropdown-content">
+                    <ul class="result-genre">
+                        <li v-for="item in result.genre" :key="item">
+                            <button class="dropdown-item">{{ item }}</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- First dropdown ends -->
+
+        <!-- <ul class="result-genre">
             <li v-for="item in result.genre" v-bind:key="item">{{ item }}</li>
-        </ul>   
-        <span class ="result-country">{{ result.country }}</span>
-        <ul class ="result-label">
-            <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
-        </ul>   
+        </ul> -->
+
+        <span class="result-country">{{ result.country }}</span>
+
+        <!-- Second dropdown starts: -->
+
+        <div class="dropdown" :class="{ 'is-active': labelClick2 }">
+            <button class="button" @click="labelClick2 = !labelClick2" aria-haspopup="true" aria-controls="dropdown-menu2">
+                <span>{{ result.label[0] }}</span>
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+
+            <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                <div class="dropdown-content">
+                    <ul class="result-label">
+                        <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
+                    </ul>
+                </div>
+            </div> 
+        </div>
         
+
+        <!-- Second dropdown stops here -->
+
+        <!-- <ul class="result-label">
+            <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
+        </ul> -->
+
         <!-- <span class="result-barcode">{{ result.barcode }}</span> -->
 
-        </div>
-
+    </div>
 </template>
 
 <script>
@@ -27,49 +71,65 @@ export default {
         }
 
     },
-    data(){
+    data() {
         return {
-            labelClick: false
-        }
-    }
+            labelClick: false,
+            labelClick2: false
 
+        }
+    },
+    computed: {
+        selectedGenre() {
+            return this.labelClick ? this.result.genre[0] : '';
+        },
+        selectedLabel() {
+            return this.labelClick2 ? this.result.label[0] : '';
+        }
+
+
+    }
 }
 </script>
 
 <style scoped>
-div{
-    background: black;
-}
-
-.Result{
-    padding: 50px;
+.Result-table {
+    padding: 10px;
     display: grid;
-    grid-template-columns: 7% 60% 5% 8% 10% 10%;
-    grid-template-areas: 
-    "thumb artist year genre country label";
+    padding-left: 35%;
+    grid-template-columns: 45% 43% 30% 42% 40% 50%;
+    grid-template-areas:
+        "thumb artist year genre country label";
     gap: 10px;
     align-items: center;
     color: white;
-    background: black;
+
+
 }
-.result-thumbnail{
+
+.result-thumbnail {
     grid-template-areas: Thumb;
 }
-.result-artist{
+
+.result-artist {
     grid-template-areas: title;
 }
-.result-year{
+
+.result-year {
     grid-template-areas: year;
 }
-.result-genre{
+
+.result-genre {
     grid-template-areas: genre;
 }
-.result-country{
+
+.result-country {
     grid-template-areas: country;
 }
-.result-label{
+
+.result-label {
     grid-template-areas: label;
 }
-
-
+#dropdown-menu2{
+    color:black
+}
 </style>
