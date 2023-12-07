@@ -5,11 +5,15 @@ using System.Xml.Linq;
 
 namespace Capstone.Models
 {
-    public class Genre
+    public class Label
     {
         [JsonIgnore]
-        public int Genre_Id { get; set; }
+        public int Label_Id { get; set; }
         public string Name { get; set; }
+        public string Resource_Url { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
-
 }
