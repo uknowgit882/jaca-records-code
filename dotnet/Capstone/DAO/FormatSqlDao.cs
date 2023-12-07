@@ -52,6 +52,50 @@ namespace Capstone.DAO
 
             return output;
         }
+
+        /// <summary>
+        /// Gets the formats associated for this record for this specific user
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of formats for this specific user. Only the type should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Format> GetFormatsByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Format> output = new List<Format>();
+            string sql = "SELECT type " +
+                "FROM formats " +
+                "JOIN records_formats ON formats.format_id = records_formats.format_id " +
+                "JOIN records ON records_formats.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Format row = new Format();
+                        // this will return the search result for the libary back to the front end
+                        // with the different format types in the name field
+                        row.Name = Convert.ToString(reader["type"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
         public bool AddFormat(string description)
         {
             Format checkedArtist = GetFormat(description);

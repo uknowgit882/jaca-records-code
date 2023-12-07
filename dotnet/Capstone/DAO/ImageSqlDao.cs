@@ -3,6 +3,7 @@ using Capstone.Models;
 using System.Data.SqlClient;
 using System;
 using Capstone.DAO.Interfaces;
+using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
@@ -45,6 +46,49 @@ namespace Capstone.DAO
                 throw new DaoException("Sql exception occured", ex);
             }
 
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the image info associated for this record for this specific user. Includes uri, height, width
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of images for this specific user. Only the uri, height, width should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Image> GetImagesByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Image> output = new List<Image>();
+            string sql = "SELECT uri, height, width " +
+                "FROM images " +
+                "JOIN records ON images.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Image row = new Image();
+                        row.Uri = Convert.ToString(reader["uri"]);
+                        row.Height = Convert.ToInt32(reader["height"]);
+                        row.Width = Convert.ToInt32(reader["width"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
             return output;
         }
         public bool AddImage(Image image)

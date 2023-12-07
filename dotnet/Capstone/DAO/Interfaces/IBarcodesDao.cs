@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using System.Collections.Generic;
 
 namespace Capstone.DAO.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Capstone.DAO.Interfaces
     {
         public Identifier GetIdentifier(Identifier identifier);
         public bool AddIdentifier(Identifier identifier);
+        public List<Identifier> GetIdentifiersByDiscogsIdAndUsername(int discogId, string username);
     }
 }

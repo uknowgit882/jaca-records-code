@@ -200,10 +200,10 @@ CREATE TABLE libraries (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_libraries PRIMARY KEY (library_id),
+	CONSTRAINT UQ_libraries_username_record UNIQUE (username, discogs_id),
 	CONSTRAINT FK_libraries_users FOREIGN KEY (username) REFERENCES users (username),
 	CONSTRAINT FK_libraries_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id),
-	CONSTRAINT UQ_library_username UNIQUE (username),
-	CONSTRAINT CK_library_quantity CHECK (quantity > 1)
+	CONSTRAINT CK_library_quantity CHECK (quantity > -1)
 
 )
 
@@ -218,6 +218,7 @@ CREATE TABLE collections (
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_collections PRIMARY KEY (collection_id),
 	CONSTRAINT UQ_collection_name UNIQUE(name),
+	CONSTRAINT UQ_collections_libary_record UNIQUE (library_id, discogs_id),
 	CONSTRAINT FK_collections_libraries FOREIGN KEY (library_id) REFERENCES libraries (library_id),
 	CONSTRAINT FK_collections_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
 

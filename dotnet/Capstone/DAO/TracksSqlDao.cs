@@ -2,6 +2,7 @@
 using Capstone.Exceptions;
 using Capstone.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Capstone.DAO
@@ -32,6 +33,49 @@ namespace Capstone.DAO
                     if (reader.Read())
                     {
                         output = MapToTrack(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the track info associated for this record for this specific user. Includes title, position, duration
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of tracks for this specific user. Only the title, position, duration should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Track> GetTracksByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Track> output = new List<Track>();
+            string sql = "SELECT tracks.title, position, duration " +
+                "FROM tracks " +
+                "JOIN records ON tracks.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Track row = new Track();
+                        row.Title = Convert.ToString(reader["title"]);
+                        row.Position = Convert.ToString(reader["position"]);
+                        row.Duration = Convert.ToString(reader["duration"]);
+                        output.Add(row);
                     }
                 }
             }

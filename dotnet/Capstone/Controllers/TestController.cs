@@ -240,6 +240,13 @@ namespace Capstone.Controllers
         [HttpGet("search")]
         public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label)
         {
+            // need the username to search the library
+            string username = User.Identity.Name;
+            if(username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
+
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q,artist,title,genre,year,country,label);
 
             SearchResult output = null;
@@ -274,19 +281,50 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("searchDatabase")]
-        public ActionResult<List<RecordTableData>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
         {
+            string username = User.Identity.Name;
+            username = "user";
+
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
 
-            List<RecordTableData> output = new List<RecordTableData>();
-            List<int> recordIds = new List<int>();
+            List<RecordClient> output = new List<RecordClient>();
+            
             try
             {
-                recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
-                RecordTableData recordToAddToResultsList = null;
+                List<int> recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
+
                 foreach(int recordId in recordIds)
                 {
+                    // get the record
+                    RecordTableData foundRecord = _recordBuilderDao.GetRecordByDiscogsIdAndUsername(recordId, username);
 
+                    // make sure you have a result to action
+                    if(foundRecord != null)
+                    {
+                        // map that found record into the eventual outgoing result
+                        RecordClient recordToAddToResultsList = new RecordClient();
+
+                        recordToAddToResultsList.Id = foundRecord.Discogs_Id;
+                        recordToAddToResultsList.URI = foundRecord.URL;
+                        recordToAddToResultsList.Title = foundRecord.Title;
+                        recordToAddToResultsList.Country = foundRecord.Country;
+                        recordToAddToResultsList.Date_Changed = foundRecord.Discogs_Date_Changed;
+                        recordToAddToResultsList.Released = foundRecord.Released;
+                        recordToAddToResultsList.Notes = foundRecord.Notes;
+
+                        // add the other bits that need a sqldao to fetch from the other tables
+                        recordToAddToResultsList.Artists = _artistsDao.GetArtistsByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.ExtraArtists = _artistsDao.GetExtraArtistsByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Labels = _labelsDao.GetLabelsByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Formats = _formatsDao.GetFormatsByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Identifiers = _barcodesDao.GetIdentifiersByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Genres = _genresDao.GetGenresByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Tracklist = _tracksDao.GetTracksByDiscogsIdAndUsername(recordId, username);
+                        recordToAddToResultsList.Images = _imagesDao.GetImagesByDiscogsIdAndUsername(recordId, username);
+
+                        output.Add(recordToAddToResultsList);
+                    }
                 }
                 if (output != null)
                 {
@@ -302,8 +340,6 @@ namespace Capstone.Controllers
                 return BadRequest(e.Message);
             }
 
-
-            return output;
         }
 
     }

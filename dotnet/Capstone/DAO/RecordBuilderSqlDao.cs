@@ -43,6 +43,44 @@ namespace Capstone.DAO
             }
             return output;
         }
+
+        /// <summary>
+        /// Gets the record for this specific user. Only gets active records
+        /// </summary>
+        /// <param name="discogsId"></param>
+        /// <param name="username"></param>
+        /// <returns>Singular record</returns>
+        /// <exception cref="DaoException"></exception>
+        public RecordTableData GetRecordByDiscogsIdAndUsername(int discogsId, string username)
+        {
+            RecordTableData output = null;
+            string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
+                "FROM records " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = MapRowToRecordTableData(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
+            return output;
+        }
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
@@ -97,7 +135,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogsId", input.Id);
                     cmd.Parameters.AddWithValue("@country", input.Country);
-                    cmd.Parameters.AddWithValue("@notes", input.Notes);
+                    cmd.Parameters.AddWithValue("@notes", string.IsNullOrEmpty(input.Notes) ? DBNull.Value : input.Notes);
                     cmd.Parameters.AddWithValue("@released", input.Released);
                     cmd.Parameters.AddWithValue("@title", input.Title);
                     cmd.Parameters.AddWithValue("@url", input.URI);

@@ -3,6 +3,7 @@ using Capstone.Models;
 using System.Data.SqlClient;
 using System;
 using Capstone.DAO.Interfaces;
+using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
@@ -45,6 +46,48 @@ namespace Capstone.DAO
                 throw new DaoException("Sql exception occured", ex);
             }
 
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the barcodes and identifiers associated for this record for this specific user. Identifiers can include barcodes and record etchings/codes
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of barcodes and identifiers for this specific user. Only the type and value should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Identifier> GetIdentifiersByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Identifier> output = new List<Identifier>();
+            string sql = "SELECT type, value " +
+                "FROM barcodes " +
+                "JOIN records ON barcodes.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Identifier row = new Identifier();
+                        row.Type = Convert.ToString(reader["type"]);
+                        row.Value = Convert.ToString(reader["value"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
             return output;
         }
         public bool AddIdentifier(Identifier identifier)

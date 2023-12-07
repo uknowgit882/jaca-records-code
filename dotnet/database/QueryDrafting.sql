@@ -38,3 +38,10 @@ WHERE discogs_id = 3110951
 SELECT *
 FROM RECORDS
 ROLLBACK
+
+SELECT genres.name
+FROM genres
+JOIN records_genres ON genres.genre_id = records_genres.genre_id
+JOIN records ON records_genres.discogs_id = records.discogs_id
+JOIN libraries ON records.discogs_id = libraries.discogs_id 
+WHERE records.discogs_id = 14881 AND username = 'user'

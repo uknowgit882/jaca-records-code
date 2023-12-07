@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using System.Collections.Generic;
 
 namespace Capstone.DAO.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Capstone.DAO.Interfaces
     {
         public Image GetImageInfo(Image image);
         public bool AddImage(Image image);
+        public List<Image> GetImagesByDiscogsIdAndUsername(int discogId, string username);
     }
 }

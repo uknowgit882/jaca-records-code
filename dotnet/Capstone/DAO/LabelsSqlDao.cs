@@ -2,6 +2,7 @@
 using Capstone.Exceptions;
 using Capstone.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Capstone.DAO
@@ -41,6 +42,50 @@ namespace Capstone.DAO
             }
             return output;
         }
+
+        /// <summary>
+        /// Gets the labels associated for this record for this specific user
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of labels for this specific user. Only the name and uri should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Label> output = new List<Label>();
+            string sql = "SELECT name, labels.url " +
+                "FROM labels " +
+                "JOIN records_labels ON labels.label_id = records_labels.label_id " +
+                "JOIN records ON records_labels.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Label row = new Label();
+                        row.Name = Convert.ToString(reader["name"]);
+                        row.Resource_Url = Convert.ToString(reader["url"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
         public bool AddLabel(Label label)
         {
             Label checkedLabel = GetLabel(label);
