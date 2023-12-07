@@ -1,5 +1,5 @@
 <template>
-    <div class="Result table" >
+    <div class="Result-table" >
         <img class="result-thumbnail" v-bind:src="result.thumb"  /> 
         <span class="result-artist">{{ result.title }}</span>
         <span class="result-year">{{ result.year }}</span>
@@ -37,21 +37,24 @@ export default {
 </script>
 
 <style scoped>
-div{
-    background: black;
-}
 
-.Result{
+
+
+.Result-table{
     padding: 50px;
     display: grid;
-    grid-template-columns: 7% 60% 5% 8% 10% 10%;
+    padding-left: 35%;
+    grid-template-columns: 45% 43% 30% 42% 40% 50%;
     grid-template-areas: 
     "thumb artist year genre country label";
     gap: 10px;
     align-items: center;
     color: white;
-    background: black;
+    background: rgb(7, 7, 7);
+
+
 }
+
 .result-thumbnail{
     grid-template-areas: Thumb;
 }

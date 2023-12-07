@@ -71,7 +71,8 @@ export default {
     padding: 20px;
     display: grid;
     grid-area: tableHeader;
-    grid-template-columns:9% 14% 10% 10% 10% 10%;
+    padding-left: 15%;
+    grid-template-columns:9% 10% 8% 10% 10% 20%;
     grid-template-areas: 
     "thumb artist-title year genre country label barcode";
     gap: 10px;
@@ -81,7 +82,7 @@ export default {
 }
 
 .thumb{
-    grid-template-areas: Thumb
+    grid-template-areas: Thumb;
 }
 .artist{
     grid-template-areas: Artist;

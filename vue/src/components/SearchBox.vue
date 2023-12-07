@@ -20,7 +20,7 @@
             <div class="dropdown-trigger"></div>
             <div class="dropdown-menu" id="advanced-search-dropdown" role="menu">
                 <div class="dropdown-content">
-                    <form v-show="showForm">
+                    <form class= "form" v-show="showForm">
                         <div class="field">
                             <label class="label">Artist</label>
                             <div class="control">
@@ -154,5 +154,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
