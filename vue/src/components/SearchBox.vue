@@ -124,8 +124,8 @@ export default {
                     //this.searchResults = response.data;
                     //this.isVisible = true;
                     if (response.status == 200){
-                        this.$router.push({name: "SearchResult"})
                         this.$store.commit('ADD_SEARCH_RESULT', response);
+                        this.$router.push({name: "SearchResult"})
                     }
 
                 })
