@@ -1,0 +1,21 @@
+search for a record by username
+	also want to return which collection it's in, if any
+	front end add button in libary search is add to collection 
+Controller decorations for authorization
+collections/records join table
+Count how many in collection if free, don't allow more than 25
+If downgrading, remove free
+	was_free column for collections/records, collections, library
+	if premium, set to false
+	if goes to free, set to true
+	gets for for free people, it filters and they only see false stuff
+
+14881
+18038
+14488
+81013 - queen
+3110951 - queen
+12339174 - queen latifah
+801907 - queen latifah
+31526 
+1852573 - queen
