@@ -70,10 +70,10 @@ namespace Capstone.DAO
             return recordIDs;
         }
 
-        public List<int> WildcardSearchDatabaseForRecords(SearchRequest requestObject)
+        public List<int> WildcardSearchDatabaseForRecords(string requestObject)
         {
             List<int> recordIDs = new List<int>();
-
+            // TODO figure out how to search as a phrase (i.e. "beatles rubber soul" should return Rubber Soul, returns nothing right now"
             string sql = "SELECT records.discogs_id " +
                 "FROM records " +
                 "JOIN records_artists ON records.discogs_id = records_artists.discogs_id " +
@@ -97,7 +97,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@recordsTitle", SearchStringWildcardAdder(requestObject.Query));
+                    cmd.Parameters.AddWithValue("@querySearch", SearchStringWildcardAdder(requestObject));
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
