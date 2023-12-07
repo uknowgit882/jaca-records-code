@@ -46,8 +46,9 @@
                         <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
                     </ul>
                 </div>
-            </div>
+            </div> 
         </div>
+        
 
         <!-- Second dropdown stops here -->
 
@@ -92,7 +93,7 @@ export default {
 
 <style scoped>
 .Result-table {
-    padding: 50px;
+    padding: 10px;
     display: grid;
     padding-left: 35%;
     grid-template-columns: 45% 43% 30% 42% 40% 50%;
@@ -101,7 +102,6 @@ export default {
     gap: 10px;
     align-items: center;
     color: white;
-    background: rgb(7, 7, 7);
 
 
 }

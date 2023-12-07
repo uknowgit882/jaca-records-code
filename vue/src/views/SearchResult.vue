@@ -1,27 +1,27 @@
 <template>
-   <!-- <button v-on:click="searchRecord">Test</button> -->
+    <!-- <button v-on:click="searchRecord">Test</button> -->
 
-    <div class= "tableHead" >
-        <span class="thumb">Thumb</span>
-        <span class="artist">Artist & Title</span>
-        <span class="year">Year</span>
-        <span class="genre">Genre</span>
-        <span class="country">Country</span>
-        <span class="table-head-label">Label</span>
-        <span class="barcode">Barcode</span>
+    <div class="table-table">
+        <div class="tableHead">
+            <span class="thumb">Thumb</span>
+            <span class="artist">Artist & Title</span>
+            <span class="year">Year</span>
+            <span class="genre">Genre</span>
+            <span class="country">Country</span>
+            <span class="table-head-label">Label</span>
+            <span class="library">Add to Library</span>
 
 
+        </div>
+        <table>
+            <tr>
+                <search-result-component v-for="result in this.$store.state.searchResults.data.results"
+                    v-bind:key="result.id" v-bind:result="result" />
+
+            </tr>
+
+        </table>
     </div>
-    <table  >
-        <tr>
-            <search-result-component v-for="result in this.$store.state.searchResults.data.results" 
-            v-bind:key="result.id"
-                v-bind:result="result" />
-
-        </tr>
-
-    </table>
-
 </template>
 
 <script>
@@ -65,41 +65,49 @@ export default {
 }
 </script>
 <style scoped>
-
-
-.tableHead{
+.tableHead {
     padding: 20px;
     display: grid;
     grid-area: tableHeader;
     padding-left: 15%;
-    grid-template-columns:9% 10% 8% 10% 10% 20%;
-    grid-template-areas: 
-    "thumb artist-title year genre country label barcode";
+    grid-template-columns: 9% 10% 8% 10% 10% 20%;
+    grid-template-areas:
+        "thumb artist-title year genre country label library";
     gap: 10px;
     align-items: center;
     color: white;
 
 }
 
-.thumb{
+.table-table{
+    background: rgba(0, 0, 0, 0.587);
+}
+
+.thumb {
     grid-template-areas: Thumb;
 }
-.artist{
+
+.artist {
     grid-template-areas: Artist;
 }
-.year{
+
+.year {
     grid-template-areas: Year;
 }
-.genre{
+
+.genre {
     grid-template-areas: Genre;
 }
-.country{
+
+.country {
     grid-template-areas: Country;
 }
-.table-head-label{
+
+.table-head-label {
     grid-template-areas: Label;
 }
-.barcode{
+
+.barcode {
     grid-template-areas: Barcode;
 }
 </style>

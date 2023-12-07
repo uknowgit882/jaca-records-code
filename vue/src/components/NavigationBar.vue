@@ -3,7 +3,7 @@
         <div class="navbar-brand">
             <p class="profile">
                 <button class="button" href="/Profile">
-                    <strong><i class="fa-solid fa-circle-user"></i></strong>
+                    <strong><i class="fa-solid fa-circle-user" ></i></strong>
                 </button>
             </p>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
