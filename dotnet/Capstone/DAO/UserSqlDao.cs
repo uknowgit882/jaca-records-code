@@ -23,7 +23,8 @@ namespace Capstone.DAO
         {
             IList<User> users = new List<User>();
 
-            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login FROM users";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
+                "FROM users";
 
             try
             {
@@ -53,7 +54,8 @@ namespace Capstone.DAO
         {
             User user = null;
 
-            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login FROM users WHERE user_id = @user_id";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
+                "FROM users WHERE user_id = @user_id";
 
             try
             {
@@ -83,7 +85,8 @@ namespace Capstone.DAO
         {
             User user = null;
 
-            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login FROM users WHERE username = @username";
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
+                "FROM users WHERE username = @username";
 
             try
             {
@@ -116,7 +119,7 @@ namespace Capstone.DAO
             IPasswordHasher passwordHasher = new PasswordHasher();
             PasswordHash hash = passwordHasher.ComputeHash(userParam.Password);
 
-            string sql = "INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login) " +
+            string sql = "INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) " +
                          "OUTPUT INSERTED.user_id " +
                          "VALUES (@username, @first_name, @last_name, @email_address, @password_hash, @salt, @user_role)";
 
@@ -179,7 +182,7 @@ namespace Capstone.DAO
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -221,7 +224,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -241,12 +244,12 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            else if (upgUser.Role == "Premium")
+            else if (upgUser.Role == "premium")
             {
                 return false;
             }
             string sql = "UPDATE users " +
-                "SET user_role = 'PREMIUM', updated_date = @updated_date " +
+                "SET user_role = 'premium', updated_date = @updated_date " +
                 "WHERE username = @username;";
 
             try
@@ -262,7 +265,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -283,13 +286,15 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            else if (downUser.Role == "Free")
+            else if (downUser.Role == "free")
             {
                 return false;
             }
             string sql = "UPDATE users " +
-                "SET user_role = 'FREE', updated_date = @updated_date " +
+                "SET user_role = 'free', updated_date = @updated_date " +
                 "WHERE username = @username;";
+
+            // TODO need to figure out how to impact the library and collections
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -303,7 +308,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -324,12 +329,12 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            else if (upgAdmin.Role == "JACAPREME")
+            else if (upgAdmin.Role == "jacapreme")
             {
                 return false;
             }
             string sql = "UPDATE users " +
-                "SET user_role = 'JACAPREME', updated_date = @updated_date " +
+                "SET user_role = 'jacapreme', updated_date = @updated_date " +
                 "WHERE username = @username;";
             try
             {
@@ -344,7 +349,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -365,12 +370,12 @@ namespace Capstone.DAO
             {
                 return false;
             }
-            else if (downUser.Role == "FREE" || downUser.Role == "PREMIUM")
+            else if (downUser.Role == "free" || downUser.Role == "premium")
             {
                 return false;
             }
             string sql = "UPDATE users " +
-                "SET user_role = 'PREMIUM', updated_date = @updated_date " +
+                "SET user_role = 'premium', updated_date = @updated_date " +
                 "WHERE username = @username;";
             try
             {
@@ -385,7 +390,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }
@@ -421,7 +426,7 @@ namespace Capstone.DAO
 
                     if (numberOfRows != 1)
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        throw new DaoException("The wrong number of rows were impacted");
                     }
                 }
             }

@@ -44,6 +44,90 @@ namespace Capstone.DAO
 
             return output;
         }
+
+        /// <summary>
+        /// Gets the artists associated for this record for this specific user
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of artists for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Artist> GetArtistsByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Artist> output = new List<Artist>();
+            string sql = "SELECT name " +
+                "FROM artists " +
+                "JOIN records_artists ON artists.artist_id = records_artists.artist_id " +
+                "JOIN records ON records_artists.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Artist row = new Artist();
+                        row.Name = Convert.ToString(reader["name"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the EXTRA artists associated for this record for this specific user
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of extra artists for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Artist> GetExtraArtistsByDiscogsIdAndUsername(int discogId, string username)
+        {
+            List<Artist> output = new List<Artist>();
+            string sql = "SELECT artists.name " +
+                "FROM artists " +
+                "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.extra_artist_id " +
+                "JOIN records ON records_extra_artists.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Artist row = new Artist();
+                        row.Name = Convert.ToString(reader["name"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
         public bool AddArtist(Artist artist)
         {
             Artist checkedArtist = GetArtist(artist);
