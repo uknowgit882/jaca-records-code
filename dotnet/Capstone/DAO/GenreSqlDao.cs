@@ -46,13 +46,22 @@ namespace Capstone.DAO
             return output;
         }
 
-        public List<string> GetGenresByDiscogsId(int discogId)
+        /// <summary>
+        /// Gets the genres associated for this record for this specific user
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <param name="username"></param>
+        /// <returns>List of genres for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<string> GetGenresByDiscogsIdAndUsername(int discogId, string username)
         {
             List<string> output = new List<string>();
-            string sql = "SELECT name " +
+            string sql = "SELECT genres.name " +
                 "FROM genres " +
                 "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
-                "WHERE discogs_id = @discogId";
+                "JOIN records ON records_genres.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogId AND username = @username";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -61,6 +70,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogId", discogId);
+                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -104,6 +114,7 @@ namespace Capstone.DAO
             }
         }
 
+
         /// <summary>
         /// Ignore this method for now. Wrote it and don't need it. Might come in handy for pulling information from multiple discogIds at once, in aggregate
         /// </summary>
@@ -137,7 +148,7 @@ namespace Capstone.DAO
         //            conn.Open();
 
         //            SqlCommand cmd = new SqlCommand(string.Format(sql, inClause), conn);
-                    
+
         //            // continued stack overflow idea
         //            for(int i = 0; i < paramNames.Length; i++)
         //            {

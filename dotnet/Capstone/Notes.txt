@@ -29,9 +29,20 @@ PENTERNARY
 	collections
 
 TODO:
-add user last_login method upon login (maybe need its own user functions dao)
-do we need an update function for the database?
-figure out how to handle if you load the record, then another sub-table load fails, how do you start all over?
+figure out the library and collections edit if a user downgrades
+update the registration page to accept first, last, email
+update profile page to display last login
+update registration to automatically create a library
+need a collection creation page
+colleciton page needs a delete button (and a confirmation prompt) to delete the collection
+collection page needs an edit button
+return collection a record is in, if any, in any search result or record page
+something about CORS???
+FRIENDS is_active - update sql query so it only returns active friends
+FOR JAKE - if you enter a general query, it'll return all records
+
+
+remove temp registration info from below:
 
 USERREGISTRATIONINFO:
 {

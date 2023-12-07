@@ -3,6 +3,7 @@ using Capstone.Exceptions;
 using Capstone.Models;
 using Capstone.Security;
 using Capstone.DAO.Interfaces;
+using System;
 
 namespace Capstone.Controllers
 {
@@ -45,8 +46,12 @@ namespace Capstone.Controllers
                 // Create an authentication token
                 string token = tokenGenerator.GenerateToken(user.UserId, user.Username, user.Role);
 
+                // update the last login column to the latest
+                userDao.UpdateLastLogin(user.Username);
+
                 // Create a ReturnUser object to return to the client
-                LoginResponse retUser = new LoginResponse() { User = new ReturnUser() { UserId = user.UserId, Username = user.Username, Role = user.Role }, Token = token };
+                // include the last login time
+                LoginResponse retUser = new LoginResponse() { User = new ReturnUser() { UserId = user.UserId, Username = user.Username, Role = user.Role, Last_Login = DateTime.UtcNow }, Token = token };
 
                 // Switch to 200 OK
                 result = Ok(retUser);
@@ -91,7 +96,7 @@ namespace Capstone.Controllers
             if (newUser != null)
             {
                 // Create a ReturnUser object to return to the client
-                ReturnUser returnUser = new ReturnUser() { UserId = newUser.UserId, Username = newUser.Username, Role = newUser.Role };
+                ReturnUser returnUser = new ReturnUser() { UserId = newUser.UserId, Username = newUser.Username, Role = newUser.Role, Last_Login = DateTime.UtcNow };
 
                 result = Created("/login", returnUser);
             }

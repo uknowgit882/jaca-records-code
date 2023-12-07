@@ -44,6 +44,44 @@ namespace Capstone.DAO
             }
             return output;
         }
+
+        /// <summary>
+        /// Gets the record for this specific user. Only gets active records
+        /// </summary>
+        /// <param name="discogsId"></param>
+        /// <param name="username"></param>
+        /// <returns>Singular record</returns>
+        /// <exception cref="DaoException"></exception>
+        public RecordTableData GetRecordByDiscogsIdAndUsername(int discogsId, string username)
+        {
+            RecordTableData output = null;
+            string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
+                "FROM records " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = MapRowToRecordTableData(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
+            return output;
+        }
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
@@ -98,7 +136,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogsId", input.Id);
                     cmd.Parameters.AddWithValue("@country", input.Country);
-                    cmd.Parameters.AddWithValue("@notes", input.Notes);
+                    cmd.Parameters.AddWithValue("@notes", string.IsNullOrEmpty(input.Notes) ? DBNull.Value : input.Notes);
                     cmd.Parameters.AddWithValue("@released", input.Released);
                     cmd.Parameters.AddWithValue("@title", input.Title);
                     cmd.Parameters.AddWithValue("@url", input.URI);
@@ -159,6 +197,14 @@ namespace Capstone.DAO
             return output;
         }
 
+        /// <summary>
+        /// Calling method will have checked if the database's discogs update date is different to the incoming discogs update date - if true, will call this method.
+        /// This method checks if it exists. If not, add it. If yes, assume everything needs to be updated.
+        /// If there is a join table, it will check the associations are there. If not, it will add associations
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
         public RecordTableData UpdateRecord(RecordClient input)
         {
             // double check it exists (although should always exist if you're calling this method)
@@ -172,7 +218,7 @@ namespace Capstone.DAO
             RecordTableData output = null;
 
             string sql = "UPDATE records " +
-                "SET country = @country, notes = @notes, released = @released, title = @title, url = @url, discogs_date_changed = @discogsDateChanged, updated_date = @updatedDate " +
+                "SET country = @country, notes = @notes, released = @released, title = @title, url = @url, updated_date = @updatedDate " +
                 "WHERE discogs_id = @discogsId";
 
             int numberOfRowsAffected = 0;
@@ -189,7 +235,6 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@released", input.Released);
                     cmd.Parameters.AddWithValue("@title", input.Title);
                     cmd.Parameters.AddWithValue("@url", input.URI);
-                    cmd.Parameters.AddWithValue("@discogsDateChanged", input.Date_Changed);
                     cmd.Parameters.AddWithValue("@updatedDate", DateTime.UtcNow);
 
                     cmd.Parameters.AddWithValue("@discogsId", input.Id);
@@ -209,9 +254,41 @@ namespace Capstone.DAO
             {
                 throw new DaoException("Sql exception occured", ex);
             }
+        }
+        public RecordTableData UpdateRecordDiscogsDateChanged(int discogsId, DateTime discogsDateChanged)
+        {
+            RecordTableData output = null;
+
+            string sql = "UPDATE records " +
+                "SET discogs_date_changed = @discogsDateChanged " +
+                "WHERE discogs_id = @discogsId";
+
+            int numberOfRowsAffected = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@discogsDateChanged", discogsDateChanged);
+
+                    numberOfRowsAffected = cmd.ExecuteNonQuery();
+
+                    if (numberOfRowsAffected != 1)
+                    {
+                        throw new DaoException("The wrong number of rows were affected");
+                    }
+                }
+                output = GetRecordByDiscogsId(discogsId);
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
             return output;
         }
-
         private RecordTableData MapRowToRecordTableData(SqlDataReader reader)
         {
             RecordTableData output = new RecordTableData();

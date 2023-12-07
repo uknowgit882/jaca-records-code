@@ -82,6 +82,7 @@ namespace Capstone
             services.AddTransient<IRecordService>(m => new RecordService());
             services.AddTransient<ITracksDao>(m => new TracksSqlDao(connectionString));
             services.AddTransient<ISearchDao>(m => new SearchSqlDao(connectionString));
+             
 
             // Swagger set up
             services.AddSwaggerGen(s => {
@@ -126,6 +127,7 @@ namespace Capstone
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

@@ -6,5 +6,7 @@ namespace Capstone.DAO
     {
         public Track GetTrack(Track track);
         public bool AddTrack(Track track);
+        public Track UpdateTrack(Track updatedTrack);
+        public List<Track> GetTracksByDiscogsIdAndUsername(int discogId, string username);
     }
 }

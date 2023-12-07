@@ -8,6 +8,6 @@ namespace Capstone.DAO
     {
         public Genre GetGenre(string genre);
         public bool AddGenre(string genre);
-        public List<string> GetGenresByDiscogsId(int discogId);
+        public List<string> GetGenresByDiscogsIdAndUsername(int discogId, string username);
     }
 }
