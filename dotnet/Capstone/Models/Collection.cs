@@ -10,7 +10,7 @@ namespace Capstone.Models
         [JsonIgnore]
         public int Collection_Id { get; set; }
         [JsonIgnore]
-        public int Library_Id { get; set; }
+        public string Username { get; set; }
         [JsonIgnore]
         public int Discog_Id { get; set; }
         public string Name { get; set; }
