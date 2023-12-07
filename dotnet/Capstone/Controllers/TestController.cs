@@ -441,7 +441,7 @@ namespace Capstone.Controllers
 
 
         [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
+        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
         {
             // need the username to search the library
             string username = User.Identity.Name;
@@ -450,7 +450,7 @@ namespace Capstone.Controllers
                 return BadRequest("You must be logged in to search a library");
             }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
             SearchResult output = null;
             if (searchRequest.TypeOfSearch == "All")
@@ -484,18 +484,30 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("searchDatabase")]
-        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label)
+        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
         {
             string username = User.Identity.Name;
             username = "user";
+            if (username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
             List<RecordClient> output = new List<RecordClient>();
 
             try
             {
-                List<int> recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
+                List<int> recordIds = new List<int>();
+                if (!string.IsNullOrEmpty(searchRequest.Query))
+                {
+                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
+                }
+                else
+                {
+                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
+                }
 
                 if (recordIds.Count == 0)
                 {
@@ -534,31 +546,20 @@ namespace Capstone.Controllers
                         output.Add(recordToAddToResultsList);
                     }
                 }
+
                 if (output != null)
                 {
-                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
-                    if (output != null)
-                    {
-                        return Ok(output);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
+                    return Ok(output);
                 }
-                catch (Exception e)
+                else
                 {
-                    return BadRequest(e.Message);
-                }
-
-            } else
+                    return NotFound();
+                } 
+            }
+            catch (Exception e)
             {
-                try
-                {
-                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
-                    //RecordTableData recordToAddToResultsList = null;
-                    //foreach (int recordId in recordIds)
-                    //{
+                return BadRequest(e.Message);
+            }
 
         }
 

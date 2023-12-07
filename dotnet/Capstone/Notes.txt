@@ -38,6 +38,7 @@ colleciton page needs a delete button (and a confirmation prompt) to delete the 
 collection page needs an edit button
 return collection a record is in, if any, in any search result or record page
 something about CORS???
+FRIENDS is_active - update sql query so it only returns active friends
 FOR JAKE - if you enter a general query, it'll return all records
 
 
