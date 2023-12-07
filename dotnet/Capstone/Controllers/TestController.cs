@@ -493,11 +493,11 @@ namespace Capstone.Controllers
                 List<int> recordIds = new List<int>();
                 if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
                 {
-                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
+                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query, username);
                 }
                 else
                 {
-                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
+                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest, username);
                 }
 
                 if (recordIds.Count == 0)
@@ -568,9 +568,9 @@ namespace Capstone.Controllers
 
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
             SearchResult discogsResult = null;
-            //SearchResult libraryResult = null;
-            //List<RecordClient> recordsInLibrary = null;
-            //SearchResult collectionsResult = null;
+            SearchResult libraryResult = null;
+            List<RecordClient> recordsInLibrary = null;
+            SearchResult collectionsResult = null;
 
             if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
             {
@@ -584,14 +584,12 @@ namespace Capstone.Controllers
                 if (discogsResult != null)
                 {
                     return Ok(discogsResult);
+                    //allResults.Add(discogsResult);
                 }
                 else
                 {
                     return NotFound();
                 }
-
-
-
             }
             catch (Exception e)
             {

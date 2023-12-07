@@ -15,10 +15,11 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public List<int> WildcardAdvancedSearchDatabaseForRecords(SearchRequest requestObject)
+
+        public List<int> WildcardAdvancedSearchDatabaseForRecords(SearchRequest requestObject, string username)
         {
             List<int> recordIDs = new List<int>();
-            List<int> recordIDsFromQuerySearch = WildcardSearchDatabaseForRecords(requestObject.Query);
+            List<int> recordIDsFromQuerySearch = WildcardSearchDatabaseForRecords(requestObject.Query, username);
             for (int i = 0; i < recordIDsFromQuerySearch.Count; i++)
             {
                 recordIDs.Add(recordIDsFromQuerySearch[i]);
@@ -41,7 +42,6 @@ namespace Capstone.DAO
            "AND (labels.name LIKE @labelsName OR @labelsName = '') " +
            "AND (barcodes.value LIKE @barcodesValue OR @barcodesValue = '')" +
            "GROUP BY records.discogs_id";
-
 
             try
             {
@@ -79,7 +79,7 @@ namespace Capstone.DAO
             return recordIDs;
         }
 
-        public List<int> WildcardSearchDatabaseForRecords(string requestObject)
+        public List<int> WildcardSearchDatabaseForRecords(string requestObject, string username)
         {
             string sql = null;
             List<int> recordIDs = new List<int>();
@@ -99,7 +99,10 @@ namespace Capstone.DAO
                         "JOIN barcodes ON records.discogs_id = barcodes.discogs_id " +
                         "JOIN records_genres ON records.discogs_id = records_genres.discogs_id " +
                         "JOIN genres ON records_genres.genre_id = genres.genre_id " +
-                        $"WHERE records.title LIKE @querySearch{i} " +
+                        "JOIN libraries ON libraries.discogs_id = records.discogs_id " +
+                        "JOIN users on libraries.username = users.username " +
+                        "WHERE users.username = @username " +
+                        $"AND records.title LIKE @querySearch{i} " +
                         $"OR artists.name LIKE @querySearch{i} " +
                         $"OR genres.name LIKE @querySearch{i} " +
                         $"OR records.released LIKE @querySearch{i} " +
@@ -114,6 +117,7 @@ namespace Capstone.DAO
 
                         SqlCommand cmd = new SqlCommand(sql, conn);
                         cmd.Parameters.AddWithValue($"@querySearch{i}", SearchStringWildcardAdder(requestObjectWords[i]));
+                        cmd.Parameters.AddWithValue("@username", username);
                         SqlDataReader reader = cmd.ExecuteReader();
 
                         while (reader.Read())
