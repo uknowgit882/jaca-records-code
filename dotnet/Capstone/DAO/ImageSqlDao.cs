@@ -16,7 +16,7 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Image GetImageInfo(Image image)
+        public Image GetImageInfoExact(Image image)
         {
             Image output = null;
             string sql = "SELECT image_id, discogs_id, uri, height, width " +
@@ -38,6 +38,36 @@ namespace Capstone.DAO
                     if (reader.Read())
                     {
                         output = MapRowToImage(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("Sql exception occured", ex);
+            }
+
+            return output;
+        }
+
+        public List<Image> GetAllImagesByDiscogsId(int discogsId)
+        {
+            List<Image> output = new List<Image>();
+            string sql = "SELECT image_id, discogs_id, uri, height, width " +
+                "FROM images " +
+                "WHERE discogs_id = @discogsId";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output.Add(MapRowToImage(reader));
                     }
                 }
             }
@@ -93,7 +123,7 @@ namespace Capstone.DAO
         }
         public bool AddImage(Image image)
         {
-            Image checkedImage = GetImageInfo(image);
+            Image checkedImage = GetImageInfoExact(image);
 
             if (checkedImage != null)
             {
@@ -114,6 +144,27 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@width", image.Width);
                     cmd.ExecuteScalar();
                     return true;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
+            }
+        }
+        public int DeleteImage(int imageId)
+        {
+            string sql = "DELETE images " +
+                "WHERE image_id = @imageId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@imageId", imageId);
+
+                    return cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception e)
@@ -153,5 +204,6 @@ namespace Capstone.DAO
             }
             return output;
         }
+        
     }
 }

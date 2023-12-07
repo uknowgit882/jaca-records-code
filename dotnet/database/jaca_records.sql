@@ -50,7 +50,7 @@ CREATE TABLE friends (
 
 CREATE TABLE genres (
 	genre_id int IDENTITY(1, 1) NOT NULL,
-	name NVARCHAR(50) NOT NULL,
+	name NVARCHAR(100) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE genres (
 
 CREATE TABLE labels (
 	label_id int IDENTITY(1, 1) NOT NULL,
-	name NVARCHAR(100) NOT NULL,
+	name NVARCHAR(200) NOT NULL,
 	url NVARCHAR(500) NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE labels (
 
 CREATE TABLE formats(
 	format_id int IDENTITY(1, 1) NOT NULL,
-	type NVARCHAR(10) NOT NULL,
+	type NVARCHAR(100) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE formats(
 
 CREATE TABLE artists (
 	artist_id int IDENTITY(1,1) NOT NULL,
-	name NVARCHAR(100) NOT NULL,
+	name NVARCHAR(200) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -94,8 +94,8 @@ CREATE TABLE records (
 	discogs_id int NOT NULL,
 	title NVARCHAR(200) NOT NULL,
 	released NVARCHAR(10) NOT NULL,
-	country NVARCHAR(50) NULL,
-	notes NVARCHAR(1000) NULL,
+	country NVARCHAR(10) NULL,
+	notes NVARCHAR(2000) NULL,
 	url NVARCHAR(500) NULL,
 	discogs_date_changed DATETIME NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
@@ -108,9 +108,9 @@ CREATE TABLE records (
 CREATE TABLE barcodes (
 	barcode_id int IDENTITY (1, 1) NOT NULL,
 	discogs_id int NOT NULL,
-	type NVARCHAR(20) NOT NULL,
-	value NVARCHAR(50) NOT NULL,
-	description NVARCHAR(200) NOT NULL,
+	type NVARCHAR(100) NOT NULL,
+	value NVARCHAR(100) NOT NULL,
+	description NVARCHAR(500) NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -135,8 +135,8 @@ CREATE TABLE tracks (
 	track_id int IDENTITY(1,1) NOT NULL,
 	discogs_id int NOT NULL,
 	title NVARCHAR(100) NOT NULL,
-	position NVARCHAR(10) NOT NULL,
-	duration NVARCHAR(10) NOT NULL,
+	position NVARCHAR(50) NOT NULL,
+	duration NVARCHAR(50) NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -194,7 +194,7 @@ CREATE TABLE libraries (
 	library_id int IDENTITY(1, 1) NOT NULL,
 	username NVARCHAR(50) NOT NULL,
 	discogs_id int NOT NULL,
-	notes NVARCHAR(1000) DEFAULT '' NULL,
+	notes NVARCHAR(2000) DEFAULT '' NULL,
 	quantity int DEFAULT 1 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
@@ -211,7 +211,7 @@ CREATE TABLE collections (
 	collection_id int IDENTITY(1, 1) NOT NULL,
 	library_id int NOT NULL,
 	discogs_id int NOT NULL,
-	name NVARCHAR(50) NOT NULL,
+	name NVARCHAR(200) NOT NULL,
 	is_private BIT DEFAULT 0 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,

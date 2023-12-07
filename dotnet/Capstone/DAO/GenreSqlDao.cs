@@ -114,6 +114,7 @@ namespace Capstone.DAO
             }
         }
 
+
         /// <summary>
         /// Ignore this method for now. Wrote it and don't need it. Might come in handy for pulling information from multiple discogIds at once, in aggregate
         /// </summary>
@@ -147,7 +148,7 @@ namespace Capstone.DAO
         //            conn.Open();
 
         //            SqlCommand cmd = new SqlCommand(string.Format(sql, inClause), conn);
-                    
+
         //            // continued stack overflow idea
         //            for(int i = 0; i < paramNames.Length; i++)
         //            {

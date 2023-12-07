@@ -19,7 +19,7 @@ namespace Capstone.DAO
         {
             Track output = null;
             string sql = "SELECT track_id, discogs_id, title, position, duration FROM tracks " +
-                "WHERE title = @title;";
+                "WHERE title = @title AND discogs_id = @discogsId;";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -28,6 +28,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@title", track.Title);
+                    cmd.Parameters.AddWithValue("@discogsId", track.Discogs_Id);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -115,6 +116,32 @@ namespace Capstone.DAO
             catch (Exception e)
             {
                 throw new DaoException("Exception occurred", e);
+            }
+        }
+        public Track UpdateTrack(Track updatedTrack)
+        {
+            string sql = "UPDATE tracks " +
+                "SET position = @position, duration = @duration, updated_date = @updatedDate " +
+                "WHERE title = @title AND discogs_id = @discogsId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@position", updatedTrack.Position);
+                    cmd.Parameters.AddWithValue("@duration", updatedTrack.Duration);
+                    cmd.Parameters.AddWithValue("@updatedDate", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@title", updatedTrack.Title);
+                    cmd.Parameters.AddWithValue("@discogsId", updatedTrack.Discogs_Id);
+                    int numberOfRowsAffected = cmd.ExecuteNonQuery();
+                }
+                return GetTrack(updatedTrack);
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
             }
         }
 

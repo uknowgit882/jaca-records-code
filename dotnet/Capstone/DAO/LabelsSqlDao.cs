@@ -115,11 +115,47 @@ namespace Capstone.DAO
             }
         }
 
+        public Label UpdateLabel(Label updatedLabel)
+        {
+            Label output = null;
+
+            string sql = "UPDATE labels " +
+                "SET url = @url, updated_date = @updatedDate " +
+                "WHERE name = @name";
+
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@url", updatedLabel.Resource_Url);
+                    cmd.Parameters.AddWithValue("@updatedDate", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@name", updatedLabel.Name);
+                    
+                    int numberOfRowsAffected = cmd.ExecuteNonQuery();
+
+                    if(numberOfRowsAffected != 1)
+                    {
+                        throw new DaoException("The wrong number of rows were affected");
+                    }
+                }
+                return GetLabel(updatedLabel);
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
+            }
+            return null;
+        }
+
         private Label MapRowToLabel(SqlDataReader reader)
         {
             Label label = new Label();
             label.Label_Id = Convert.ToInt32(reader["label_id"]);
             label.Name = Convert.ToString(reader["name"]);
+            label.Resource_Url = Convert.ToString(reader["url"]);
             return label;
         }
     }

@@ -171,7 +171,6 @@ namespace Capstone.Controllers
                         }
                     }
 
-
                     // then do the other downstream builds
                     if (clientSuppliedRecord.Identifiers.Count != 0)
                     {
@@ -203,26 +202,230 @@ namespace Capstone.Controllers
                     // if you have a new record, activate that
                     if (existingRecord != null)
                     {
-                        _recordBuilderDao.ActivateRecord(existingRecord.Discogs_Id);
+                        return Created("https://localhost:44315/", _recordBuilderDao.ActivateRecord(existingRecord.Discogs_Id));
                     }
                     else
                     {
-                        _recordBuilderDao.ActivateRecord(newRecord.Discogs_Id);
+                        return Created("https://localhost:44315/", _recordBuilderDao.ActivateRecord(newRecord.Discogs_Id));
                     }
 
-                    return Created("https://localhost:44315/", newRecord);
                 }
                 else if (clientSuppliedRecord.Date_Changed != existingRecord.Discogs_Date_Changed)
                 {
-                    //do an update
-                    // update record
+                    // do an update
+                    // update record (but doesn't update the discog update column until it reaches the end, in case something fails)
                     _recordBuilderDao.UpdateRecord(clientSuppliedRecord);
+
+                    // update genre
+                    // not much to change. If you find the name, there are no other fields to change
+                    // so check if the genre exists, if not, add it
+                    if (clientSuppliedRecord.Genres.Count != 0)
+                    {
+                        foreach (string genre in clientSuppliedRecord.Genres)
+                        {
+                            // get the genre so we have the ID/check if it exists
+                            Genre genreReturned = _genresDao.GetGenre(genre);
+
+                            if (genreReturned == null)
+                            {
+                                // if it doesn't exist, create it
+                                _genresDao.AddGenre(genre);
+                            }
+                            // then check if the association is there
+                            if (!_recordsGenresDao.GetRecordGenreByRecordIdAndGenreId(clientSuppliedRecord.Id, genreReturned.Genre_Id))
+                            {
+                                // if not there, make the association
+                                _recordsGenresDao.AddRecordGenre(clientSuppliedRecord.Id, genreReturned.Genre_Id);
+                            }
+                            // if already associated with this record, and genre in database, get to this point and do nothing
+                        }
+                    }
+                    // same method for style
+                    if (clientSuppliedRecord.Styles.Count != 0)
+                    {
+                        foreach (string style in clientSuppliedRecord.Styles)
+                        {
+                            Genre styleReturned = _genresDao.GetGenre(style);
+
+                            if (styleReturned == null)
+                            {
+                                _genresDao.AddGenre(style);
+                            }
+                            if (!_recordsGenresDao.GetRecordGenreByRecordIdAndGenreId(clientSuppliedRecord.Id, styleReturned.Genre_Id))
+                            {
+                                _recordsGenresDao.AddRecordGenre(clientSuppliedRecord.Id, styleReturned.Genre_Id);
+                            }
+                        }
+                    }
+                    // label is a little different as it also has the uri
+                    // if they change the name, it'll create a new entry and keep the old one
+                    //      this will still happen even if they correct a typo - I don't know how else to check the name field for updates
+                    if (clientSuppliedRecord.Labels.Count != 0)
+                    {
+                        foreach (Label label in clientSuppliedRecord.Labels)
+                        {
+                            Label labelReturned = _labelsDao.GetLabel(label);
+
+                            if (labelReturned == null)
+                            {
+                                // if you don't find the label, create it
+                                _labelsDao.AddLabel(label);
+                            }
+                            else
+                            {
+                                // if you do find it, then you have to update the properties for the uri in case it has changed
+                                Label updatedLabel = _labelsDao.UpdateLabel(label);
+                                // then check if the association is there
+                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndGenreId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
+                                {
+                                    // if not, add it
+                                    _recordsLabelsDao.AddRecordLabel(clientSuppliedRecord.Id, updatedLabel.Label_Id);
+                                }
+                            }
+                        }
+                    }
+                    // format update method is the same pattern as genre/style
+                    if (clientSuppliedRecord.Formats.Count != 0)
+                    {
+                        foreach (Format format in clientSuppliedRecord.Formats)
+                        {
+                            // except it has a nested list... ouch, my performance!
+                            foreach (string description in format.Descriptions)
+                            {
+                                Format formatReturned = _formatsDao.GetFormat(description);
+                                if (formatReturned == null)
+                                {
+                                    _formatsDao.AddFormat(description);
+                                }
+                                if (!_recordsFormatsDao.GetRecordFormatByRecordIdAndFormatId(clientSuppliedRecord.Id, formatReturned.Format_Id))
+                                {
+                                    _recordsFormatsDao.GetRecordFormatByRecordIdAndFormatId(clientSuppliedRecord.Id, formatReturned.Format_Id);
+                                }
+                            }
+
+
+                        }
+                    }
+                    // similar method for artists and extra artists to genre/style
+                    if (clientSuppliedRecord.Artists.Count != 0)
+                    {
+                        foreach (Artist artist in clientSuppliedRecord.Artists)
+                        {
+                            Artist artistReturned = _artistsDao.GetArtist(artist);
+
+                            if (artistReturned == null)
+                            {
+                                _artistsDao.AddArtist(artist);
+                            }
+                            if (!_recordsArtistsDao.GetRecordArtistByRecordIdAndArtistId(clientSuppliedRecord.Id, artistReturned.Artist_Id))
+                            {
+                                _recordsArtistsDao.AddRecordArtist(clientSuppliedRecord.Id, artistReturned.Artist_Id);
+                            }
+                        }
+                    }
+                    if (clientSuppliedRecord.ExtraArtists.Count != 0)
+                    {
+                        foreach (Artist artist in clientSuppliedRecord.ExtraArtists)
+                        {
+                            Artist artistReturned = _artistsDao.GetArtist(artist);
+
+                            if (artistReturned == null)
+                            {
+                                _artistsDao.AddArtist(artist);
+                            }
+                            if (!_recordsExtraArtistsDao.GetRecordExtraArtistByRecordIdAndExtraArtistId(clientSuppliedRecord.Id, artistReturned.Artist_Id))
+                            {
+                                _recordsExtraArtistsDao.AddRecordExtraArtist(clientSuppliedRecord.Id, artistReturned.Artist_Id);
+                            }
+                        }
+                    }
+
+                    // this is slightly different to the other update methods. So will track/img
+                    if (clientSuppliedRecord.Identifiers.Count != 0)
+                    {
+                        foreach (Identifier identifier in clientSuppliedRecord.Identifiers)
+                        {
+                            identifier.Discogs_Id = clientSuppliedRecord.Id;
+                            Identifier identifierReturned = _barcodesDao.GetIdentifier(identifier);
+
+                            if (identifierReturned == null)
+                            {
+                                // if the identifier doesn't exist, add it
+                                identifier.Discogs_Id = clientSuppliedRecord.Id;
+                                _barcodesDao.AddIdentifier(identifier);
+                            }
+                            // if you find it, then some other pieces may have changed, so have to do an update
+                            else
+                            {
+                                // need to include the discogs IDs
+                                identifier.Discogs_Id = clientSuppliedRecord.Id;
+                                _barcodesDao.UpdateIdentifier(identifierReturned);
+                            }
+                            // don't need to do another association, it's already tied through the discogs_id
+                        }
+                    }
+                    if (clientSuppliedRecord.Tracklist.Count != 0)
+                    {
+                        foreach (Track track in clientSuppliedRecord.Tracklist)
+                        {
+                            track.Discogs_Id = clientSuppliedRecord.Id;
+                            Track trackReturned = _tracksDao.GetTrack(track);
+
+                            if (trackReturned == null)
+                            {
+                                track.Discogs_Id = clientSuppliedRecord.Id;
+                                _tracksDao.AddTrack(track);
+                            }
+                            else
+                            {
+                                // need to include the discogs IDs
+                                track.Discogs_Id = clientSuppliedRecord.Id;
+                                _tracksDao.UpdateTrack(track);
+                            }
+                        }
+                    }
+                    if (clientSuppliedRecord.Images.Count != 0)
+                    {
+                        // this will avoid stale images:
+                        // get all the current images
+                        List<Image> allCurrentImages = _imagesDao.GetAllImagesByDiscogsId(clientSuppliedRecord.Id);
+
+                        foreach (Image image in clientSuppliedRecord.Images)
+                        {
+                            image.Discogs_Id = clientSuppliedRecord.Id;
+                            Image imageReturned = _imagesDao.GetImageInfoExact(image);
+
+                            // if image url is not there, create one
+                            if (imageReturned == null)
+                            {
+                                image.Discogs_Id = clientSuppliedRecord.Id;
+                                _imagesDao.AddImage(image);
+                            }
+                            else if (imageReturned != null)
+                            {
+                                // if you find an image with an exact match
+                                // find it on the list and take it off
+                                int indexPosition = allCurrentImages.FindIndex(p => p.Uri == imageReturned.Uri);
+                                allCurrentImages.RemoveAt(indexPosition);
+                            }
+                        }
+                        // then all the ones on the list left don't exist in the new list, but are still in the database
+                        // so delete them from the database
+                        foreach (Image image in allCurrentImages)
+                        {
+                            _imagesDao.DeleteImage(image.Image_Id);
+                        }
+                    }
+
+                    // if you get here, all your updates are successful, so you can update the discogs date in the database
+                    // so you won't come down this path again until discogs updates its api
+
+                    _recordBuilderDao.UpdateRecordDiscogsDateChanged(clientSuppliedRecord.Id, clientSuppliedRecord.Date_Changed);
 
                     return Ok("Updated record");
                 }
                 else
                 {
-                    // TODO update this
                     return Ok("This record already exists in our database");
                 }
 
@@ -242,12 +445,12 @@ namespace Capstone.Controllers
         {
             // need the username to search the library
             string username = User.Identity.Name;
-            if(username == null)
+            if (username == null)
             {
                 return BadRequest("You must be logged in to search a library");
             }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q,artist,title,genre,year,country,label);
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
 
             SearchResult output = null;
             if (searchRequest.TypeOfSearch == "All")
@@ -289,18 +492,23 @@ namespace Capstone.Controllers
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label);
 
             List<RecordClient> output = new List<RecordClient>();
-            
+
             try
             {
                 List<int> recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest);
 
-                foreach(int recordId in recordIds)
+                if (recordIds.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                foreach (int recordId in recordIds)
                 {
                     // get the record
                     RecordTableData foundRecord = _recordBuilderDao.GetRecordByDiscogsIdAndUsername(recordId, username);
 
                     // make sure you have a result to action
-                    if(foundRecord != null)
+                    if (foundRecord != null)
                     {
                         // map that found record into the eventual outgoing result
                         RecordClient recordToAddToResultsList = new RecordClient();

@@ -21,7 +21,7 @@ namespace Capstone.DAO
             Identifier output = null;
             string sql = "SELECT barcode_id, discogs_id, type, value, description " +
                 "FROM barcodes " +
-                "WHERE discogs_id = @discogsId AND type = @type AND value = @value AND description = @description";
+                "WHERE discogs_id = @discogsId AND value = @value ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -30,9 +30,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogsId", identifier.Discogs_Id);
-                    cmd.Parameters.AddWithValue("@type", identifier.Type);
                     cmd.Parameters.AddWithValue("@value", identifier.Value);
-                    cmd.Parameters.AddWithValue("@description", string.IsNullOrEmpty(identifier.Description) ? "" : identifier.Description);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -114,6 +112,33 @@ namespace Capstone.DAO
                     cmd.ExecuteScalar();
                     return true;
                 }
+            }
+            catch (Exception e)
+            {
+                throw new DaoException("exception occurred", e);
+            }
+        }
+
+        public Identifier UpdateIdentifier(Identifier updatedIdentifier)
+        {
+            string sql = "UPDATE barcodes " +
+                "SET type = @type, description = @description, updated_date = @updatedDate " +
+                "WHERE value = @value AND discogs_id = @discogsId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@type", updatedIdentifier.Type);
+                    cmd.Parameters.AddWithValue("@description", string.IsNullOrEmpty(updatedIdentifier.Description) ? "" : updatedIdentifier.Description);
+                    cmd.Parameters.AddWithValue("@updatedDate", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@value", updatedIdentifier.Value);
+                    cmd.Parameters.AddWithValue("@discogsId", updatedIdentifier.Discogs_Id);
+                    int numberOfRowsAffected = cmd.ExecuteNonQuery();
+                }
+                return GetIdentifier(updatedIdentifier);
             }
             catch (Exception e)
             {

@@ -29,8 +29,6 @@ PENTERNARY
 	collections
 
 TODO:
-add user last_login method upon login (maybe need its own user functions dao)
-do we need an update function for the database?
 figure out the library and collections edit if a user downgrades
 update the registration page to accept first, last, email
 update profile page to display last login
