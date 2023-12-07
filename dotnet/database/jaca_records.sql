@@ -210,7 +210,7 @@ CREATE TABLE libraries (
 CREATE TABLE collections (
 	collection_id int IDENTITY(1, 1) NOT NULL,
 	library_id int NOT NULL,
-	discogs_id int NOT NULL,
+	discogs_id int NULL,
 	name NVARCHAR(200) NOT NULL,
 	is_private BIT DEFAULT 0 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
