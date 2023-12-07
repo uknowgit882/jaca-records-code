@@ -11,7 +11,7 @@ import Library from'../views/Library.vue'
 import Collections from '@/views/Collections.vue'
 import Data from '@/views/Data.vue'
 import SearchResult from'@/views/SearchResult.vue'
-import Caorusel from '@/views/CaorusalView.vue'
+import Carousel from '@/views/CarousalView.vue'
 import ProfilePageView from '@/views/ProfilePageView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -104,9 +104,9 @@ const routes = [
     } 
   },
   {
-    path: "/Caorusel",
+    path: "/Carousel",
     name: "Caorusel",
-    component: Caorusel,
+    component: Carousel,
     meta: {
       requiresAuth: false,
     } 

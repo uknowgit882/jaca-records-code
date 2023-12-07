@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import CaoruselComponent from '../components/CaoruselComponent.vue';
+import CaoruselComponent from '../components/CarouselComponent.vue';
 
 export default{
     components: {
