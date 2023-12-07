@@ -1,4 +1,8 @@
-﻿namespace Capstone.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
+
+namespace Capstone.Models
 {
     public class SearchRequest
     {

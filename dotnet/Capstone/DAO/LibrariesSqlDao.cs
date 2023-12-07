@@ -20,7 +20,7 @@ namespace Capstone.DAO
             List<Library> output = new List<Library>();
 
             string sql = "SELECT library_id, username, discogs_id, notes, quantity, is_active, created_date, updated_date From libraries " +
-                "WHERE username = @username;";
+                "WHERE username = @username AND libraries.is_active = 1;";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -292,7 +292,6 @@ namespace Capstone.DAO
             {
                 throw new DaoException("Something went wrong", ex);
             }
-
             return true;
         }
 
@@ -300,8 +299,6 @@ namespace Capstone.DAO
         public bool ReactivateLibrary(string username)
         {
             int numberOfRows = 0;
-
-            List<Library> libraryActive = GetLibrary(username);
 
             string sql = "UPDATE libraries " +
                 "SET is_active = 1, updated_date = @updated_date " +
