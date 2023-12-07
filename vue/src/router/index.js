@@ -61,7 +61,7 @@ const routes = [
     }
   },
   {
-    path:"/library",
+    path:"/Library",
     name: "Library",
     component: Library,
     meta: {
