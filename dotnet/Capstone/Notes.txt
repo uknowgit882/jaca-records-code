@@ -1,5 +1,5 @@
-Load primary to tertiary tables
-Delete tertiary to primary
+Load tables top to bottom
+Delete tables (or information within) top to bottom
 
 PRIMARY
 	users
@@ -27,6 +27,9 @@ QUANTERNARY
 
 PENTERNARY
 	collections
+
+SEXTERNARY
+	records_collections
 
 TODO:
 figure out the library and collections edit if a user downgrades
@@ -63,3 +66,8 @@ USERREGISTRATIONINFO:
   "confirmPassword": "basiltbasilt",
   "role": "free"
 }
+
+alizg, alizgjacapreme16
+caleba, calebajacapreme88
+jakel, jakeljacapreme45
+aseelt, aseeltjacapreme29

@@ -1,9 +1,11 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -65,6 +67,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get user's friends", $"For user id {id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -115,6 +118,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get user's friends", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -150,9 +154,10 @@ namespace Capstone.DAO
                 }
                 output = GetUsersFriendsById(usersId);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add user's friend", $"For user: {usersId}, friend: {friendsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
             return output;
         }
@@ -189,9 +194,10 @@ namespace Capstone.DAO
                 }
                 output = GetUsersFriendsById(usersId);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to drop user's friend", $"For user: {usersId}, friend: {friendsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
             return output;
         }

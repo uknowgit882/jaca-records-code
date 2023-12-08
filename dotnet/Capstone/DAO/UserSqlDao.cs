@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
 using Capstone.Security;
 using Capstone.Security.Models;
+using Capstone.Utils;
 
 namespace Capstone.DAO
 {
@@ -44,6 +46,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get all users", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("SQL exception occurred", ex);
             }
 
@@ -75,6 +78,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get user by id", $"For {userId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("SQL exception occurred", ex);
             }
 
@@ -106,10 +110,78 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get user by username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("SQL exception occurred", ex);
             }
 
             return user;
+        }
+
+        public string GetUserRole(string username)
+        {
+            string output = "";
+
+            string sql = "SELECT user_role " +
+                "FROM users " +
+                "WHERE username = @username";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToString(reader["user_role"]);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get user role by username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Returns how many users are in the entire database.
+        /// </summary>
+        /// <returns>Int number of users</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetUserCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(user_id) AS count " +
+                "FROM users ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get user count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
         }
 
         public User CreateUser(RegisterUser userParam)
@@ -146,6 +218,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get add user to db, with pw hash", $"For {userParam.Username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("SQL exception occurred", ex);
             }
 
@@ -188,6 +261,7 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
+                ErrorLog.WriteLog("Trying to deactivate username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -230,6 +304,7 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
+                ErrorLog.WriteLog("Trying to reactivate by username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -271,6 +346,7 @@ namespace Capstone.DAO
             }
             catch (DaoException ex)
             {
+                ErrorLog.WriteLog("Trying to upgrade user", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -294,7 +370,6 @@ namespace Capstone.DAO
                 "SET user_role = 'free', updated_date = @updated_date " +
                 "WHERE username = @username;";
 
-            // TODO need to figure out how to impact the library and collections
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -314,6 +389,7 @@ namespace Capstone.DAO
             }
             catch (DaoException ex)
             {
+                ErrorLog.WriteLog("Trying to downgrade user", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -355,6 +431,7 @@ namespace Capstone.DAO
             }
             catch (DaoException ex)
             {
+                ErrorLog.WriteLog("Trying to upgrade admin", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -396,6 +473,7 @@ namespace Capstone.DAO
             }
             catch (DaoException ex)
             {
+                ErrorLog.WriteLog("Trying to downgrade admin", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
@@ -432,6 +510,7 @@ namespace Capstone.DAO
             }
             catch (DaoException ex)
             {
+                ErrorLog.WriteLog("Trying to update last login", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;

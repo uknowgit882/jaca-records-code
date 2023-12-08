@@ -15,6 +15,8 @@ namespace Capstone.Models
         public string Notes { get; set; }
         public int Quantity { get; set; } = 1;
         [JsonIgnore]
+        public bool Is_Premium { get; set; }
+        [JsonIgnore]
         public bool IsActive { get; set; }
         [JsonIgnore]
         public DateTime Created_Date { get; set; }

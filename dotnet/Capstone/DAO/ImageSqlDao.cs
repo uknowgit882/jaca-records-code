@@ -5,6 +5,7 @@ using System;
 using Capstone.DAO.Interfaces;
 using System.Collections.Generic;
 using Capstone.Utils;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -44,13 +45,20 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get image based on exact match", $"For {image.Discogs_Id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
             return output;
         }
 
-        public List<Image> GetAllImagesByDiscogsId(int discogsId)
+        /// <summary>
+        /// Gets the image info associated for this record
+        /// </summary>
+        /// <param name="discogId"></param>
+        /// <returns>List of images. Only the uri, height, width should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Image> GetAllImagesByDiscogsId(int discogId)
         {
             List<Image> output = new List<Image>();
             string sql = "SELECT image_id, discogs_id, uri, height, width " +
@@ -63,7 +71,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -74,6 +82,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get image by discogId", $"For {discogId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -81,20 +90,16 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Gets the image info associated for this record for this specific user. Includes uri, height, width
+        /// Returns how many images are in the entire database.
         /// </summary>
-        /// <param name="discogId"></param>
-        /// <param name="username"></param>
-        /// <returns>List of images for this specific user. Only the uri, height, width should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <returns>Int number of images</returns>
         /// <exception cref="DaoException"></exception>
-        public List<Image> GetImagesByDiscogsIdAndUsername(int discogId, string username)
+        public int GetImageCount()
         {
-            List<Image> output = new List<Image>();
-            string sql = "SELECT uri, height, width " +
-                "FROM images " +
-                "JOIN records ON images.discogs_id = records.discogs_id " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogId AND username = @username";
+            int output = 0;
+
+            string sql = "SELECT count(image_id) AS count " +
+                "FROM images ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -102,26 +107,105 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@discogId", discogId);
-                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        Image row = new Image();
-                        row.Uri = Convert.ToString(reader["uri"]);
-                        row.Height = Convert.ToInt32(reader["height"]);
-                        row.Width = Convert.ToInt32(reader["width"]);
-                        output.Add(row);
+                        output = Convert.ToInt32(reader["count"]);
                     }
+                    return output;
                 }
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get total image count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
-            return output;
         }
+
+        /// <summary>
+        /// Returns how many images are associated with this user. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of images</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetImageCountByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT count(images.image_id) AS count " +
+                "FROM images " +
+                "JOIN records ON images.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get image count for this user", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        // I don't think I need this...
+        ///// <summary>
+        ///// Gets the image info associated for this record for this specific user. Includes uri, height, width
+        ///// </summary>
+        ///// <param name="discogId"></param>
+        ///// <param name="username"></param>
+        ///// <returns>List of images for this specific user. Only the uri, height, width should be sent to the front end - use JSONIgnore on the other properties</returns>
+        ///// <exception cref="DaoException"></exception>
+        //public List<Image> GetImagesByDiscogsIdAndUsername(int discogId, string username)
+        //{
+        //    List<Image> output = new List<Image>();
+        //    string sql = "SELECT uri, height, width " +
+        //        "FROM images " +
+        //        "JOIN records ON images.discogs_id = records.discogs_id " +
+        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+        //        "WHERE records.discogs_id = @discogId AND username = @username";
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+        //            cmd.Parameters.AddWithValue("@discogId", discogId);
+        //            cmd.Parameters.AddWithValue("@username", username);
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                Image row = new Image();
+        //                row.Uri = Convert.ToString(reader["uri"]);
+        //                row.Height = Convert.ToInt32(reader["height"]);
+        //                row.Width = Convert.ToInt32(reader["width"]);
+        //                output.Add(row);
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occurred", ex);
+        //    }
+        //    return output;
+        //}
+
         public bool AddImage(Image image)
         {
             Image checkedImage = GetImageInfoExact(image);
@@ -147,9 +231,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add image", $"For {image.Discogs_Id}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
         public int DeleteImage(int imageId)
@@ -168,9 +253,10 @@ namespace Capstone.DAO
                     return cmd.ExecuteNonQuery();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to delete image", $"For {imageId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
 
