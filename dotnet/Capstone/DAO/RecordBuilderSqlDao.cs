@@ -5,6 +5,8 @@ using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Capstone.DAO
 {
@@ -19,7 +21,7 @@ namespace Capstone.DAO
         public RecordTableData GetRecordByDiscogsId(int discogsId)
         {
             RecordTableData output = null;
-            string sql = "SELECT record_id, discogs_id, country, notes, released, title, url, discogs_date_changed, is_active " +
+            string sql = "SELECT record_id, discogs_id, title, released, country, notes, url, discogs_date_changed, is_active " +
                 "FROM records " +
                 "WHERE discogs_id = @discogsId";
             try
@@ -40,48 +42,50 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Getting RecordTableData from database", $"Database Input: {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
             return output;
         }
+        
+        // I don't think I need this...
+        ///// <summary>
+        ///// Gets the record for this specific user. Only gets active records
+        ///// </summary>
+        ///// <param name="discogsId"></param>
+        ///// <param name="username"></param>
+        ///// <returns>Singular record</returns>
+        ///// <exception cref="DaoException"></exception>
+        //public RecordTableData GetRecordByDiscogsIdAndUsername(int discogsId, string username)
+        //{
+        //    RecordTableData output = null;
+        //    string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
+        //        "FROM records " +
+        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+        //        "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
 
-        /// <summary>
-        /// Gets the record for this specific user. Only gets active records
-        /// </summary>
-        /// <param name="discogsId"></param>
-        /// <param name="username"></param>
-        /// <returns>Singular record</returns>
-        /// <exception cref="DaoException"></exception>
-        public RecordTableData GetRecordByDiscogsIdAndUsername(int discogsId, string username)
-        {
-            RecordTableData output = null;
-            string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
-                "FROM records " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+        //            cmd.Parameters.AddWithValue("@discogsId", discogsId);
+        //            cmd.Parameters.AddWithValue("@username", username);
+        //            SqlDataReader reader = cmd.ExecuteReader();
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
-                    cmd.Parameters.AddWithValue("@username", username);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        output = MapRowToRecordTableData(reader);
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new DaoException("Sql exception occured", ex);
-            }
-            return output;
-        }
+        //            if (reader.Read())
+        //            {
+        //                output = MapRowToRecordTableData(reader);
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occured", ex);
+        //    }
+        //    return output;
+        //}
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
@@ -106,9 +110,116 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Getting RecordTableData from database", $"Database Input: {recordId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
             return output;
+        }
+
+        /// <summary>
+        /// Returns how many records are in the entire database.
+        /// </summary>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetRecordCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(discogs_id) AS count " +
+                "FROM records ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Getting all records from database", $"Simple query", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by year in the database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, year, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetYearAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT released AS year_released, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "GROUP BY released " +
+                "ORDER by year_released DESC";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["year_released"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by year from database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by country in the database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, country, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetCountryAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT country, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "GROUP BY country " +
+                "ORDER by country";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["country"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by country from database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
         }
 
         /// <summary>
@@ -154,6 +265,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Adding record to database - just record table", $"{input.Id} - New record object from API", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
             return output;
@@ -192,6 +304,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Activating record when full load successfully complete", $"{discogsId} - Updating record is_active status to true", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
             return output;
@@ -252,6 +365,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Updating record", $"{input.Id} - When details may have changed", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
         }
@@ -285,6 +399,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Updating when all other updates complete", $"{discogsId} - Updating discogs_date_changed", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
             return output;

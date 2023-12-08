@@ -1,11 +1,13 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -41,27 +43,26 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get genre", $"For {genre}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
             return output;
         }
 
         /// <summary>
-        /// Gets the genres associated for this record for this specific user
+        /// Gets the genres associated for this record
         /// </summary>
         /// <param name="discogId"></param>
-        /// <param name="username"></param>
-        /// <returns>List of genres for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <returns>List of genres. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
         /// <exception cref="DaoException"></exception>
-        public List<string> GetGenresByDiscogsIdAndUsername(int discogId, string username)
+        public List<string> GetGenresByDiscogsId(int discogId)
         {
             List<string> output = new List<string>();
             string sql = "SELECT genres.name " +
                 "FROM genres " +
                 "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
                 "JOIN records ON records_genres.discogs_id = records.discogs_id " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogId AND username = @username";
+                "WHERE records.discogs_id = @discogId";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -70,7 +71,6 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogId", discogId);
-                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -81,10 +81,206 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get genre by id", $"For {discogId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
             return output;
         }
+        /// <summary>
+        /// Returns how many genres are in the entire database.
+        /// </summary>
+        /// <returns>Int number of genres</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetGenreCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(genre_id) AS count " +
+                "FROM genres ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get total genre count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns how many genres are associated with this user. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of genres</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetGenreCountByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT count(genres.genre_id) AS count " +
+                "FROM genres " +
+                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+                "JOIN records ON records_genres.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get users genre", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by genre in this user's library. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Dictionary of key, genre name, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetGenreAndRecordCountByUsername(string username)
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT genre.name, count(records.discogs_id) AS record_count " +
+                "FROM genres " +
+                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+                "JOIN records ON records_genres.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND records.is_active = 1 " +
+                "GROUP BY genre.name";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["name"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by genre for user", $"{username} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by genres in the entire database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, genre name, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetGenreAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT genre.name, count(records.discogs_id) AS record_count " +
+                "FROM genres " +
+                "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+                "JOIN records ON records_genres.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.is_active = 1 " +
+                "GROUP BY genre.name";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["name"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by genre for whole database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        // I think I don't need this...
+        ///// <summary>
+        ///// Gets the genres associated for this record for this specific user
+        ///// </summary>
+        ///// <param name="discogId"></param>
+        ///// <param name="username"></param>
+        ///// <returns>List of genres for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
+        ///// <exception cref="DaoException"></exception>
+        //public List<string> GetGenresByDiscogsIdAndUsername(int discogId, string username)
+        //{
+        //    List<string> output = new List<string>();
+        //    string sql = "SELECT genres.name " +
+        //        "FROM genres " +
+        //        "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
+        //        "JOIN records ON records_genres.discogs_id = records.discogs_id " +
+        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+        //        "WHERE records.discogs_id = @discogId AND username = @username";
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+        //            cmd.Parameters.AddWithValue("@discogId", discogId);
+        //            cmd.Parameters.AddWithValue("@username", username);
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                output.Add(Convert.ToString(reader["name"]));
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occurred", ex);
+        //    }
+        //    return output;
+        //}
 
         public bool AddGenre(string genre)
         {
@@ -108,9 +304,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("Exception occurred", e);
+                ErrorLog.WriteLog("Trying to add genre", $"For {genre}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Exception occurred", ex);
             }
         }
 

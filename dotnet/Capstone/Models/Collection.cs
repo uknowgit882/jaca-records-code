@@ -10,12 +10,13 @@ namespace Capstone.Models
         [JsonIgnore]
         public int Collection_Id { get; set; }
         [JsonIgnore]
-        public int Library_Id { get; set; }
-        [JsonIgnore]
-        public int Discog_Id { get; set; }
+        public string Username { get; set; }
+      
         public string Name { get; set; }
         [JsonIgnore]
         public bool IsPrivate { get; set; }
+        [JsonIgnore]
+        public bool IsPremium { get; set; }
         [JsonIgnore]
         public bool IsActive { get; set; }
         [JsonIgnore]
