@@ -1,9 +1,11 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -79,6 +81,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to perform advanced wildcard search on database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -143,11 +146,11 @@ namespace Capstone.DAO
                         }
                     }
                 }
-                catch (Exception)
-                {
-
-                    throw;
-                }
+            }
+            catch (Exception)
+            {
+                ErrorLog.WriteLog("Trying to perform wildcard search on database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw;
             }
             return recordIDs;
         }

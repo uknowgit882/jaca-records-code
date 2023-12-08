@@ -37,6 +37,10 @@ CREATE TABLE users (
 --populate default data
 INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('user', 'userFirst', 'userLast', 'user@user.com', 'Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','free');
 INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('jacapreme', 'adminFirst', 'adminLast', 'admin@admin.com', '`YhyGVQ+Ch69n4JMBncM4lNF/i9s=', 'Ar/aB2thQTI=','jacapreme');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('alizg', 'aliz', 'gosztola', 'aliz.gosztola@gmail.com', 'SWSvTXaO3nlF1D/Kfq/wHtKPZ8g=', 'W+xsnLck5ws=','jacapreme');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('caleba', 'caleb', 'abrams', 'calebabrams97@gmail.com', 'KH3+nlKn4Rtzn+lQbzt+lEhAbTU=', 'YGu/eFD0EbY=','jacapreme');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('jakel', 'jake', 'leya', 'jleya95@gmail.com', 'cTOpwUqeBDDag/dTnavvmwczGZk=', 'R5a+p4psJRg=','jacapreme');
+INSERT INTO users (username, first_name, last_name, email_address, password_hash, salt, user_role) VALUES ('aseelt', 'aseel', 'tungekar', 'aseelt@hotmail.com', 'ixypradK/MFvXMMxaZhZGKkBSCk=', 'Y3S9it3zXL4=','jacapreme');
 
 CREATE TABLE friends (
 	friend_id int IDENTITY (1, 1) NOT NULL,
@@ -193,9 +197,10 @@ CREATE TABLE records_formats(
 CREATE TABLE libraries (
 	library_id int IDENTITY(1, 1) NOT NULL,
 	username NVARCHAR(50) NOT NULL,
-	discogs_id int NOT NULL,
+	discogs_id int NULL,
 	notes NVARCHAR(2000) DEFAULT '' NULL,
 	quantity int DEFAULT 1 NOT NULL,
+	is_premium BIT DEFAULT 0 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
@@ -210,19 +215,31 @@ CREATE TABLE libraries (
 CREATE TABLE collections (
 	collection_id int IDENTITY(1, 1) NOT NULL,
 	username NVARCHAR(50) NOT NULL,
-	discogs_id int NULL,
 	name NVARCHAR(200) NOT NULL,
 	is_private BIT DEFAULT 0 NOT NULL,
+	is_premium BIT DEFAULT 0 NOT NULL,
 	is_active BIT DEFAULT 1 NOT NULL,
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_collections PRIMARY KEY (collection_id),
 	--CONSTRAINT UQ_collection_name UNIQUE(name),
-	CONSTRAINT UQ_collections_libary_record UNIQUE (username, name, discogs_id),
+	CONSTRAINT UQ_collections_libary_record UNIQUE (username, name),
 	CONSTRAINT FK_collections_libraries FOREIGN KEY (username) REFERENCES users (username),
-	CONSTRAINT FK_collections_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
-
-	
 )
 
+CREATE TABLE records_collections(
+	records_collections_id int IDENTITY(1, 1) NOT NULL,
+	library_id int NOT NULL,
+	collection_id int NOT NULL,
+	discogs_id int NOT NULL,
+	is_premium BIT DEFAULT 0 NOT NULL,
+	is_active BIT DEFAULT 1 NOT NULL,
+	created_date DATETIME DEFAULT getdate() NOT NULL,
+	updated_date DATETIME DEFAULT getdate() NOT NULL,
+	CONSTRAINT PK_records_collections PRIMARY KEY (records_collections_id),
+	CONSTRAINT UQ_records_collections UNIQUE (collection_id, discogs_id),
+	CONSTRAINT FK_records_collections_library FOREIGN KEY (library_id) REFERENCES libraries (library_id),
+	CONSTRAINT FK_records_collections_collections FOREIGN KEY (collection_id) REFERENCES collections (collection_id),
+	CONSTRAINT FK_records_collections_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)
+)
 GO
