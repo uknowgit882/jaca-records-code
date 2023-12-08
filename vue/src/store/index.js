@@ -9,6 +9,10 @@ export function createStore(currentToken, currentUser) {
       searchResults: [
      
       ],
+      recordsInLibrary: [
+
+      ],
+
       records: [
         { 
           id: 1,
@@ -99,8 +103,13 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_SEARCH_RESULT(state, result){
         state.searchResults = result;
+      },
+      ADD_RECORDS_TO_LIBRARY(state, bibub){
+        state.recordsInLibrary = bibub;
       }
     },
+
+
 
   });
   return store;

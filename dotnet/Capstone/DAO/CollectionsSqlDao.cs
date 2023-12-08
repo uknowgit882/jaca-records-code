@@ -1,9 +1,12 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Capstone.DAO
 {
@@ -16,40 +19,21 @@ namespace Capstone.DAO
             connectionString = dbconnectionString;
         }
 
-        public Collection GetCollection(string username, string name)
-        {
-            Collection output = null;
-
-            string sql = "SELECT collection_id, library_id, discogs_id, name, is_private, is_active, created_date, updated_date FROM collections " +
-                "WHERE name = @name AND username = @username AND collections.is_active = 1;";
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        output = MapRowToCollection(reader);
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new DaoException("Sql exception occurred", ex);
-            }
-            return output;
-        }
-        public List<Collection> GetAllCollection(string username)
+        /// <summary>
+        /// Gets all user collections, regardless of privacy status.
+        /// For all users. Pass in the current user's role in the toggle. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Collection> GetAllCollections(string username, bool isPremium)
         {
             List<Collection> output = new List<Collection>();
 
-            string sql = "SELECT collection_id, library_id, discogs_id, name, is_private, is_active, created_date, updated_date FROM collections " +
-                "WHERE name = @name AND username = @username AND collections.is_active = 1;";
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE username = @username " +
+                "AND is_active = 1 AND is_premium = @isPremium;";
 
             try
             {
@@ -58,7 +42,8 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", username);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -69,19 +54,28 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get all collections", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
             return output;
         }
-        public bool AddCollection(string username, string name, int? discogsId = null)
+
+        /// <summary>
+        /// Gets all user collections, you can choose public/private.
+        /// For all users. Pass in the current user's role in the toggle. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="isPrivate">Default is false (public collection)</param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Collection> GetPubOrPrivAllCollections(string username, bool isPremium, bool isPrivate = false)
         {
-            int collectionId = 0;
+            List<Collection> output = new List<Collection>();
 
-            Collection output = new Collection();
-
-            string sql = "INSERT INTO collections (name) " +
-                "OUTPUT INSERTED.collection_id " +
-                "VALUES (@name);";
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE username = @username AND is_private = @isPrivate " +
+                "AND is_active = 1 AND is_premium = @isPremium;";
 
             try
             {
@@ -91,32 +85,40 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@discogs_id", discogsId.Value);
-                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@isPrivate", isPrivate);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-                    collectionId = Convert.ToInt32(cmd.ExecuteScalar());
+                    while (reader.Read())
+                    {
+                        output.Add(MapRowToCollection(reader));
+                    }
                 }
             }
-            catch (Exception e)
+            catch (SqlException ex)
             {
-                throw new DaoException("Exception occurred", e);
+                ErrorLog.WriteLog("Trying to get all pub/priv collections", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
             }
-            return true;
+            return output;
         }
 
-        public bool UpdateCollectionTitle(string name, string username)
+        /// <summary>
+        /// Gets the specific user's named collection, regardless of privacy status.
+        /// For all users. Pass in the current user's role in the toggle. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="name"></param>
+        /// <returns>User's singular collection, regardless of privacy status</returns>
+        /// <exception cref="DaoException"></exception>
+        public Collection GetNamedCollection(string username, string name, bool isPremium)
         {
-            int numberOfRows = 0;
+            Collection output = null;
 
-            Collection collection = GetCollection(username, name);
-
-            if (collection == null)
-            {
-                return false;
-            }
-            string sql = "UPDATE collections " +
-                "SET name = @name, updated_date = @updated_date " +
-                "WHERE name = @name AND username = @username AND collections.is_active = 1;";
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE username = @username AND name = @name " +
+                "AND is_active = 1 AND is_premium = @isPremium;";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -124,40 +126,326 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
-                    numberOfRows = cmd.ExecuteNonQuery();
-                    if (numberOfRows != 1)
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        throw new DaoException("The wrong number of rows is impacted");
+                        output = MapRowToCollection(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get named collection", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the specific user's named collection, you can choose public/private.
+        /// For all users. Pass in the current user's role in the toggle. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="name"></param>
+        /// <param name="isPrivate">Default is false (public collection)</param>
+        /// <returns>Singular named collection</returns>
+        /// <exception cref="DaoException"></exception>
+        public Collection GetPubOrPrivCollection(string username, string name, bool isPremium, bool isPrivate = false)
+        {
+            Collection output = null;
+
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE username = @username AND name = @name AND is_private = @isPrivate " +
+                "AND is_active = 1 AND is_premium = @isPremium;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    cmd.Parameters.AddWithValue("@isPrivate", isPrivate);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = MapRowToCollection(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get named pub/priv collection", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Gets all records in a collection, based on the username/name. Can toggle based on isPremium, or isPrivate.
+        /// Then use "BuildFullRecord" in the common controller to build out the full record to display.
+        /// Assumes you will not need to get a singular record/collection combination individually.
+        /// Free users should only see the isPremium false records in their free collection
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="name"></param>
+        /// <param name="isPremium"></param>
+        /// <param name="isPrivate"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public List<int> GetAllRecordsInCollectionByUsernameAndName(string username, string name, bool isPremium, bool isPrivate = false)
+        {
+            List<int> output = new List<int>();
+
+            string sql = "SELECT discogs_id " +
+                "FROM collections " +
+                "JOIN records_collections ON collections.collection_id = records_collections.collections_id " +
+                "WHERE username = @username AND name = @name, AND collections.is_active = 1 AND is_private = @isPrivate AND records_collections.is_premium = @isPremium;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@isPrivate", isPrivate);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        int row = Convert.ToInt32(reader["discogs_id"]);
+                        output.Add(row);
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new DaoException("Something went wrong", ex);
+                ErrorLog.WriteLog("Trying to get all records in named collection", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
-            return true;
+            return output;
         }
 
-        public bool AddRecordToCollection(string name, int discogId, string username)
+        /// <summary>
+        /// Returns how many collections are in the active user's library.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of collections</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetCollectionCountByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT username, count(username) AS count " +
+                "FROM collections " +
+                "WHERE username = @username AND is_active = 1 " +
+                "GROUP BY username;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get collection count", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns how many collections are in the entire database for all active users.
+        /// </summary>
+        /// <returns>Int number of collections</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetCollectionCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(username) AS count " +
+                "FROM collections " +
+                "WHERE is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get total collection count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Returns how many records are in the user's specific collection.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="name"></param>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int CountOfRecordsInSpecificCollectionByUsername(string username, string name)
+        {
+            int output = 0;
+
+            string sql = "SELECT username, name, count(records_collections.discogs_id) AS count " +
+                "FROM collections " +
+                "JOIN records_collections ON collections.collection_id = records_collections.collection_id " +
+                "WHERE username = @username AND name = @name AND collections.is_active = 1 " +
+                "GROUP BY username, name;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get records in named collection count", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns how many records are in all collections for the user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int CountOfRecordsInAllCollectionsByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT username, count(records_collections.discogs_id) AS count " +
+                "FROM collections " +
+                "JOIN records_collections ON collections.collection_id = records_collections.collection_id " +
+                "WHERE username = @username AND collections.is_active = 1 " +
+                "GROUP BY username;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get records in collection count", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns how many records are in all collections for all active users, in aggregate.
+        /// </summary>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int CountOfRecordsInAllCollections()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(records_collections.discogs_id) AS count " +
+                "FROM collections " +
+                "JOIN records_collections ON collections.collection_id = records_collections.collection_id " +
+                "WHERE collections.is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get records in all collections count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Adds a collection for the user. Records are added separately in their own RecordsColelctionsSqlDao.
+        /// Methods calling this should first call GetCollectionCountByUsername. Free users should not be able to have >1 collection.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="name">The collection's name</param>
+        /// <returns>Returns newly created collection's id</returns>
+        /// <exception cref="DaoException"></exception>
+        public int AddCollection(string username, string name)
         {
             int collectionId = 0;
 
             Collection output = new Collection();
 
-            if (output == null)
-            {
-                return false;
-            }
-            else if (output.IsActive == false)
-            {
-                return false;
-            }
-
-            string sql = "INSERT INTO collections (library_id, discogs_id, name) " +
+            string sql = "INSERT INTO collections (username, name) " +
                 "OUTPUT INSERTED.collection_id " +
-                "VALUES (@library_id, @discogs_id, @name)";
+                "VALUES (@username, @name);";
 
             try
             {
@@ -167,26 +455,35 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@discogs_id", discogId);
                     cmd.Parameters.AddWithValue("@name", name);
 
                     collectionId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("Exception occurred", e);
+                ErrorLog.WriteLog("Trying to add collection", $"For {username}, adding {name}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Exception occurred", ex);
             }
-            return true;
+            return collectionId;
         }
 
-        public bool RemoveSongFromCollection(string name, int discogsID, string username)
+        /// <summary>
+        /// Update's the user's collection's name (title). Doesn't need a toggle for privacy or premium.
+        /// (Free user's shouldn't be able to see their hidden premium collections).
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="username"></param>
+        /// <param name="newName"></param>
+        /// <returns>True if actioned</returns>
+        /// <exception cref="DaoException"></exception>
+        public bool UpdateCollectionTitle(string name, string username, string newName)
         {
-            int NumberOfRows = 0;
+            int numberOfRows = 0;
 
-            string sql = "DELETE FROM collections " +
-                "WHERE name = @name AND discogs_id = @discogs_id";
-
+            string sql = "UPDATE collections " +
+                "SET name = @new_name, updated_date = @updated_date " +
+                "WHERE name = @name AND username = @username AND is_active = 1;";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -195,27 +492,43 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("discogs_id", discogsID);
-                    NumberOfRows = cmd.ExecuteNonQuery();
-                    if (NumberOfRows != 1)
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@new_name", newName);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+
+                    if (numberOfRows == 0)
+                    {
+                        return false;
+                    }
+                    else if (numberOfRows != 1)
                     {
                         throw new DaoException("The wrong number of rows is impacted");
                     }
+                    return true;
                 }
             }
-            catch (SqlException e)
+            catch (Exception ex)
             {
-                throw new DaoException("RemoveRecord() not implemented", e);
+                ErrorLog.WriteLog("Trying to rename collection", $"For {username}, {name}, to {newName}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Something went wrong", ex);
             }
-            return true;
         }
 
-        public bool RemoveCollection(string name, string username)
+        /// <summary>
+        /// Deletes a collection. Should not be called before DeleteRecord in RecordCollectionSqlDao or FK_ error will occur.
+        /// Removes collection permanently
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool DeleteCollection(string name, string username)
         {
             int numberOfRows = 0;
 
             string sql = "DELETE FROM collections " +
-                "WHERE name = @name AND updated_date = @updated_date;";
+                "WHERE name = @name AND username = @username;";
 
             try
             {
@@ -225,7 +538,8 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@username", username);
+
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
                     {
@@ -235,18 +549,27 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to delete collection", $"For {username}, {name}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("RemoveCollection() not implemented", ex);
             }
             return true;
         }
 
-        public bool PrivatizeCollection(string name, string username)
+        /// <summary>
+        /// Changes the private/public status of a collection
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="username"></param>
+        /// <param name="isPrivate"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool ChangeCollectionPrivacy(string name, string username, bool isPrivate)
         {
             int numberOfRows = 0;
 
             string sql = "UPDATE collections " +
-                "SET is_private = 1, updated_date = @updated_date " +
-                "WHERE name = @name;";
+                "SET is_private = @isPrivate, updated_date = @updated_date " +
+                "WHERE name = @name AND username = @username;";
 
             try
             {
@@ -256,6 +579,8 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPrivate", isPrivate);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
@@ -266,19 +591,31 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
+                ErrorLog.WriteLog("Trying to update collection", $"For {username}, {name}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
 
         }
 
-        public bool PublicizeCollection(string name, string username)
+        /// <summary>
+        /// Toggles a collection from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
+        /// All existing collections should be left isPremium. A new collection should be created (empty), called "free", and should be marked isPremium False.
+        /// The get collections will prevent free users seeing isPremium true.
+        /// When upgrading, the free collection should then be marked isPremiumTrue.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="username"></param>
+        /// <param name="isPremium"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool ChangeCollectionIsPremium(string name, string username, bool isPremium)
         {
             int numberOfRows = 0;
 
             string sql = "UPDATE collections " +
-                "WHERE is_private = 0, updated_date = @updated_date " +
-                "WHERE name = @name;";
+                "SET is_premium = @isPremium, updated_date = @updated_date " +
+                "WHERE name = @name AND username = @username;";
 
             try
             {
@@ -288,6 +625,8 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
@@ -298,17 +637,28 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
+                ErrorLog.WriteLog("Trying to change collection premium/free status", $"For {username}, {name}, direction of up/downgrade {isPremium}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
+
         }
-        public bool DeactivateCollection(string name, string username)
+
+        /// <summary>
+        /// Called when a user's account is de/reactivated. Does not un/delete the collection.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="username"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool DeReactivateCollection(string name, string username, bool isActive)
         {
             int numberOfRows = 0;
 
             string sql = "UPDATE collections " +
-                "SET is_active = 0, updated_date = @updated_date " +
-                "WHERE name = @name;";
+                "SET is_active = @isActive, updated_date = @updated_date " +
+                "WHERE name = @name AND username = @username;";
 
             try
             {
@@ -318,6 +668,8 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isActive", isActive);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
@@ -328,53 +680,21 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
+                ErrorLog.WriteLog("Trying to deactivate collection", $"For {username}, {name}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
         }
 
-        public bool ReactivateCollection(string name, string username)
-        {
-            int numberOfRows = 0;
-
-            string sql = "UPDATE collections " +
-                "SET is_active = 1, updated_date = @updated_date " +
-                "WHERE name = @name;";
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
-                    numberOfRows = cmd.ExecuteNonQuery();
-                    if (numberOfRows != 1)
-                    {
-                        throw new DaoException("The wrong number of rows is impacted");
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw new DaoException("Something went wrong");
-            }
-            return true;
-        }
 
         private Collection MapRowToCollection(SqlDataReader reader)
         {
             Collection collection = new Collection();
             collection.Collection_Id = Convert.ToInt32(reader["collection_id"]);
-            collection.Library_Id = Convert.ToInt32(reader["library_id"]);
-            collection.Discog_Id = Convert.ToInt32(reader["discogs_id"]);
+            collection.Username = Convert.ToString(reader["username"]);
             collection.Name = Convert.ToString(reader["name"]);
             collection.IsPrivate = Convert.ToBoolean(reader["is_private"]);
-            collection.IsActive = Convert.ToBoolean(reader["is_active"]);
-            collection.Created_Date = Convert.ToDateTime(reader["created_date"]);
-            collection.Updated_Date = Convert.ToDateTime(reader["updated_date"]);
+            collection.IsPremium = Convert.ToBoolean(reader["is_premium"]);
             return collection;
         }
     }

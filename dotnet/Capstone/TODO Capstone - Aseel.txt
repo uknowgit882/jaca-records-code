@@ -1,0 +1,22 @@
+search for a record by username
+	also want to return which collection it's in, if any
+searches by privacy
+Controller decorations for authorization
+collections/records join table
+Count how many in collection if free, don't allow more than 25
+If downgrading, remove free
+	was_free column for collections/records, collections, library
+	if premium, set to false
+	if goes to free, set to true
+	gets for for free people, it filters and they only see false stuff
+errors - better wording on endpoints
+
+14881
+18038
+14488
+81013 - queen
+3110951 - queen
+12339174 - queen latifah
+801907 - queen latifah
+31526 
+1852573 - queen

@@ -1,0 +1,22 @@
+Load primary to tertiary tables
+Delete tertiary to primary
+
+PRIMARY
+	users
+	genres
+	labels
+	formats
+
+SECONDARY
+	friends
+	artists
+	tracks
+
+TERTIARY
+	records
+
+QUANTERNARY
+	libraries
+
+PENTERNARY
+	collections
