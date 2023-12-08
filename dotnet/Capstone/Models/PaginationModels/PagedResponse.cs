@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Capstone.Models.Pagination
+namespace Capstone.Models.PaginationModels
 {
     public class PagedResponse<T> : Response<T>
     {
@@ -23,3 +23,4 @@ namespace Capstone.Models.Pagination
 
         }
     }
+}

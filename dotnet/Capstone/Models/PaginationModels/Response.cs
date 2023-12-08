@@ -1,4 +1,4 @@
-﻿namespace Capstone.Models.Pagination
+﻿namespace Capstone.Models.PaginationModels
 {
     public class Response<T>
     {
