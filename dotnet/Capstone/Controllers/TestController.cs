@@ -247,7 +247,7 @@ namespace Capstone.Controllers
                                 // if you do find it, then you have to update the properties for the uri in case it has changed
                                 Label updatedLabel = _labelsDao.UpdateLabel(label);
                                 // then check if the association is there
-                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndGenreId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
+                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndDiscogsId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
                                 {
                                     // if not, add it
                                     _recordsLabelsDao.AddRecordLabel(clientSuppliedRecord.Id, updatedLabel.Label_Id);
@@ -411,49 +411,39 @@ namespace Capstone.Controllers
 
 
 
-        [HttpGet("search")]
-        public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        {
-            // need the username to search the library
-            string username = User.Identity.Name;
-            username = "user";
-            if (username == null)
-            {
-                return BadRequest("You must be logged in to search a library");
-            }
+        //[HttpGet("search")]
+        //public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        //{
+        //    // need the username to search the library
+        //    string username = User.Identity.Name;
+        //    username = "user";
+        //    if (username == null)
+        //    {
+        //        return BadRequest("You must be logged in to search a library");
+        //    }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+        //    SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
-            SearchResult output = null;
-            if (searchRequest.TypeOfSearch == "All")
-            {
-                try
-                {
-                    output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
-                    if (output != null)
-                    {
-                        return Ok(output);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e.Message);
-                }
-            }
-            else if (searchRequest.TypeOfSearch == "Library")
-            {
+        //    SearchResult output = null;
+        //        try
+        //        {
+        //            output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+        //            if (output != null)
+        //            {
+        //                return Ok(output);
+        //            }
+        //            else
+        //            {
+        //                return NotFound();
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return BadRequest(e.Message);
+        //        }
 
-            }
-            else if (searchRequest.TypeOfSearch == "Collections")
-            {
-
-            }
-            return output;
-        }
+        //    return output;
+        //}
 
         [HttpGet("searchDatabase")]
         public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
@@ -472,13 +462,13 @@ namespace Capstone.Controllers
             try
             {
                 List<int> recordIds = new List<int>();
-                if (!string.IsNullOrEmpty(searchRequest.Query))
+                if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
                 {
-                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query);
+                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query, username);
                 }
                 else
                 {
-                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest);
+                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest, username);
                 }
 
                 if (recordIds.Count == 0)
@@ -512,6 +502,54 @@ namespace Capstone.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        [HttpGet("search")]
+        public ActionResult<List<SearchResult>> SearchAll(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        {
+            List<SearchResult> allResults = new List<SearchResult>();
+            // need the username to search the library
+            string username = User.Identity.Name;
+            username = "user";
+            if (username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
+
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+            SearchResult discogsResult = null;
+            SearchResult libraryResult = null;
+            List<RecordClient> recordsInLibrary = null;
+            SearchResult collectionsResult = null;
+
+            if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
+            {
+                return BadRequest("Please enter a valid search");
+            }
+
+            try
+            {
+                discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+
+                if (discogsResult != null)
+                {
+                    return Ok(discogsResult);
+                    //allResults.Add(discogsResult);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+
+
+            return allResults;
         }
 
     }

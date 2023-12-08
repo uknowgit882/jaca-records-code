@@ -173,7 +173,7 @@ public class RecordService : IRecordService
         searchRequest.Country = country;
         searchRequest.Label = label;
         searchRequest.Barcode = barcode;
-        searchRequest.TypeOfSearch = "All";
+        //searchRequest.TypeOfSearch = "All";
 
         return searchRequest;
     }

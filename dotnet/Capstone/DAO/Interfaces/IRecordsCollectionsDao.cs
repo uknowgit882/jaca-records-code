@@ -9,6 +9,6 @@ namespace Capstone.DAO.Interfaces
         public bool AddRecordCollections(int discogsId, int collectionId);
         public bool DeleteRecordCollectionByDiscogsIdAndCollectionId(int discogsID, int collectionId);
         public bool ChangeCollectionIsPremium(int discogsID, int collectionId, bool isPremium);
-        public bool DeReactivateRecordsInCollection(string username, bool isActive)
+        public bool DeReactivateRecordsInCollection(string username, bool isActive);
     }
 }

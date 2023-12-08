@@ -114,7 +114,7 @@ namespace Capstone.Controllers
                 // check user role for all view library/collections 
                 // in get library or get collections endpoints, do an if on the role
                 // if role free, use the method that only returns is_premium false
-                List<int> freeRecords = _librariesDao(username)
+                // List<int> freeRecords = _librariesDao(username)
 
 
                 bool output = _userDao.DowngradeUser(username);
