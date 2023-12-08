@@ -79,6 +79,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                //ErrorLog.WriteLog("Trying to perform advanced wildcard search on database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -92,9 +93,9 @@ namespace Capstone.DAO
             List<int> recordIDs = new List<int>();
             string[] requestObjectSplit = requestObject.Split(' ');
             List<string> requestObjectWords = new List<string>();
-            foreach(string word in requestObjectSplit)
+            foreach (string word in requestObjectSplit)
             {
-                if(word != "the" && word != "a" && word != "an")
+                if (word != "the" && word != "a" && word != "an")
                 {
                     requestObjectWords.Add(word);
                 }
@@ -145,13 +146,12 @@ namespace Capstone.DAO
                 }
                 catch (Exception)
                 {
-
+                    //ErrorLog.WriteLog("Trying to perform wildcard search on database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                     throw;
                 }
             }
             return recordIDs;
         }
-
         protected string SearchStringWildcardAdder(string query)
         {
             return string.IsNullOrEmpty(query) ? "" : "%" + query + "%";
@@ -184,7 +184,7 @@ namespace Capstone.DAO
 
 
 
-
-
     }
+
 }
+
