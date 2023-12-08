@@ -82,7 +82,7 @@
     justify-content:center;
     width: 95%;
     align-items: end;
-    height: 90vh;
+    height: 50vh;
 }
 .box-info{
     display: flex;
