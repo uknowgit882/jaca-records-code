@@ -25,7 +25,7 @@
 </template>
 
 <script>
-
+import SearchService from '../services/SearchService'
 import SearchResultComponent from '@/components/SearchResultComponent.vue'
 
 
@@ -50,18 +50,18 @@ export default {
             searchResults: [],
         }
     },
-    // methods: {
-    //     searchRecord() {
-    //         AuthService.search(this.Search)
-    //             .then(response => {
-    //                 this.$store.commit('ADD_SEARCH_RESULT', response);
-    //                 //this.isVisible = true;
-    //             })
-    //             .catch(error => {
+    methods: {
+        searchRecord() {
+            SearchService.search(this.Search)
+                .then(response => {
+                    this.$store.commit('ADD_SEARCH_RESULT', response);
+                    //this.isVisible = true;
+                })
+                .catch(error => {
 
-    //             })
-    //     }
-    // }
+                })
+        }
+    }
 }
 </script>
 <style scoped>

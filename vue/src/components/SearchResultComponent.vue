@@ -46,9 +46,11 @@
                         <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
                     </ul>
                 </div>
-            </div> 
+            </div>
         </div>
+
         
+
 
         <!-- Second dropdown stops here -->
 
@@ -56,25 +58,38 @@
             <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
         </ul> -->
 
-        <!-- <span class="result-barcode">{{ result.barcode }}</span> -->
+        <!-- <span class="result-barcode">
+            <div class="radio" >
+                <input type="radio" name="answer">
+            </div>
+        </span> -->
+        <AddToLibrary v-bind:key="result.id" v-bind:id="result.id">{{ result.id }}</AddToLibrary>
+
 
     </div>
+
+
+    
 </template>
 
 <script>
-
+import AddToLibrary from '@/components/AddToLibraryComponents.vue'
 export default {
+    components: {
+        AddToLibrary
+    },
     props: {
         result: {
             type: Object,
-            required: true
+            required: true,
+
         }
 
     },
     data() {
         return {
             labelClick: false,
-            labelClick2: false
+            labelClick2: false,
 
         }
     },
@@ -84,7 +99,7 @@ export default {
         },
         selectedLabel() {
             return this.labelClick2 ? this.result.label[0] : '';
-        }
+        },
 
 
     }
@@ -95,8 +110,8 @@ export default {
 .Result-table {
     padding: 10px;
     display: grid;
-    padding-left: 35%;
-    grid-template-columns: 45% 43% 30% 42% 40% 50%;
+    padding-left: 30%;
+    grid-template-columns: 30% 30% 20% 30% 28% 50% 23%;
     grid-template-areas:
         "thumb artist year genre country label";
     gap: 10px;
@@ -129,7 +144,8 @@ export default {
 .result-label {
     grid-template-areas: label;
 }
-#dropdown-menu2{
-    color:black
+
+#dropdown-menu2 {
+    color: black
 }
 </style>
