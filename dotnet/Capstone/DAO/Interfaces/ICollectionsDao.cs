@@ -5,7 +5,8 @@ namespace Capstone.DAO.Interfaces
 {
     public interface ICollectionsDao
     {
-        public List<Collection> GetAllCollections(string username, bool isPremium);
+        public List<Collection> GetAllCollections(string username);
+        public List<Collection> GetAllCollectionsByRole(string username, bool isPremium);
         public List<Collection> GetPubOrPrivAllCollections(string username, bool isPremium, bool isPrivate = false);
         public Collection GetNamedCollection(string username, string name, bool isPremium);
         public Collection GetPubOrPrivCollection(string username, string name, bool isPremium, bool isPrivate = false);
@@ -20,6 +21,6 @@ namespace Capstone.DAO.Interfaces
         public bool DeleteCollection(string name, string username);
         public bool ChangeCollectionPrivacy(string name, string username, bool isPrivate);
         public bool ChangeCollectionIsPremium(string name, string username, bool isPremium);
-        public bool DeReactivateCollection(string name, string username, bool isActive);
+        public bool DeReactivateCollection(string username, bool isActive);
     }
 }

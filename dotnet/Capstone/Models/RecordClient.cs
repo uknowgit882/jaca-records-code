@@ -5,6 +5,7 @@ using System.Xml.Linq;
 
 namespace Capstone.Models
 {
+    // this is the outbound object from the database that goes to the front end
     public class RecordClient
     {
         // this is the discogs_id

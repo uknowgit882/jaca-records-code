@@ -20,13 +20,51 @@ namespace Capstone.DAO
         }
 
         /// <summary>
+        /// Gets all user collections, regardless of privacy status or role, or active status
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public List<Collection> GetAllCollections(string username)
+        {
+            List<Collection> output = new List<Collection>();
+
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE username = @username ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output.Add(MapRowToCollection(reader));
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get all collections", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Gets all user collections, regardless of privacy status.
         /// For all users. Pass in the current user's role in the toggle. 
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public List<Collection> GetAllCollections(string username, bool isPremium)
+        public List<Collection> GetAllCollectionsByRole(string username, bool isPremium)
         {
             List<Collection> output = new List<Collection>();
 
@@ -652,13 +690,13 @@ namespace Capstone.DAO
         /// <param name="isActive"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public bool DeReactivateCollection(string name, string username, bool isActive)
+        public bool DeReactivateCollection(string username, bool isActive)
         {
             int numberOfRows = 0;
 
             string sql = "UPDATE collections " +
                 "SET is_active = @isActive, updated_date = @updated_date " +
-                "WHERE name = @name AND username = @username;";
+                "WHERE username = @username;";
 
             try
             {
@@ -667,7 +705,6 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", name);
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@isActive", isActive);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
@@ -680,7 +717,7 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to deactivate collection", $"For {username}, {name}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to de/reactivate collection", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;

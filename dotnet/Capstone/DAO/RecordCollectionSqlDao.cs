@@ -133,20 +133,22 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Toggles a record_collection association from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
+        /// Toggles specific record in record_collections for a user from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
         /// </summary>
-        /// <param name="discogsID"></param>
-        /// <param name="collectionId"></param>
+        /// <param name="discogsId"></param>
+        /// <param name="username"></param>
         /// <param name="isPremium"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public bool ChangeCollectionIsPremium(int discogsId, int collectionId, bool isPremium)
+        public bool ChangeSingleRecordCollectionIsPremium(int discogsId, string username, bool isPremium)
         {
             int numberOfRows = 0;
 
-            string sql = "UPDATE records_collections " +
-                "SET is_premium = @isPremium, updated_date = @updated_date " +
-                "WHERE discogs_id = @discogsId AND collection_id = @collectionId;";
+            string sql = "UPDATE rc " +
+                "SET rc.is_premium = @isPremium, rc.updated_date = @updated_date " +
+                "FROM collections AS c " +
+                "JOIN records_collections AS rc ON c.collection_id = rc.collection_id " +
+                "WHERE username = @username AND records_collections.discogs_id = @discogsId";
 
             try
             {
@@ -155,9 +157,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
-                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
                     if (numberOfRows != 1)
@@ -168,7 +170,46 @@ namespace Capstone.DAO
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to change collection free/premium status", $"For {discogsId}, {collectionId}, action: {isPremium}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to change collection free/premium status for all records", $"For {username}, action: {isPremium}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Something went wrong", ex);
+            }
+            return true;
+
+        }
+
+        /// <summary>
+        /// Toggles all records in record_collections for a user from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="isPremium"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool ChangeAllRecordCollectionIsPremium(string username, bool isPremium)
+        {
+            int numberOfRows = 0;
+
+            string sql = "UPDATE rc " +
+                "SET rc.is_premium = @isPremium, rc.updated_date = @updated_date " +
+                "FROM collections AS c " +
+                "JOIN records_collections AS rc ON c.collection_id = rc.collection_id " +
+                "WHERE username = @username";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    numberOfRows = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to change collection free/premium status for all records", $"For {username}, action: {isPremium}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Something went wrong", ex);
             }
             return true;
