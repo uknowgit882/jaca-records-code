@@ -20,7 +20,6 @@ namespace Capstone.Models.PaginationModels
             this.Message = null;
             this.Succeeded = true;
             this.Errors = null;
-
         }
     }
 }

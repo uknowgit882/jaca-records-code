@@ -7,6 +7,7 @@ namespace Capstone.DAO.Interfaces
     {
         public List<int> WildcardAdvancedSearchDatabaseForRecords(SearchRequest requestObject, string username);
         public List<int> WildcardSearchDatabaseForRecords(string requestObject, string username);
-
+        public List<int> WildcardSearchCollectionsForRecords(string requestObject, string username);
+        public List<int> WildcardAdvancedSearchCollectionsForRecords(SearchRequest requestObject, string username);
     }
 }

@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Models.PaginationModels;
 using Capstone.Security;
 using Capstone.DAO.Interfaces;
 using System;
 using Capstone.DAO;
 using Capstone.Service;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Capstone.Controllers
 {
@@ -279,7 +281,7 @@ namespace Capstone.Controllers
                                 // if you do find it, then you have to update the properties for the uri in case it has changed
                                 Label updatedLabel = _labelsDao.UpdateLabel(label);
                                 // then check if the association is there
-                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndGenreId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
+                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndDiscogsId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
                                 {
                                     // if not, add it
                                     _recordsLabelsDao.AddRecordLabel(clientSuppliedRecord.Id, updatedLabel.Label_Id);
@@ -440,9 +442,12 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("searchDatabase")]
-        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+
+        [HttpGet("search")]
+        public ActionResult<SearchResult> SearchDiscogs(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
         {
+            SearchResult discogsResult = null;
+            // need the username to search the library
             string username = User.Identity.Name;
             username = "user";
             if (username == null)
@@ -451,6 +456,42 @@ namespace Capstone.Controllers
             }
 
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+
+            if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
+            {
+                return BadRequest("Please enter a valid search");
+            }
+
+            try
+            {
+                discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
+
+                if (discogsResult != null)
+                {
+                    return Ok(discogsResult);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("searchLibrary")]
+        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
+        {
+            string username = User.Identity.Name;
+            username = "user";
+            if (username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
+
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode); // PaginationFilter filter
 
             List<RecordClient> output = new List<RecordClient>();
 
@@ -471,36 +512,79 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
 
-                foreach (int recordId in recordIds)
+                foreach (int discogId in recordIds)
                 {
-                    // get the record
-                    RecordTableData foundRecord = _recordBuilderDao.GetRecordByDiscogsIdAndUsername(recordId, username);
+                    // this is much neater
+                    // refactored and put in the parent CommonController class as a helper method
+                    RecordClient newFullRecord = BuildFullRecord(discogId);
 
-                    // make sure you have a result to action
-                    if (foundRecord != null)
+                    if (newFullRecord != null)
                     {
-                        // map that found record into the eventual outgoing result
-                        RecordClient recordToAddToResultsList = new RecordClient();
+                        output.Add(newFullRecord);
+                    }
+                }
 
-                        recordToAddToResultsList.Id = foundRecord.Discogs_Id;
-                        recordToAddToResultsList.URI = foundRecord.URL;
-                        recordToAddToResultsList.Title = foundRecord.Title;
-                        recordToAddToResultsList.Country = foundRecord.Country;
-                        recordToAddToResultsList.Date_Changed = foundRecord.Discogs_Date_Changed;
-                        recordToAddToResultsList.Released = foundRecord.Released;
-                        recordToAddToResultsList.Notes = foundRecord.Notes;
+                //PaginationFilter validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+                //var pagedData = output.Skip((validFilter.PageNumber - 1) * validFilter.PageSize).Take(validFilter.PageSize);
 
-                        // add the other bits that need a sqldao to fetch from the other tables
-                        recordToAddToResultsList.Artists = _artistsDao.GetArtistsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.ExtraArtists = _artistsDao.GetExtraArtistsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Labels = _labelsDao.GetLabelsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Formats = _formatsDao.GetFormatsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Identifiers = _barcodesDao.GetIdentifiersByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Genres = _genresDao.GetGenresByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Tracklist = _tracksDao.GetTracksByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Images = _imagesDao.GetImagesByDiscogsIdAndUsername(recordId, username);
+                if (output != null)
+                {
+                    return Ok(output);
+                    //return Ok(new PagedResponse<List<RecordClient>>((List<RecordClient>)pagedData, validFilter.PageNumber, validFilter.PageSize));
+                    //return Ok(new PagedResponse<List<Customer>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
-                        output.Add(recordToAddToResultsList);
+        }
+
+        [HttpGet("searchCollections")]
+        public ActionResult<List<RecordClient>> SearchCollections(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        {
+            string username = User.Identity.Name;
+            username = "user";
+            if (username == null)
+            {
+                return BadRequest("You must be logged in to search a library");
+            }
+
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+
+            List<RecordClient> output = new List<RecordClient>();
+
+            try
+            {
+                List<int> recordIds = new List<int>();
+                if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
+                {
+                    recordIds = _searchDao.WildcardSearchCollectionsForRecords(searchRequest.Query, username);
+                }
+                else
+                {
+                    recordIds = _searchDao.WildcardAdvancedSearchCollectionsForRecords(searchRequest, username);
+                }
+
+                if (recordIds.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                foreach (int discogId in recordIds)
+                {
+                    // this is much neater
+                    // refactored and put in the parent CommonController class as a helper method
+                    RecordClient newFullRecord = BuildFullRecord(discogId);
+
+                    if (newFullRecord != null)
+                    {
+                        output.Add(newFullRecord);
                     }
                 }
 
@@ -517,55 +601,6 @@ namespace Capstone.Controllers
             {
                 return BadRequest(e.Message);
             }
-
-        }
-
-        [HttpGet("search")]
-        public ActionResult<List<SearchResult>> SearchAll(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        {
-            List<SearchResult> allResults = new List<SearchResult>();
-            // need the username to search the library
-            string username = User.Identity.Name;
-            username = "user";
-            if (username == null)
-            {
-                return BadRequest("You must be logged in to search a library");
-            }
-
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
-            SearchResult discogsResult = null;
-            SearchResult libraryResult = null;
-            List<RecordClient> recordsInLibrary = null;
-            SearchResult collectionsResult = null;
-
-            if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
-            {
-                return BadRequest("Please enter a valid search");
-            }
-
-            try
-            {
-                discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
-
-                if (discogsResult != null)
-                {
-                    return Ok(discogsResult);
-                    //allResults.Add(discogsResult);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-
-
-
-            return allResults;
         }
 
     }

@@ -1,13 +1,14 @@
 <template>
-<caorusel-component></caorusel-component>
+<carousel-component></carousel-component>
 </template>
 
 <script>
-import CaoruselComponent from '../components/CarouselComponent.vue';
+import CarouselComponent from '../components/CarouselComponent.vue';
+
 
 export default{
     components: {
-        CaoruselComponent
+        CarouselComponent
     }
 }
 </script>

@@ -247,7 +247,7 @@ namespace Capstone.Controllers
                                 // if you do find it, then you have to update the properties for the uri in case it has changed
                                 Label updatedLabel = _labelsDao.UpdateLabel(label);
                                 // then check if the association is there
-                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndGenreId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
+                                if (!_recordsLabelsDao.GetRecordLabelByLabelIdAndDiscogsId(clientSuppliedRecord.Id, updatedLabel.Label_Id))
                                 {
                                     // if not, add it
                                     _recordsLabelsDao.AddRecordLabel(clientSuppliedRecord.Id, updatedLabel.Label_Id);
@@ -509,6 +509,7 @@ namespace Capstone.Controllers
         {
             List<SearchResult> allResults = new List<SearchResult>();
             // need the username to search the library
+            //TODO
             string username = User.Identity.Name;
             username = "user";
             if (username == null)
