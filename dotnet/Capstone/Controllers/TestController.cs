@@ -509,6 +509,7 @@ namespace Capstone.Controllers
         {
             List<SearchResult> allResults = new List<SearchResult>();
             // need the username to search the library
+            //TODO
             string username = User.Identity.Name;
             username = "user";
             if (username == null)
