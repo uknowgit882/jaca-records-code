@@ -172,6 +172,87 @@ namespace Capstone.DAO
             }
         }
 
+        /// <summary>
+        /// Returns the record count by formats type in this user's library. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Dictionary of key, format type, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetFormatAndRecordCountByUsername(string username)
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT format.type, count(records.discogs_id) AS record_count " +
+                "FROM formats " +
+                "JOIN records_formats ON formats.format_id = records_formats.format_id " +
+                "JOIN records ON records_formats.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND records.is_active = 1 " +
+                "GROUP BY format.type";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["type"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by type for user", $"{username} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by format type in the entire database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, format type, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetFormatAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT format.type, count(records.discogs_id) AS record_count " +
+                "FROM formats " +
+                "JOIN records_formats ON formats.format_id = records_formats.format_id " +
+                "JOIN records ON records_formats.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.is_active = 1 " +
+                "GROUP BY format.type";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["type"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by format for whole database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
         // I don't think I need this...
         ///// <summary>
         ///// Gets the formats associated for this record for this specific user

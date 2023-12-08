@@ -10,6 +10,9 @@ namespace Capstone.DAO.Interfaces
         public List<Label> GetLabelsByDiscogsId(int discogId);
         public int GetLabelCountByUsername(string username);
         public int GetLabelCount();
+        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username);
+        public Dictionary<string, int> GetGenreAndRecordCount();
+
         //public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username); // might not need
         public Label UpdateLabel(Label updatedLabel);
     }

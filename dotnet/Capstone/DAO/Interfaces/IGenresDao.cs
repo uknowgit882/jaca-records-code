@@ -10,6 +10,8 @@ namespace Capstone.DAO
         public List<string> GetGenresByDiscogsId(int discogId);
         public int GetGenreCountByUsername(string username);
         public int GetGenreCount();
+        public Dictionary<string, int> GetGenreAndRecordCountByUsername(string username);
+        public Dictionary<string, int> GetGenreAndRecordCount();
         //public List<string> GetGenresByDiscogsIdAndUsername(int discogId, string username); // might not need this
         public bool AddGenre(string genre);
     }

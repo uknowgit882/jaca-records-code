@@ -16,11 +16,13 @@ namespace Capstone.Controllers
     {
         protected readonly IArtistsDao _artistsDao;
         protected readonly IBarcodesDao _barcodesDao;
+        protected readonly ICollectionsDao _collectionsDao;
         protected readonly IFormatsDao _formatsDao;
         protected readonly IFriendsDao _friendsDao;
         protected readonly IGenresDao _genresDao;
         protected readonly IImagesDao _imagesDao;
         protected readonly ILabelsDao _labelsDao;
+        protected readonly ILibrariesDao _librariesDao;
         protected readonly IRecordBuilderDao _recordBuilderDao;
         protected readonly IRecordsArtistsDao _recordsArtistsDao;
         protected readonly IRecordsExtraArtistsDao _recordsExtraArtistsDao;
@@ -32,17 +34,19 @@ namespace Capstone.Controllers
         protected readonly IRecordService _recordService;
         protected readonly ISearchDao _searchDao;
 
-        public CommonController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao,
-            IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+        public CommonController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao,
+            IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
         {
             _artistsDao = artistsDao;
             _barcodesDao = barcodesDao;
+            _collectionsDao = collectionsDao;
             _formatsDao = formatsDao;
             _friendsDao = friendsDao;
             _genresDao = genresDao;
             _imagesDao = imagesDao;
             _labelsDao = labelsDao;
+            _librariesDao = librariesDao;
             _recordBuilderDao = recordBuilderDao;
             _recordsArtistsDao = recordsArtistsDao;
             _recordsExtraArtistsDao = recordsExtraArtistsDao;

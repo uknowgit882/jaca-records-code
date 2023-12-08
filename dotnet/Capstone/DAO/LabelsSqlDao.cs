@@ -161,6 +161,87 @@ namespace Capstone.DAO
             }
         }
 
+        /// <summary>
+        /// Returns the record count by label in this user's library. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Dictionary of key, label name, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username)
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT label.name, count(records.discogs_id) AS record_count " +
+                "FROM labels " +
+                "JOIN records_labels ON labels.label_id = records_labels.label_id " +
+                "JOIN records ON records_labels.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND records.is_active = 1 " +
+                "GROUP BY label.name";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["name"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by label for user", $"{username} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by genres in the entire database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, genre name, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetGenreAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT label.name, count(records.discogs_id) AS record_count " +
+                "FROM labels " +
+                "JOIN records_labels ON labels.label_id = records_labels.label_id " +
+                "JOIN records ON records_labels.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE records.is_active = 1 " +
+                "GROUP BY label.name"; 
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["name"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by label for whole database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
         // don't think I need this...
         ///// <summary>
         ///// Gets the labels associated for this record for this specific user

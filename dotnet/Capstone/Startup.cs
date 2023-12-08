@@ -68,11 +68,13 @@ namespace Capstone
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
             services.AddTransient<IArtistsDao>(m => new ArtistSqlDao(connectionString));
             services.AddTransient<IBarcodesDao>(m => new BarcodeSqlDao(connectionString));
+            services.AddTransient<ICollectionsDao>(m => new CollectionsSqlDao(connectionString));
             services.AddTransient<IFormatsDao>(m => new FormatSqlDao(connectionString));
             services.AddTransient<IFriendsDao>(m => new FriendSqlDao(connectionString));
             services.AddTransient<IGenresDao>(m => new GenreSqlDao(connectionString));
             services.AddTransient<IImagesDao>(m => new ImageSqlDao(connectionString));
             services.AddTransient<ILabelsDao>(m => new LabelsSqlDao(connectionString));
+            services.AddTransient<ILibrariesDao>(m => new LibrariesSqlDao(connectionString));
             services.AddTransient<IRecordBuilderDao>(m => new RecordBuilderSqlDao(connectionString));
             services.AddTransient<IRecordsArtistsDao>(m => new RecordArtistSqlDao(connectionString));
             services.AddTransient<IRecordsCollectionsDao>(m => new RecordCollectionSqlDao(connectionString));

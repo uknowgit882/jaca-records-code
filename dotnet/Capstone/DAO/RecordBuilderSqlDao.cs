@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Capstone.DAO
 {
@@ -145,6 +146,78 @@ namespace Capstone.DAO
             catch (SqlException ex)
             {
                 ErrorLog.WriteLog("Getting all records from database", $"Simple query", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by year in the database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, year, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetYearAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT released AS year_released, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "GROUP BY released " +
+                "ORDER by year_released DESC";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["year_released"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by year from database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by country in the database. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, country, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetCountryAndRecordCount()
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT country, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "GROUP BY country " +
+                "ORDER by country";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["country"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by country from database", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
         }

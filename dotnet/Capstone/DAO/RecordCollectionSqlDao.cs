@@ -175,6 +175,45 @@ namespace Capstone.DAO
 
         }
 
+        /// <summary>
+        /// De/Reactivates (but not un/deletes) a user's records in the collection when they de/reactivate their profile.
+        /// Separate from when they down/upgrade
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool DeReactivateRecordsInCollection(string username, bool isActive)
+        {
+            int numberOfRows = 0;
+
+            string sql = "UPDATE rc " +
+                "SET rc.is_active = @isActive, rc.updated_date = @updated_date " +
+                "FROM collections AS c " +
+                "JOIN records_collections AS rc ON c.collection_id = rc.collection_id " +
+                "WHERE username = @username";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@isActive", isActive);
+                    numberOfRows = cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to de/reactivate records in the user's collection", $"For {username}, action: {isActive}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Something went wrong", ex);
+            }
+        }
+
         private RecordCollection MapRowToRecordCollection(SqlDataReader reader)
         {
             RecordCollection output = new RecordCollection();

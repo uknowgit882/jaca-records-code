@@ -12,51 +12,17 @@ namespace Capstone.Controllers
     [ApiController]
     public class TestController : CommonController
     {
-        //private readonly IArtistsDao _artistsDao;
-        //private readonly IBarcodesDao _barcodesDao;
-        //private readonly IFormatsDao _formatsDao;
-        //private readonly IFriendsDao _friendsDao;
-        //private readonly IGenresDao _genresDao;
-        //private readonly IImagesDao _imagesDao;
-        //private readonly ILabelsDao _labelsDao;
-        //private readonly IRecordBuilderDao _recordBuilderDao;
-        //private readonly IRecordsArtistsDao _recordsArtistsDao;
-        //private readonly IRecordsExtraArtistsDao _recordsExtraArtistsDao;
-        //private readonly IRecordsFormatsDao _recordsFormatsDao;
-        //private readonly IRecordsGenresDao _recordsGenresDao;
-        //private readonly IRecordsLabelsDao _recordsLabelsDao;
-        //private readonly ITracksDao _tracksDao;
-        //private readonly IUserDao _userDao;
-        //public readonly IRecordService _recordService;
-        //private readonly ISearchDao _searchDao;
 
-        public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao, IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
-            : base(artistsDao, barcodesDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao, recordService, tracksDao, userDao, searchDao)
+        public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
+            IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao,
+            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+            IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao,
+            IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
+            : base(artistsDao, barcodesDao, collectionsDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, librariesDao,
+                  recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
+                  recordService, tracksDao, userDao, searchDao)
         {
         }
-
-        //public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao,
-        //    IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
-        //    IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
-        //{
-        //    _artistsDao = artistsDao;
-        //    _barcodesDao = barcodesDao;
-        //    _formatsDao = formatsDao;
-        //    _friendsDao = friendsDao;
-        //    _genresDao = genresDao;
-        //    _imagesDao = imagesDao;
-        //    _labelsDao = labelsDao;
-        //    _recordBuilderDao = recordBuilderDao;
-        //    _recordsArtistsDao = recordsArtistsDao;
-        //    _recordsExtraArtistsDao = recordsExtraArtistsDao;
-        //    _recordsFormatsDao = recordsFormatsDao;
-        //    _recordsGenresDao = recordsGenresDao;
-        //    _recordsLabelsDao = recordsLabelsDao;
-        //    _recordService = recordService;
-        //    _tracksDao = tracksDao;
-        //    _userDao = userDao;
-        //    _searchDao = searchDao;
-        //}
 
         [HttpGet("AddRecordToDb/{discogsId}")]
         public ActionResult<RecordClient> AddRecordToDbById(int discogsId)
