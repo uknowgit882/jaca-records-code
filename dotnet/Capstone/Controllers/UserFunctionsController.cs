@@ -16,16 +16,16 @@ namespace Capstone.Controllers
     {
         public UserFunctionsController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
             IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao,
-            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsCollectionsDao recordsCollectionsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao,
             IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
             : base(artistsDao, barcodesDao, collectionsDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, librariesDao,
-                  recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
+                  recordBuilderDao, recordsArtistsDao, recordsCollectionsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
                   recordService, tracksDao, userDao, searchDao)
         {
         }
 
-        [HttpPut("userfunctions/deactivate/{username}")]
+        [HttpPut("deactivate/{username}")]
         public ActionResult<string> DeactivateUser(string username)
         {
             // check if you have a valid value, and it matches the user who is logged in (for security)
@@ -39,6 +39,12 @@ namespace Capstone.Controllers
 
             try
             {
+                // deactivate library, collections, record collections
+                _librariesDao.DeReactivateLibrary(username, false);
+                _collectionsDao.DeReactivateCollection(username, false);
+                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, false);
+
+                // then deactivate the user
                 bool output = _userDao.DeactivateUser(username);
                 if (output)
                 {
@@ -56,7 +62,7 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("userfunctions/upgrade/{username}")]
+        [HttpPut("upgrade/{username}")]
         public ActionResult<string> UpgradeUser(string username)
         {
             // check if you have a valid value, and it matches the user who is logged in (for security)
@@ -71,6 +77,21 @@ namespace Capstone.Controllers
             try
             {
                 // have to update is_premium in places
+                // upgrade all records in libraries and collections to ispremium true
+                _librariesDao.ChangeAllRecordIsPremium(username, true);
+                _recordsCollectionsDao.ChangeAllRecordCollectionIsPremium(username, true);
+
+                // restore all collections to is premium true
+                // get all the collections that are false
+                List<Collection> collections = _collectionsDao.GetAllCollections(username);
+
+                // then make is premium is true
+                foreach(Collection collection in collections)
+                {
+                    _collectionsDao.ChangeCollectionIsPremium(collection.Name, username, true);
+                }
+
+                // then upgrade
                 bool output = _userDao.UpgradeUser(username);
                 if (output)
                 {
@@ -87,7 +108,7 @@ namespace Capstone.Controllers
                 return BadRequest("Something went wrong upgrading this user");
             }
         }
-        [HttpPut("userfunctions/downgrade/{username}")]
+        [HttpPut("downgrade/{username}")]
         public ActionResult<string> DowngradeUser(string username)
         {
             // check if you have a valid value, and it matches the user who is logged in (for security)
@@ -106,18 +127,25 @@ namespace Capstone.Controllers
                 // will reduce collection to the last one created
 
                 // get the most recent 25 records from library
-                // mark them is premium false
+                List<Library> freeRecords = _librariesDao.Get25MostRecentDiscogsIdsInLibrary(username);
+                
+                // mark just them as is premium false
+                foreach(Library record in freeRecords)
+                {
+                    _librariesDao.ChangeRecordIsPremium(record.Discog_Id, username, false);
+                    // and also in records collections
+                    _recordsCollectionsDao.ChangeSingleRecordCollectionIsPremium(record.Discog_Id, username, false);
+                }
+
                 // add a collection "free" from collections
-                // set it to is premium false
-                // add the 25 to that collection to records_collections
-                // set it to is premium false
-                // check user role for all view library/collections 
-                // in get library or get collections endpoints, do an if on the role
-                // if role free, use the method that only returns is_premium false
-                // List<int> freeRecords = _librariesDao(username)
+                _collectionsDao.AddCollection(username, "Free Collection");
 
+                // set it to is premium false
+                _collectionsDao.ChangeCollectionIsPremium("Free Collection", username, false);
 
+                // then downgrade the user
                 bool output = _userDao.DowngradeUser(username);
+
                 if (output)
                 {
                     return Ok($"{username} was downgraded");

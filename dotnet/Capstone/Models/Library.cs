@@ -23,4 +23,10 @@ namespace Capstone.Models
         [JsonIgnore]
         public DateTime Updated_Date { get; set; }
     }
+    public class IncomingAddLibrary
+    {
+        public int DiscogsId { get; set; }
+        public string Username { get; set; }
+        public string Notes { get; set; } = "";
+    }
 }

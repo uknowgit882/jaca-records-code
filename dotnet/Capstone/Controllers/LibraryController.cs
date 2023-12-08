@@ -1,19 +1,22 @@
-﻿using Capstone.DAO;
-using Capstone.DAO.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Capstone.Exceptions;
 using Capstone.Models;
-using Capstone.Service;
-using Microsoft.AspNetCore.Mvc;
+using Capstone.Security;
+using Capstone.DAO.Interfaces;
 using System;
+using Capstone.DAO;
+using Capstone.Service;
 using System.Collections.Generic;
+using Capstone.Utils;
+using System.Reflection;
 
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TestController : CommonController
+    public class LibraryController : CommonController
     {
-
-        public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
+        public LibraryController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
             IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao,
             IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsCollectionsDao recordsCollectionsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao,
@@ -23,9 +26,113 @@ namespace Capstone.Controllers
                   recordService, tracksDao, userDao, searchDao)
         {
         }
+        // sample, to edit
+        [HttpPut("userfunctions/reactivate/{username}")]
+        public ActionResult<string> ReactivateUser(string username)
+        {
+            // check if you have a valid value, and it matches the user who is logged in (for security)
+            // so they are actioning their own profile
+            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
+            {
+                // validation of the input
+                // if fails, stop
+                return BadRequest("You must enter a valid username");
+            }
 
-        [HttpGet("AddRecordToDb/{discogsId}")]
-        public ActionResult<RecordClient> AddRecordToDbById(int discogsId)
+            try
+            {
+                bool output = _userDao.ReactivateUser(username);
+                if (output)
+                {
+                    return Ok($"{username} was deactivated");
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<List<RecordClient>> GetLibrary()
+        {
+            string username = User.Identity.Name;
+            //TODO remove hardcode
+            username = "user";
+
+            // container for the outbound records
+            List<RecordClient> output = new List<RecordClient>();
+
+            try
+            {
+                // get the user's role
+                string role = _userDao.GetUserRole(username);
+
+                // container
+                List<Library> usersLibrary = new List<Library>();
+
+                if(role == "free")
+                {
+                    usersLibrary = _librariesDao.GetFreeUsersLibrary(username);    
+                }
+                else
+                {
+                    usersLibrary = _librariesDao.GetPremiumUsersLibrary(username);
+                }
+
+                foreach(Library row in usersLibrary)
+                {
+                    output.Add(BuildFullRecord(row.Discog_Id));
+                }
+
+                if (output != null)
+                {
+                    return Ok(output);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpPost]
+        public ActionResult<bool> AddLibrary(IncomingAddLibrary incoming)
+        {
+            try
+            {
+                // get the record from the api and put it in our db
+                string errorMessage = "";
+                RecordClient dbLoadedRecord = AddRecordToDbById(incoming.DiscogsId, out errorMessage);
+
+                bool output = _librariesDao.AddRecord(incoming.DiscogsId, incoming.Username, incoming.Notes);
+                if (output)
+                {
+                    return Ok($"{dbLoadedRecord.Title} was added to your library");
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        private RecordClient AddRecordToDbById(int discogsId, out string errorMessage)
         {
             // this might be atrocious for performance but I am not sure how else to do this
             RecordClient output = null;
@@ -48,7 +155,8 @@ namespace Capstone.Controllers
                 // if there isn't at least one vinyl format, return a bad request 
                 if (vinylCount < 1)
                 {
-                    return BadRequest("This record does not contain any vinyl. We're a vinyl only shop. Try again.");
+                    errorMessage = "This record does not contain any vinyl. We're a vinyl only shop. Try again.";
+                    return output;
                 }
 
                 // check if it's in the record table first
@@ -173,11 +281,23 @@ namespace Capstone.Controllers
                     // if you have a new record, activate that
                     if (existingRecord != null)
                     {
-                        return Created("https://localhost:44315/", _recordBuilderDao.ActivateRecord(existingRecord.Discogs_Id));
+                        // activate the record
+                        _recordBuilderDao.ActivateRecord(existingRecord.Discogs_Id);
+
+                        // then get the fully qualified object
+                        output = BuildFullRecord(discogsId);
+                        errorMessage = "Created record successfully";
+                        return output;
                     }
                     else
                     {
-                        return Created("https://localhost:44315/", _recordBuilderDao.ActivateRecord(newRecord.Discogs_Id));
+                        // activate the record
+                        _recordBuilderDao.ActivateRecord(newRecord.Discogs_Id);
+
+                        // then get the fully qualified object
+                        output = BuildFullRecord(discogsId);
+                        errorMessage = "Created record successfully";
+                        return output;
                     }
 
                 }
@@ -392,165 +512,25 @@ namespace Capstone.Controllers
                     // so you won't come down this path again until discogs updates its api
 
                     _recordBuilderDao.UpdateRecordDiscogsDateChanged(clientSuppliedRecord.Id, clientSuppliedRecord.Date_Changed);
+                    output = BuildFullRecord(discogsId);
+                    errorMessage = "Updated record succesfully";
 
-                    return Ok("Updated record");
+                    return output;
                 }
                 else
                 {
-                    return Ok("This record already exists in our database");
+                    output = BuildFullRecord(discogsId);
+                    errorMessage = "This record already exists in our database";
+                    return output;
                 }
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
-                return BadRequest($"Something went wrong adding your record, id {discogsId}. Please contact an admin");
+                ErrorLog.WriteLog("Trying to get record from Discogs API and build into database", $"For {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                errorMessage = $"Something went wrong adding your record, id {discogsId}. Please contact an admin";
+                return output;
             }
         }
-
-
-
-
-        //[HttpGet("search")]
-        //public ActionResult<SearchResult> Search(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        //{
-        //    // need the username to search the library
-        //    string username = User.Identity.Name;
-        //    username = "user";
-        //    if (username == null)
-        //    {
-        //        return BadRequest("You must be logged in to search a library");
-        //    }
-
-        //    SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
-
-        //    SearchResult output = null;
-        //        try
-        //        {
-        //            output = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
-        //            if (output != null)
-        //            {
-        //                return Ok(output);
-        //            }
-        //            else
-        //            {
-        //                return NotFound();
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return BadRequest(e.Message);
-        //        }
-
-        //    return output;
-        //}
-
-        [HttpGet("searchDatabase")]
-        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        {
-            string username = User.Identity.Name;
-            username = "user";
-            if (username == null)
-            {
-                return BadRequest("You must be logged in to search a library");
-            }
-
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
-
-            List<RecordClient> output = new List<RecordClient>();
-
-            try
-            {
-                List<int> recordIds = new List<int>();
-                if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
-                {
-                    recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query, username);
-                }
-                else
-                {
-                    recordIds = _searchDao.WildcardAdvancedSearchDatabaseForRecords(searchRequest, username);
-                }
-
-                if (recordIds.Count == 0)
-                {
-                    return NotFound();
-                }
-
-                foreach (int discogId in recordIds)
-                {
-                    // this is much neater
-                    // refactored and put in the parent CommonController class as a helper method
-                    RecordClient newFullRecord = BuildFullRecord(discogId);
-
-                    if (newFullRecord != null)
-                    {
-                        output.Add(newFullRecord);
-                    }
-                }
-
-                if (output != null)
-                {
-                    return Ok(output);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-        }
-
-        [HttpGet("search")]
-        public ActionResult<List<SearchResult>> SearchAll(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
-        {
-            List<SearchResult> allResults = new List<SearchResult>();
-            // need the username to search the library
-            string username = User.Identity.Name;
-            username = "user";
-            if (username == null)
-            {
-                return BadRequest("You must be logged in to search a library");
-            }
-
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
-            SearchResult discogsResult = null;
-            SearchResult libraryResult = null;
-            List<RecordClient> recordsInLibrary = null;
-            SearchResult collectionsResult = null;
-
-            if (string.IsNullOrEmpty(searchRequest.Query) && string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
-            {
-                return BadRequest("Please enter a valid search");
-            }
-
-            try
-            {
-                discogsResult = _recordService.SearchForRecordsDiscogs(searchRequest, pageNumber);
-
-                if (discogsResult != null)
-                {
-                    return Ok(discogsResult);
-                    //allResults.Add(discogsResult);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-
-
-
-            return allResults;
-        }
-
     }
 }

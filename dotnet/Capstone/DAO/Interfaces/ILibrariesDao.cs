@@ -14,6 +14,7 @@ namespace Capstone.DAO.Interfaces
         public int GetRecordCountForAllUsers();
         public bool AddRecord(int discogsId, string username, string notes);
         public bool ChangeRecordIsPremium(int discogsId, string username, bool toggleIsPremium);
+        public bool ChangeAllRecordIsPremium(string username, bool toggleIsPremium);
         public string ChangeNote(string username, int discogsId, string notes);
         public int ChangeQuantity(string username, int discogsId, int quantity);
         public bool DeleteRecord(int discogsId, string username);

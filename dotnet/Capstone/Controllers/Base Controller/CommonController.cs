@@ -25,6 +25,7 @@ namespace Capstone.Controllers
         protected readonly ILibrariesDao _librariesDao;
         protected readonly IRecordBuilderDao _recordBuilderDao;
         protected readonly IRecordsArtistsDao _recordsArtistsDao;
+        protected readonly IRecordsCollectionsDao _recordsCollectionsDao;
         protected readonly IRecordsExtraArtistsDao _recordsExtraArtistsDao;
         protected readonly IRecordsFormatsDao _recordsFormatsDao;
         protected readonly IRecordsGenresDao _recordsGenresDao;
@@ -35,7 +36,7 @@ namespace Capstone.Controllers
         protected readonly ISearchDao _searchDao;
 
         public CommonController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao,
-            IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+            IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsCollectionsDao recordsCollectionsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
         {
             _artistsDao = artistsDao;
@@ -49,6 +50,7 @@ namespace Capstone.Controllers
             _librariesDao = librariesDao;
             _recordBuilderDao = recordBuilderDao;
             _recordsArtistsDao = recordsArtistsDao;
+            _recordsCollectionsDao = recordsCollectionsDao;
             _recordsExtraArtistsDao = recordsExtraArtistsDao;
             _recordsFormatsDao = recordsFormatsDao;
             _recordsGenresDao = recordsGenresDao;
