@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Models.PaginationModels;
 using Capstone.Security;
 using Capstone.DAO.Interfaces;
 using System;
 using Capstone.DAO;
 using Capstone.Service;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Capstone.Controllers
 {
@@ -480,7 +482,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("searchLibrary")]
-        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
+        public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
             string username = User.Identity.Name;
             username = "user";
@@ -489,7 +491,7 @@ namespace Capstone.Controllers
                 return BadRequest("You must be logged in to search a library");
             }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode); // PaginationFilter filter
 
             List<RecordClient> output = new List<RecordClient>();
 
@@ -522,9 +524,14 @@ namespace Capstone.Controllers
                     }
                 }
 
+                //PaginationFilter validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+                //var pagedData = output.Skip((validFilter.PageNumber - 1) * validFilter.PageSize).Take(validFilter.PageSize);
+
                 if (output != null)
                 {
                     return Ok(output);
+                    //return Ok(new PagedResponse<List<RecordClient>>((List<RecordClient>)pagedData, validFilter.PageNumber, validFilter.PageSize));
+                    //return Ok(new PagedResponse<List<Customer>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
                 }
                 else
                 {
