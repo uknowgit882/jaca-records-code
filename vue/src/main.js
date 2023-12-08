@@ -35,4 +35,3 @@ const app = createApp(CapstoneApp);
 app.use(store);
 app.use(router);
 app.mount('#app');
-app.use(Carousel3d);
