@@ -19,10 +19,13 @@ namespace Capstone.DAO
         public List<int> WildcardAdvancedSearchDatabaseForRecords(SearchRequest requestObject, string username)
         {
             List<int> recordIDs = new List<int>();
-            List<int> recordIDsFromQuerySearch = WildcardSearchDatabaseForRecords(requestObject.Query, username);
-            for (int i = 0; i < recordIDsFromQuerySearch.Count; i++)
+            if (!string.IsNullOrEmpty(requestObject.Query))
             {
-                recordIDs.Add(recordIDsFromQuerySearch[i]);
+                List<int> recordIDsFromQuerySearch = WildcardSearchDatabaseForRecords(requestObject.Query, username);
+                for (int i = 0; i < recordIDsFromQuerySearch.Count; i++)
+                {
+                    recordIDs.Add(recordIDsFromQuerySearch[i]);
+                }
             }
 
             string sql = "SELECT records.discogs_id " +
@@ -34,7 +37,10 @@ namespace Capstone.DAO
            "LEFT JOIN barcodes ON records.discogs_id = barcodes.discogs_id " +
            "LEFT JOIN records_genres ON records.discogs_id = records_genres.discogs_id " +
            "LEFT JOIN genres ON records_genres.genre_id = genres.genre_id " +
-           "WHERE (records.title LIKE @recordsTitle OR @recordsTitle = '') " +
+           "JOIN libraries ON libraries.discogs_id = records.discogs_id " +
+           "JOIN users on libraries.username = users.username " +
+           "WHERE users.username = @username " +
+           "AND (records.title LIKE @recordsTitle OR @recordsTitle = '') " +
            "AND (artists.name LIKE @artistsName OR @artistsName = '') " +
            "AND (genres.name LIKE @genresName OR @genresName = '') " +
            "AND (records.released LIKE @recordsReleased OR @recordsReleased = '') " +
@@ -58,6 +64,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@recordsCountry", SearchStringWildcardAdder(requestObject.Country));
                     cmd.Parameters.AddWithValue("@labelsName", SearchStringWildcardAdder(requestObject.Label));
                     cmd.Parameters.AddWithValue("@barcodesValue", SearchStringWildcardAdder(requestObject.Barcode));
+                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -83,11 +90,17 @@ namespace Capstone.DAO
         {
             string sql = null;
             List<int> recordIDs = new List<int>();
-            // TODO figure out how to search as a phrase (i.e. "beatles rubber soul" should return Rubber Soul, returns nothing right now"
-            string[] requestObjectWords = requestObject.Split(' ');
-            List<string> paramQueries = new List<string>();
+            string[] requestObjectSplit = requestObject.Split(' ');
+            List<string> requestObjectWords = new List<string>();
+            foreach(string word in requestObjectSplit)
+            {
+                if(word != "the" && word != "a" && word != "an")
+                {
+                    requestObjectWords.Add(word);
+                }
+            }
             string singleParamQuery = null;
-            for (int i = 0; i < requestObjectWords.Length; i++)
+            for (int i = 0; i < requestObjectWords.Count; i++)
             {
                 singleParamQuery = $"@querySearch{i}";
                 sql = "SELECT records.discogs_id " +
