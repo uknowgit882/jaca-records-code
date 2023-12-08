@@ -20,15 +20,35 @@
                         <a class="button is-primary" href="/register">
                             <strong>Sign up</strong>
                         </a> -->
-                        <a class="button is-light" href="/login">
+                    <div class="dropdown" :class="{'is-active': dropdownActive}">
+                        <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Log in</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <login-view></login-view>
+                                <h2>Need an account? Sign up: </h2>
+                                <button class="button is-success" id="freeButton">Free</button> <button
+                                    class="button is-warning" id="premiumButton">Premium</button>
+                                    <!-- <img class="image is-50x50" src="img/logo2.png" style="max-height: none;"/> -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- <a class="button is-light" href="/login">
                             Log in
-                        </a>
+                        </a> -->
                     <!-- </div> -->
                 </div>
                 <div class="navbar-start">
-                    <a class="navbar-item" href="/home">
+                    <router-link class="navbar-item" :to="{ name: 'home' }">
                         Home
-                    </a>
+                    </router-link>
 
                     <a class="navbar-item" href="/library">
                         Library
@@ -44,7 +64,7 @@
                 </div>
             </div>
 
- <SearchBoxVue/>
+            <SearchBoxVue />
         </div>
 
     </nav>
@@ -52,9 +72,16 @@
 
 <script>
 import SearchBoxVue from '@/components/SearchBox.vue'
+import LoginView from '../views/LoginView.vue';
 export default {
     components: {
-        SearchBoxVue
+        SearchBoxVue,
+        LoginView
+    },
+    data() {
+        return {
+            dropdownActive: false
+        }
     }
 }
 </script>
@@ -80,5 +107,11 @@ export default {
 .profile {
     margin-top: 15%;
     margin-left: 10%;
+}
+
+h2 {
+    color: black;
+}
+.input{
 }
 </style>

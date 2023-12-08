@@ -1,5 +1,20 @@
 <template>
+    
     <div class="box1">
+        <div class="box-info">
+            <box class="box-pre">
+                <div class="media-content">
+                    <div class="content">
+                        <h2><strong> <i class="fa-solid fa-bolt"></i>About Jaca Records:</strong>
+                        </h2>
+                        <h4>
+                            blablabla
+                        </h4>
+                    </div>
+                </div>
+            </box>
+        </div>
+
         <div class="box-free">
             <box class="box-pre">
                 <div class="media-content">
@@ -41,40 +56,43 @@
 
 <style scoped>
 .box-free {
-    width: 300px;
-    height: 200px;
+    display: flex;
+    width: 500px;
+    height: 500px;
     border: 5px solid rgb(255, 255, 255);
     background: rgba(168, 232, 238, 0.826);
     border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: end;
     margin-right: 20px;
+    margin-left: 20px
 }
 
 .box-premium {
     display: flex;
-    width: 300px;
-    height: 200px;
+    width: 500px;
+    height: 500px;
     border: 5px solid rgb(255, 255, 255);
     background: rgba(228, 231, 97, 0.826);
     border-radius: 10px;
     justify-content: center;
-    align-items: end;
+    align-items: start;
 }
 
 .box1 {
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    width: 120%;
+    justify-content:center;
+    width: 95%;
+    align-items: end;
+    height: 90vh;
 }
-
-.no-account{
+.box-info{
     display: flex;
+    width: 500px;
+    height: 500px;
+    border: 5px solid rgb(255, 255, 255);
+    background: rgba(231, 97, 155, 0.719);
+    border-radius: 10px;
     justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-
+    align-items: start;
+    
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
+  <h2>Please Sign in:</h2>
   <div class="divClass" id="login">
-    <img class="image" src="img/logo2.png" />
     <form class="log-in" v-on:submit.prevent="login">
-      <h1>Please Sign In</h1>
       <div role="alert" v-if="invalidCredentials">
         Invalid username and password!
       </div>
@@ -18,25 +17,19 @@
         <input type="password" id="password" v-model="user.password" required />
       </div>
       <button type="submit">Sign in</button>
-      <p>
+      <!-- <p>
         <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
-      </p>
+      </p> -->
     </form>
-    <register-suggestion-Comp></register-suggestion-Comp>
   </div>
   
 </template>
 
 <script>
 import authService from "../services/AuthService";
-import RegisterSuggestionComp from "../components/RegisterSuggestionComp.vue";
 
 
 export default {
-  components: { 
-    RegisterSuggestionComp
-
-   },
   data() {
     return {
       user: {
@@ -72,27 +65,32 @@ export default {
 <style scoped>
 .form-input-group {
   margin-bottom: 1rem;
+  color: black;
 }
 
 label {
   margin-right: 0.5rem;
 }
 
-.image {
-  left: 0%;
-  width: 350px;
-  height: 350px;
+.img {
+  width: 550px;
+  height: 500px;
   margin-left: 0%;
-
+  max-height: none;
 }
 
 .log-in {
-  margin-left: 1%;
+  margin-left: 3%;
+  color: black;
 }
 .divClass{
-  display: flex;
-  align-items: center;
-  justify-content: start;
+  padding-top: 30px;
+  width: 300px;
+  height: 180px;
+}
+h2{
+  padding-top: 30px;
+  color: black;
 }
 
 </style>
