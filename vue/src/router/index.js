@@ -106,13 +106,12 @@ const routes = [
   },
   {
     path: "/Carousel",
-    name: "Caorusel",
+    name: "Carousel",
     component: Carousel,
     meta: {
       requiresAuth: false,
     } 
   },
-
 ];
 
 // Create the router

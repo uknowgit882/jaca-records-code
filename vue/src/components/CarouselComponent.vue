@@ -1,92 +1,83 @@
 <template>
-    <section class="section" id="app">
-        <div class="columns">
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="card-carousel">
-                            <div class="card-img">
-                                <img src="img/logo2.png" alt="Some image">
-                                <div class="actions">
-                                    <span @click="prevImage" class="prev">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span @click="nextImage" class="next">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="thumbnails">
-                                <div class="thumbnail-img">
-                                    <img src="img/background.jpg" alt="Some thumbnail">
-                                </div>
-                                <div class="thumbnail-img active">
-                                    <img src="/some-thumbnail.jpg" alt="Some thumbnail">
-                                </div>
-                                <div class="thumbnail-img">
-                                    <img src="/some-thumbnail.jpg" alt="Some thumbnail">
-                                </div>
-
-                                <p>I suck.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
+      <Slide v-for="n in 50" :key="n">
+        <div class="carousel__item">
+            <!-- <v-img :src="this.image[n-1]" height="50px"></v-img> -->
+            <img src="https://www.lpl.com/content/dam/lpl-www/images/newsroom/read/insider/insider-blog-meme-stocks-what-do-they-mean_article-hero-450x450.png"/>
         </div>
-    </section>
-</template>
+      </Slide>
+      <template #addons>
+      <Navigation />
+      <Pagination />
+    </template>
+    </Carousel>
+  </template>
+
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 
-    data() {
-        return {
-            //Array to hold all carousel images
-            images: [
-              
-            ],
-            //Index of the active image on the images array
-            activeImage: 0
-        }
-    },
-    computed: {
-        // currentImage gets called whenever activeImage changes
-        // and is the reason why we don't have to worry about the 
-        // big image getting updated
-        currentImage() {
-            return this.images[this.activeImage].big;
-        }
-    },
-    methods: {
-        // Go forward on the images array 
-        // or go at the first image if you can't go forward :/ 
-        nextImage() {
-            let active = this.activeImage + 1;
-            if (active >= this.images.length) {
-                active = 0;
-            }
-            this.activateImage(active);
-        },
-        // Go backwards on the images array 
-        // or go at the last image
-        prevImage() {
-            let active = this.activeImage - 1;
-            if (active < 0) {
-                active = this.images.length - 1;
-            }
-            this.activateImage(active);
-        },
-        activateImage(imageIndex) {
-            this.activeImage = imageIndex;
-        }
+import 'vue3-carousel/dist/carousel.css'
+
+export default defineComponent({
+  name: 'Autoplay',
+  components: {
+    Carousel,
+    Slide,
+    Navigation,
+    Pagination,
+  },
+  data() {
+    return {
+        image: [
+            "https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUEIbxGhXurYC9gDshTflQ0DpnZyNqzWDvTiuUchMApUMdj-f4kPid9aW6-E2qrVshy-A&usqp=CAU",
+            "https://www.lifewire.com/thmb/PiAB30sXKFcKSO_r72hP5-Hwq_E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/BabywithFistmeme2-0c317ccc4d3a44c68098cd08f4ecac74.jpg"
+        ]
     }
-};
-
+  }
+})
 </script>
 
 <style scoped>
-p {
-    color: black;
+.carousel__slide {
+  padding: 5px;
+}
+
+.carousel__viewport {
+  perspective: 2000px;
+}
+
+.carousel__track {
+  transform-style: preserve-3d;
+}
+
+.carousel__slide--sliding {
+  transition: 0.5s;
+}
+
+.carousel__slide {
+  opacity: 0.9;
+  transform: rotateY(-20deg) scale(0.9);
+}
+
+.carousel__slide--active ~ .carousel__slide {
+  transform: rotateY(20deg) scale(0.9);
+}
+
+.carousel__slide--prev {
+  opacity: 1;
+  transform: rotateY(-10deg) scale(0.95);
+}
+
+.carousel__slide--next {
+  opacity: 1;
+  transform: rotateY(10deg) scale(0.95);
+}
+
+.carousel__slide--active {
+  opacity: 1;
+  transform: rotateY(0) scale(1.1);
 }
 </style>
