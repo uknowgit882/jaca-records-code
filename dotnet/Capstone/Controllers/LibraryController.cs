@@ -26,37 +26,6 @@ namespace Capstone.Controllers
                   recordService, tracksDao, userDao, searchDao)
         {
         }
-        // sample, to edit
-        [HttpPut("userfunctions/reactivate/{username}")]
-        public ActionResult<string> ReactivateUser(string username)
-        {
-            // check if you have a valid value, and it matches the user who is logged in (for security)
-            // so they are actioning their own profile
-            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
-            {
-                // validation of the input
-                // if fails, stop
-                return BadRequest("You must enter a valid username");
-            }
-
-            try
-            {
-                bool output = _userDao.ReactivateUser(username);
-                if (output)
-                {
-                    return Ok($"{username} was deactivated");
-
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
 
         [HttpGet]
         public ActionResult<List<RecordClient>> GetLibrary()
@@ -106,18 +75,92 @@ namespace Capstone.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<bool> AddLibrary(IncomingAddLibrary incoming)
+        public ActionResult<bool> AddRecordToLibrary(IncomingLibrary incoming)
         {
+            string username = User.Identity.Name;
+            username = "user"; // TODO remove hardcode
             try
             {
                 // get the record from the api and put it in our db
                 string errorMessage = "";
                 RecordClient dbLoadedRecord = AddRecordToDbById(incoming.DiscogsId, out errorMessage);
 
-                bool output = _librariesDao.AddRecord(incoming.DiscogsId, incoming.Username, incoming.Notes);
+                bool output = _librariesDao.AddRecord(incoming.DiscogsId, username, incoming.Notes);
                 if (output)
                 {
                     return Ok($"{dbLoadedRecord.Title} was added to your library");
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<bool> DeleteRecordFromLibrary(int discogsId)
+        {
+            string username = User.Identity.Name;
+            username = "user"; // TODO remove hardcode
+            try
+            {
+                bool output = _librariesDao.DeleteRecord(discogsId, username);
+                if (output)
+                {
+                    return Ok($"You removed a record from your library");
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{id}/notes")]
+        public ActionResult<bool> UpdateNoteForRecordInLibrary(IncomingLibrary input)
+        {
+            string username = User.Identity.Name;
+            username = "user"; // TODO remove hardcode
+            try
+            {
+                string output = _librariesDao.ChangeNote(username, input.DiscogsId, input.Notes);
+                if (output != null)
+                {
+                    return Ok(output);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{id}/quantity")]
+        public ActionResult<bool> UpdateQuantityForRecordInLibrary(IncomingLibrary input)
+        {
+            string username = User.Identity.Name;
+            username = "user"; // TODO remove hardcode
+            try
+            {
+                int output = _librariesDao.ChangeQuantity(username, input.DiscogsId, input.Quantity);
+                if (output > 0)
+                {
+                    return Ok(output);
 
                 }
                 else
