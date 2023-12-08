@@ -75,6 +75,7 @@ namespace Capstone
             services.AddTransient<ILabelsDao>(m => new LabelsSqlDao(connectionString));
             services.AddTransient<IRecordBuilderDao>(m => new RecordBuilderSqlDao(connectionString));
             services.AddTransient<IRecordsArtistsDao>(m => new RecordArtistSqlDao(connectionString));
+            services.AddTransient<IRecordsCollectionsDao>(m => new RecordCollectionSqlDao(connectionString));
             services.AddTransient<IRecordsExtraArtistsDao>(m => new RecordExtraArtistSqlDao(connectionString));
             services.AddTransient<IRecordsFormatsDao>(m => new RecordFormatSqlDao(connectionString));
             services.AddTransient<IRecordsGenresDao>(m => new RecordGenreSqlDao(connectionString));

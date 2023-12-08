@@ -5,18 +5,21 @@ namespace Capstone.DAO.Interfaces
 {
     public interface ICollectionsDao
     {
-        public Collection GetCollection(string username, string name);
-        public Collection GetPubOrPrivCollection(string username, string name, bool isPrivate = false);
-        public List<Collection> GetAllCollection(string username);
-        public List<Collection> GetPubOrPrivAllCollection(string username, bool isPrivate);
-        public bool AddCollection(string username, string name, int? discogsId = null);
-        public bool AddRecordToCollection(string name, int discogId, string username);
+        public List<Collection> GetAllCollections(string username, bool isPremium);
+        public List<Collection> GetPubOrPrivAllCollections(string username, bool isPremium, bool isPrivate = false);
+        public Collection GetNamedCollection(string username, string name, bool isPremium);
+        public Collection GetPubOrPrivCollection(string username, string name, bool isPremium, bool isPrivate = false);
+        public List<int> GetAllRecordsInCollectionByUsernameAndName(string username, string name, bool isPremium, bool isPrivate = false);
+        public int GetCollectionCountByUsername(string username);
+        public int GetCollectionCount();
+        public int CountOfRecordsInSpecificCollectionByUsername(string username, string name);
+        public int CountOfRecordsInAllCollectionsByUsername(string username);
+        public int CountOfRecordsInAllCollections();
+        public int AddCollection(string username, string name);
         public bool UpdateCollectionTitle(string name, string username, string newName);
-        public bool RemoveSongFromCollection(string name, int discogsID, string username);
-        public bool RemoveCollection(string name, string username);
-        public bool PrivatizeCollection(string name, string username);
-        public bool PublicizeCollection(string name, string username);
-        public bool DeactivateCollection(string name, string username);
-        public bool ReactivateCollection(string name, string username);
+        public bool DeleteCollection(string name, string username);
+        public bool ChangeCollectionPrivacy(string name, string username, bool isPrivate);
+        public bool ChangeCollectionIsPremium(string name, string username, bool isPremium);
+        public bool DeReactivateCollection(string name, string username, bool isActive);
     }
 }

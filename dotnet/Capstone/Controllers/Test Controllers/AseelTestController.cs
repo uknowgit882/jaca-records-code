@@ -6,6 +6,7 @@ using Capstone.DAO.Interfaces;
 using System;
 using Capstone.DAO;
 using Capstone.Service;
+using System.Collections.Generic;
 
 namespace Capstone.Controllers
 {
@@ -17,20 +18,20 @@ namespace Capstone.Controllers
         {
         }
         // Sample, please edit as needed
-        [HttpPut("userfunctions/{username}")]
-        public ActionResult<string> DeactivateUser(string username)
+        [HttpGet("library")]
+        public ActionResult<List<RecordTableData>> GetUserLibrary()
         {
-            // check if you have a valid value, and it matches the user who is logged in (for security)
-            // so they are actioning their own profile
-            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
+            string username = User.Identity.Name;
+            if (string.IsNullOrEmpty(username))
             {
-                // validation of the input
-                // if fails, stop
-                return BadRequest("You must enter a valid username");
+                return BadRequest("Please provide a valid username");
             }
+            username = "aseelt"; // TODO remove after test
+
 
             try
             {
+                
                 bool output = _userDao.DeactivateUser(username);
                 if (output)
                 {

@@ -1,13 +1,13 @@
 ﻿namespace Capstone.Service;
 using Capstone.Models;
+using Capstone.Utils;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Authenticators.OAuth;
 using System.Diagnostics.Metrics;
 using System.Net.Http;
-
-
+using System.Reflection;
 
 public class RecordService : IRecordService
 {
@@ -41,14 +41,18 @@ public class RecordService : IRecordService
         RestRequest request = new RestRequest(BaseURL + $"releases/{release_id}");
 
         IRestResponse<RecordClient> response = client.Get<RecordClient>(request);
+
         if (response.ResponseStatus != ResponseStatus.Completed)
         {
+            ErrorLog.WriteLog("Getting RecordClient from external API", $"Discogs Input: {release_id}", MethodBase.GetCurrentMethod().Name, "Couldn't reach the Discogs API");
             throw new HttpRequestException("Error occured - unable to reach server,", response.ErrorException);
         }
         else if (!response.IsSuccessful)
         {
+            ErrorLog.WriteLog("Getting RecordClient from external API", $"Discogs Input: {release_id}", MethodBase.GetCurrentMethod().Name, "Unsuccessful request to Discogs API");
             throw new HttpRequestException("Error occured - received non-success response.", response.ErrorException);
         }
+
         return response.Data;
     }
 
@@ -143,12 +147,15 @@ public class RecordService : IRecordService
         request.AddParameter("page", pageNumber);
 
         IRestResponse<SearchResult> response = client.Get<SearchResult>(request);
+
         if (response.ResponseStatus != ResponseStatus.Completed)
         {
+            ErrorLog.WriteLog("Getting SearchResult from external API", $"Discogs Input: user search paramaters", MethodBase.GetCurrentMethod().Name, "Couldn't reach the Discogs API");
             throw new HttpRequestException("Error occured - unable to reach server,", response.ErrorException);
         }
         else if (!response.IsSuccessful)
         {
+            ErrorLog.WriteLog("Getting SearchResult from external API", $"Discogs Input: user search parameters", MethodBase.GetCurrentMethod().Name, "Unsuccessful request to Discogs API");
             throw new HttpRequestException("Error occured - received non-success response.", response.ErrorException);
         }
 
@@ -170,5 +177,6 @@ public class RecordService : IRecordService
 
         return searchRequest;
     }
+     
 }
 

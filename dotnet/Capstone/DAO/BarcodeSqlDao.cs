@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System;
 using Capstone.DAO.Interfaces;
 using System.Collections.Generic;
+using Capstone.Utils;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -41,6 +43,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get barcode", $"{identifier.Discogs_Id} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -48,20 +51,18 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Gets the barcodes and identifiers associated for this record for this specific user. Identifiers can include barcodes and record etchings/codes
+        /// Gets the barcodes and identifiers associated for this record. Identifiers can include barcodes and record etchings/codes
         /// </summary>
         /// <param name="discogId"></param>
-        /// <param name="username"></param>
-        /// <returns>List of barcodes and identifiers for this specific user. Only the type and value should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <returns>List of barcodes and identifiers. Only the type and value should be sent to the front end - use JSONIgnore on the other properties</returns>
         /// <exception cref="DaoException"></exception>
-        public List<Identifier> GetIdentifiersByDiscogsIdAndUsername(int discogId, string username)
+        public List<Identifier> GetIdentifiersByDiscogsId(int discogId)
         {
             List<Identifier> output = new List<Identifier>();
             string sql = "SELECT type, value " +
                 "FROM barcodes " +
                 "JOIN records ON barcodes.discogs_id = records.discogs_id " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogId AND username = @username";
+                "WHERE records.discogs_id = @discogId";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -70,7 +71,6 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogId", discogId);
-                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -84,10 +84,89 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get barcode", $"{discogId} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
             return output;
         }
+
+        /// <summary>
+        /// Returns how many barcodes are in the entire database.
+        /// </summary>
+        /// <returns>Int number of barcodes</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetBarcodesCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(barcode_id) AS count " +
+                "FROM barcodes ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get all barcode count", $"Failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        // I think I don't need this...
+        ///// <summary>
+        ///// Gets the barcodes and identifiers associated for this record for this specific user. Identifiers can include barcodes and record etchings/codes
+        ///// </summary>
+        ///// <param name="discogId"></param>
+        ///// <param name="username"></param>
+        ///// <returns>List of barcodes and identifiers for this specific user. Only the type and value should be sent to the front end - use JSONIgnore on the other properties</returns>
+        ///// <exception cref="DaoException"></exception>
+        //public List<Identifier> GetIdentifiersByDiscogsIdAndUsername(int discogId, string username)
+        //{
+        //    List<Identifier> output = new List<Identifier>();
+        //    string sql = "SELECT type, value " +
+        //        "FROM barcodes " +
+        //        "JOIN records ON barcodes.discogs_id = records.discogs_id " +
+        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+        //        "WHERE records.discogs_id = @discogId AND username = @username";
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+        //            cmd.Parameters.AddWithValue("@discogId", discogId);
+        //            cmd.Parameters.AddWithValue("@username", username);
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                Identifier row = new Identifier();
+        //                row.Type = Convert.ToString(reader["type"]);
+        //                row.Value = Convert.ToString(reader["value"]);
+        //                output.Add(row);
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occurred", ex);
+        //    }
+        //    return output;
+        //}
+
         public bool AddIdentifier(Identifier identifier)
         {
             Identifier checkedIdentifier = GetIdentifier(identifier);
@@ -113,9 +192,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add barcode", $"{identifier.Discogs_Id} add failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
 
@@ -140,9 +220,10 @@ namespace Capstone.DAO
                 }
                 return GetIdentifier(updatedIdentifier);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to update barcode", $"{updatedIdentifier.Discogs_Id} update failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
 

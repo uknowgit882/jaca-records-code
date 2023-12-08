@@ -59,3 +59,24 @@ from records
 JOIN records_artists ON records.discogs_id = records_artists.discogs_id
 JOIN artists ON records_artists.artist_id = artists.artist_id
 WHERE artists.name LIKE '%queen%'
+
+INSERT INTO collections (username, name)
+VALUES ('aseelt', 'second')
+
+INSERT INTO records_collections (discogs_id, collection_id)
+VALUES (14488, 3)
+
+INSERT INTO libraries (username, discogs_id)
+VALUES ('aseelt', 18038), ('aseelt', 81013)
+
+SELECT username, count(username)
+FROM libraries
+WHERE username = 'aseelt'
+GROUP BY username
+
+SELECT *
+FROM libraries
+ORDER BY created_date DESC
+
+SELECT TOP 2 *
+FROM libraries

@@ -1,9 +1,11 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -47,6 +49,7 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get format", $"For {description}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occured", ex);
             }
 
@@ -54,21 +57,19 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Gets the formats associated for this record for this specific user
+        /// Gets the formats associated for this record
         /// </summary>
         /// <param name="discogId"></param>
-        /// <param name="username"></param>
-        /// <returns>List of formats for this specific user. Only the type should be sent to the front end - use JSONIgnore on the other properties</returns>
+        /// <returns>List of formats. Only the type should be sent to the front end - use JSONIgnore on the other properties</returns>
         /// <exception cref="DaoException"></exception>
-        public List<Format> GetFormatsByDiscogsIdAndUsername(int discogId, string username)
+        public List<Format> GetFormatsByDiscogsId(int discogId)
         {
             List<Format> output = new List<Format>();
             string sql = "SELECT type " +
                 "FROM formats " +
                 "JOIN records_formats ON formats.format_id = records_formats.format_id " +
                 "JOIN records ON records_formats.discogs_id = records.discogs_id " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE records.discogs_id = @discogId AND username = @username";
+                "WHERE records.discogs_id = @discogId";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -77,7 +78,6 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogId", discogId);
-                    cmd.Parameters.AddWithValue("@username", username);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -92,10 +92,131 @@ namespace Capstone.DAO
             }
             catch (SqlException ex)
             {
+                ErrorLog.WriteLog("Trying to get format by discogsId", $"For {discogId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Sql exception occurred", ex);
             }
             return output;
         }
+
+        /// <summary>
+        /// Returns how many formats are in the entire database.
+        /// </summary>
+        /// <returns>Int number of formats</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetFormatCount()
+        {
+            int output = 0;
+
+            string sql = "SELECT count(format_id) AS count " +
+                "FROM formats ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get format count", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns how many formats are associated with this user. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of formats</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetFormatCountByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT count(formats.format_id) AS count " +
+                "FROM formats " +
+                "JOIN records_formats ON formats.format_id = records_formats.format_id " +
+                "JOIN records ON records_formats.format_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get format count", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        // I don't think I need this...
+        ///// <summary>
+        ///// Gets the formats associated for this record for this specific user
+        ///// </summary>
+        ///// <param name="discogId"></param>
+        ///// <param name="username"></param>
+        ///// <returns>List of formats for this specific user. Only the type should be sent to the front end - use JSONIgnore on the other properties</returns>
+        ///// <exception cref="DaoException"></exception>
+        //public List<Format> GetFormatsByDiscogsIdAndUsername(int discogId, string username)
+        //{
+        //    List<Format> output = new List<Format>();
+        //    string sql = "SELECT type " +
+        //        "FROM formats " +
+        //        "JOIN records_formats ON formats.format_id = records_formats.format_id " +
+        //        "JOIN records ON records_formats.discogs_id = records.discogs_id " +
+        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+        //        "WHERE records.discogs_id = @discogId AND username = @username";
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+
+        //            SqlCommand cmd = new SqlCommand(sql, conn);
+        //            cmd.Parameters.AddWithValue("@discogId", discogId);
+        //            cmd.Parameters.AddWithValue("@username", username);
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                Format row = new Format();
+        //                // this will return the search result for the libary back to the front end
+        //                // with the different format types in the name field
+        //                row.Name = Convert.ToString(reader["type"]);
+        //                output.Add(row);
+        //            }
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        throw new DaoException("Sql exception occurred", ex);
+        //    }
+        //    return output;
+        //}
+
         public bool AddFormat(string description)
         {
             Format checkedArtist = GetFormat(description);
@@ -121,9 +242,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add format", $"For {description}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
         private Format MapRowToFormat(SqlDataReader reader)

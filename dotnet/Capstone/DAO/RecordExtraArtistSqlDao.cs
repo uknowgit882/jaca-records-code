@@ -1,9 +1,11 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -42,9 +44,10 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to get extra artist", $"For {discogsId}, {extraArtistId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
             return false;
         }
@@ -81,9 +84,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add extra artist", $"For {discogsId}, {extraArtistId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
 

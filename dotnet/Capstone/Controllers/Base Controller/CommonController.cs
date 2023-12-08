@@ -54,5 +54,42 @@ namespace Capstone.Controllers
             _userDao = userDao;
             _searchDao = searchDao;
         }
+
+        protected RecordClient BuildFullRecord(int discogId)
+        {
+            RecordClient output = new RecordClient();
+
+            try
+            {
+                RecordTableData foundRecord = _recordBuilderDao.GetRecordByDiscogsId(discogId);
+
+                if (foundRecord != null)
+                {
+                    output.Id = foundRecord.Discogs_Id;
+                    output.URI = foundRecord.URL;
+                    output.Title = foundRecord.Title;
+                    output.Country = foundRecord.Country;
+                    output.Date_Changed = foundRecord.Discogs_Date_Changed;
+                    output.Released = foundRecord.Released;
+                    output.Notes = foundRecord.Notes;
+
+                    output.Artists = _artistsDao.GetArtistsByDiscogsId(discogId);
+                    output.ExtraArtists = _artistsDao.GetExtraArtistsByDiscogsId(discogId);
+                    output.Labels = _labelsDao.GetLabelsByDiscogsId(discogId);
+                    output.Formats = _formatsDao.GetFormatsByDiscogsId(discogId);
+                    output.Genres = _genresDao.GetGenresByDiscogsId(discogId);
+
+                    output.Identifiers = _barcodesDao.GetIdentifiersByDiscogsId(discogId);
+                    output.Tracklist = _tracksDao.GetTracksByDiscogsId(discogId);
+                    output.Images = _imagesDao.GetAllImagesByDiscogsId(discogId);
+                }
+            }
+            catch (Exception)
+            {
+                throw new DaoException($"Something went wrong fetching {discogId} from the database");
+            }
+            return output;
+             
+        }
     }
 }

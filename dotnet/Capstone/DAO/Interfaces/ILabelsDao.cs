@@ -7,7 +7,10 @@ namespace Capstone.DAO.Interfaces
     {
         public Label GetLabel(Label label);
         public bool AddLabel(Label label);
-        public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username);
+        public List<Label> GetLabelsByDiscogsId(int discogId);
+        public int GetLabelCountByUsername(string username);
+        public int GetLabelCount();
+        //public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username); // might not need
         public Label UpdateLabel(Label updatedLabel);
     }
 }

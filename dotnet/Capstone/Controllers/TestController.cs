@@ -30,7 +30,7 @@ namespace Capstone.Controllers
         //public readonly IRecordService _recordService;
         //private readonly ISearchDao _searchDao;
 
-        public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao, IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao) 
+        public TestController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, IFormatsDao formatsDao, IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao, IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao, IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
             : base(artistsDao, barcodesDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao, recordService, tracksDao, userDao, searchDao)
         {
         }
@@ -520,36 +520,15 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
 
-                foreach (int recordId in recordIds)
+                foreach (int discogId in recordIds)
                 {
-                    // get the record
-                    RecordTableData foundRecord = _recordBuilderDao.GetRecordByDiscogsIdAndUsername(recordId, username);
+                    // this is much neater
+                    // refactored and put in the parent CommonController class as a helper method
+                    RecordClient newFullRecord = BuildFullRecord(discogId);
 
-                    // make sure you have a result to action
-                    if (foundRecord != null)
+                    if (newFullRecord != null)
                     {
-                        // map that found record into the eventual outgoing result
-                        RecordClient recordToAddToResultsList = new RecordClient();
-
-                        recordToAddToResultsList.Id = foundRecord.Discogs_Id;
-                        recordToAddToResultsList.URI = foundRecord.URL;
-                        recordToAddToResultsList.Title = foundRecord.Title;
-                        recordToAddToResultsList.Country = foundRecord.Country;
-                        recordToAddToResultsList.Date_Changed = foundRecord.Discogs_Date_Changed;
-                        recordToAddToResultsList.Released = foundRecord.Released;
-                        recordToAddToResultsList.Notes = foundRecord.Notes;
-
-                        // add the other bits that need a sqldao to fetch from the other tables
-                        recordToAddToResultsList.Artists = _artistsDao.GetArtistsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.ExtraArtists = _artistsDao.GetExtraArtistsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Labels = _labelsDao.GetLabelsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Formats = _formatsDao.GetFormatsByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Identifiers = _barcodesDao.GetIdentifiersByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Genres = _genresDao.GetGenresByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Tracklist = _tracksDao.GetTracksByDiscogsIdAndUsername(recordId, username);
-                        recordToAddToResultsList.Images = _imagesDao.GetImagesByDiscogsIdAndUsername(recordId, username);
-
-                        output.Add(recordToAddToResultsList);
+                        output.Add(newFullRecord);
                     }
                 }
 
@@ -560,7 +539,7 @@ namespace Capstone.Controllers
                 else
                 {
                     return NotFound();
-                } 
+                }
             }
             catch (Exception e)
             {

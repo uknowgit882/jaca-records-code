@@ -1,9 +1,11 @@
 ﻿using Capstone.DAO.Interfaces;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Capstone.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Capstone.DAO
 {
@@ -14,7 +16,7 @@ namespace Capstone.DAO
         {
             connectionString = dbConnectionString;
         }
-        public bool GetRecordLabelByLabelIdAndGenreId(int discogsId, int labelId)
+        public bool GetRecordLabelByLabelIdAndDiscogsId(int discogsId, int labelId)
         {
             string sql = "SELECT records_labels_id " +
                 "FROM records_labels " +
@@ -42,9 +44,10 @@ namespace Capstone.DAO
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to get record label", $"For {discogsId}, {labelId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
             return false;
         }
@@ -58,7 +61,7 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public bool AddRecordLabel(int discogsId, int labelId)
         {
-            if (GetRecordLabelByLabelIdAndGenreId(discogsId, labelId))
+            if (GetRecordLabelByLabelIdAndDiscogsId(discogsId, labelId))
             {
                 return false;
             }
@@ -78,9 +81,10 @@ namespace Capstone.DAO
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new DaoException("exception occurred", e);
+                ErrorLog.WriteLog("Trying to add label", $"For {discogsId}, {labelId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
             }
         }
 

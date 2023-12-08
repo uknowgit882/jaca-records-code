@@ -47,7 +47,7 @@ namespace Capstone.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Something went wrong reactivating this user");
             }
         }
         [HttpPut("userfunctions/upgradetoadmin/{username}")]
@@ -77,7 +77,7 @@ namespace Capstone.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Something went wrong upgrading this user to an admin");
             }
         }
         [HttpPut("userfunctions/downgradefromadmin/{username}")]
@@ -107,7 +107,7 @@ namespace Capstone.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Something went wrong upgrading this user to an admin");
             }
         }
     }
