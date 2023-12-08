@@ -24,4 +24,10 @@ namespace Capstone.Models
         [JsonIgnore]
         public DateTime Updated_Date { get; set; }
     }
+
+    public class IncomingCollectionRequest
+    {
+        public string Name { get; set; } 
+        public bool Is_Private { get; set; }
+    }
 }

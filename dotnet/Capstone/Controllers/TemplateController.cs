@@ -6,6 +6,8 @@ using Capstone.DAO.Interfaces;
 using System;
 using Capstone.DAO;
 using Capstone.Service;
+using Capstone.Utils;
+using System.Reflection;
 
 namespace Capstone.Controllers
 {
@@ -49,9 +51,10 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to do stuff", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

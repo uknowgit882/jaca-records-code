@@ -69,13 +69,14 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to get library", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPost]
-        public ActionResult<bool> AddRecordToLibrary(IncomingLibrary incoming)
+        public ActionResult<bool> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
             username = "user"; // TODO remove hardcode
@@ -83,9 +84,9 @@ namespace Capstone.Controllers
             {
                 // get the record from the api and put it in our db
                 string errorMessage = "";
-                RecordClient dbLoadedRecord = AddRecordToDbById(incoming.DiscogsId, out errorMessage);
+                RecordClient dbLoadedRecord = AddRecordToDbById(request.DiscogsId, out errorMessage);
 
-                bool output = _librariesDao.AddRecord(incoming.DiscogsId, username, incoming.Notes);
+                bool output = _librariesDao.AddRecord(request.DiscogsId, username, request.Notes);
                 if (output)
                 {
                     return Ok($"{dbLoadedRecord.Title} was added to your library");
@@ -120,20 +121,21 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}/notes")]
-        public ActionResult<bool> UpdateNoteForRecordInLibrary(IncomingLibrary input)
+        public ActionResult<bool> UpdateNoteForRecordInLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
             username = "user"; // TODO remove hardcode
             try
             {
-                string output = _librariesDao.ChangeNote(username, input.DiscogsId, input.Notes);
+                string output = _librariesDao.ChangeNote(username, request.DiscogsId, request.Notes);
                 if (output != null)
                 {
                     return Ok(output);
@@ -144,20 +146,21 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to update note", $"For {username}, {request.DiscogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}/quantity")]
-        public ActionResult<bool> UpdateQuantityForRecordInLibrary(IncomingLibrary input)
+        public ActionResult<bool> UpdateQuantityForRecordInLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
             username = "user"; // TODO remove hardcode
             try
             {
-                int output = _librariesDao.ChangeQuantity(username, input.DiscogsId, input.Quantity);
+                int output = _librariesDao.ChangeQuantity(username, request.DiscogsId, request.Quantity);
                 if (output > 0)
                 {
                     return Ok(output);
@@ -168,9 +171,10 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to change quantity", $"For {username}, {request.DiscogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
