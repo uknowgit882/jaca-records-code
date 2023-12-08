@@ -1,8 +1,7 @@
 <template>
-  <div id="login">
-    <img src="img/logo2.png" />
-    <form v-on:submit.prevent="login">
-      <h1 >Please Sign In</h1>
+  <h2>Please Sign in:</h2>
+  <div class="divClass" id="login">
+    <form class="log-in" v-on:submit.prevent="login">
       <div role="alert" v-if="invalidCredentials">
         Invalid username and password!
       </div>
@@ -18,17 +17,19 @@
         <input type="password" id="password" v-model="user.password" required />
       </div>
       <button type="submit">Sign in</button>
-      <p>
-      <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link></p>
+      <!-- <p>
+        <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
+      </p> -->
     </form>
   </div>
+  
 </template>
 
 <script>
 import authService from "../services/AuthService";
 
+
 export default {
-  components: {},
   data() {
     return {
       user: {
@@ -64,16 +65,32 @@ export default {
 <style scoped>
 .form-input-group {
   margin-bottom: 1rem;
+  color: black;
 }
+
 label {
   margin-right: 0.5rem;
 }
-div{
-  display: flex;
-  justify-content: center;
+
+.img {
+  width: 550px;
+  height: 500px;
+  margin-left: 0%;
+  max-height: none;
 }
-img{
-  width: 250px;
-  height: 250px;
+
+.log-in {
+  margin-left: 3%;
+  color: black;
 }
+.divClass{
+  padding-top: 30px;
+  width: 300px;
+  height: 180px;
+}
+h2{
+  padding-top: 30px;
+  color: black;
+}
+
 </style>

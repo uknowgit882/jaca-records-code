@@ -13,7 +13,7 @@ import Data from '@/views/Data.vue'
 import SearchResult from'@/views/SearchResult.vue'
 import Carousel from '@/views/CarousalView.vue'
 import ProfilePageView from '@/views/ProfilePageView.vue'
-
+import HomeA from '@/views/HomeAView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -26,9 +26,9 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: HomeView,
+    component: HomeA,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   {

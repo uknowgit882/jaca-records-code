@@ -1,5 +1,6 @@
 <template>
-    <div class="level-item">
+    <div class="SearchBar" @keyup.enter="sendSearch()" >
+    <div class="level-item is-flex is-flex-direction-column is-justify-content-end">
         <div class="field has-addons">
             <p class="control">
                 <input class="input" type="text" placeholder="Find a Record, Artist etc." v-model="Search.General">
@@ -16,7 +17,7 @@
             </p>
         </div>
 
-        <div class="dropdown is-active" v-if="showForm">
+        <div class="dropdown is-active" v-show="showForm">
             <div class="dropdown-trigger"></div>
             <div class="dropdown-menu" id="advanced-search-dropdown" role="menu">
                 <div class="dropdown-content">
@@ -69,7 +70,7 @@
             </div>
         </div>
     </div>
-
+</div>
     <!-- <div class="level-item">
         <div class="field is-grouped is-grouped-centered">
             <div class="control">
@@ -89,15 +90,18 @@
 
 <script>
 import SearchService from '../services/SearchService';
+import AuthService from '../services/AuthService';
 
 export default {
 
-  
+  components: {
+    AuthService
+  },
 
     data() {
+        
         return {
-      
-
+    
             Search: {
                
                 General: "",
@@ -142,7 +146,7 @@ export default {
             } else {
                 console.log(`Error ${verb} topic. Request could not be created.`)
             }
-        }
+        },
         // created() {
         //   AuthService.search(this.$route.params.Search).then((dataBack) => {
         //     this.Search = dataBack.data;
@@ -154,4 +158,7 @@ export default {
 </script>
 
 <style scoped>
+.input{
+    width: 800px;
+}
 </style>
