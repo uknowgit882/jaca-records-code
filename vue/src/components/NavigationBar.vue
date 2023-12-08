@@ -1,11 +1,11 @@
 <template>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <p class="profile">
+            <!-- <p class="profile">
                 <button class="button" href="/Profile">
                     <strong><i class="fa-solid fa-circle-user" ></i></strong>
                 </button>
-            </p>
+            </p> -->
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -16,14 +16,14 @@
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                    <div class="buttons">
+                    <!-- <div class="buttons">
                         <a class="button is-primary" href="/register">
                             <strong>Sign up</strong>
-                        </a>
+                        </a> -->
                         <a class="button is-light" href="/login">
                             Log in
                         </a>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div class="navbar-start">
                     <a class="navbar-item" href="/home">
