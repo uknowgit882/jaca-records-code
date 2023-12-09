@@ -9,7 +9,7 @@ namespace Capstone.Models
     {
         [JsonIgnore]
         public int Library_Id { get; set; }
-        public int Username { get; set; }
+        public string Username { get; set; }
         [JsonIgnore]
         public int Discog_Id { get; set; }
         public string Notes { get; set; }
