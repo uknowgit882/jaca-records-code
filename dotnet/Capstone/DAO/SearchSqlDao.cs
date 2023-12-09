@@ -295,19 +295,5 @@ namespace Capstone.DAO
             }
             return searchStringWords;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
 }
