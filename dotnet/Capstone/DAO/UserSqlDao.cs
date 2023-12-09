@@ -150,6 +150,39 @@ namespace Capstone.DAO
             return output;
         }
 
+        public bool GetUserStatus(string username)
+        {
+            bool output = false;
+
+            string sql = "SELECT is_active " +
+                "FROM users " +
+                "WHERE username = @username";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToBoolean(reader["is_active"]);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get user is_active status by username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Returns how many users are in the entire database.
         /// </summary>

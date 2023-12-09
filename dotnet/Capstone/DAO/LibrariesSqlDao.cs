@@ -19,6 +19,7 @@ namespace Capstone.DAO
             connectionString = dbconnectionString;
         }
 
+
         /// <summary>
         /// Gets the user's entire library and all discogsIds within. Active libraries only.
         /// For premium users.
@@ -333,7 +334,7 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Toggles a record from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
+        /// Toggles a single record from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
         /// </summary>
         /// <param name="discogsId"></param>
         /// <param name="username"></param>
@@ -372,6 +373,48 @@ namespace Capstone.DAO
             catch (Exception ex)
             {
                 ErrorLog.WriteLog("Trying to change record in library to free/premium", $"For {username}, record: {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Toggles all records from isPremium true to false and vice versa. Ideally called in a for/foreach loop. Used when down/upgrading an account.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="toggleIsPremium"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool ChangeAllRecordIsPremium(string username, bool toggleIsPremium)
+        {
+            int recordsAffected = 0;
+
+            string sql = "UPDATE libraries " +
+                "SET is_premium = @toggleIsPremium, updated_date = @updated_date " +
+                "WHERE username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@toggleIsPremium", toggleIsPremium);
+                    cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue("@username", username);
+
+                    recordsAffected = cmd.ExecuteNonQuery();
+
+                    if (recordsAffected != 0)
+                    {
+                        throw new DaoException("The wrong number of rows were affected");
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to change record in library to free/premium", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("Exception occurred", ex);
             }
         }

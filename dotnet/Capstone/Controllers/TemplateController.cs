@@ -6,6 +6,8 @@ using Capstone.DAO.Interfaces;
 using System;
 using Capstone.DAO;
 using Capstone.Service;
+using Capstone.Utils;
+using System.Reflection;
 
 namespace Capstone.Controllers
 {
@@ -15,11 +17,11 @@ namespace Capstone.Controllers
     {
         public TemplateController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
             IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao,
-            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsCollectionsDao recordsCollectionsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao,
             IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
             : base(artistsDao, barcodesDao, collectionsDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, librariesDao,
-                  recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
+                  recordBuilderDao, recordsArtistsDao, recordsCollectionsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
                   recordService, tracksDao, userDao, searchDao)
         {
         }
@@ -49,9 +51,10 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                ErrorLog.WriteLog("Trying to do stuff", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

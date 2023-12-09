@@ -17,11 +17,11 @@ namespace Capstone.Controllers
     {
         public JacapremeController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
             IFriendsDao friendsDao, IGenresDao genresDao, IImagesDao imagesDao, ILabelsDao labelsDao, ILibrariesDao librariesDao,
-            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
+            IRecordBuilderDao recordBuilderDao, IRecordsArtistsDao recordsArtistsDao, IRecordsCollectionsDao recordsCollectionsDao, IRecordsExtraArtistsDao recordsExtraArtistsDao,
             IRecordsFormatsDao recordsFormatsDao, IRecordsGenresDao recordsGenresDao, IRecordsLabelsDao recordsLabelsDao,
             IRecordService recordService, ITracksDao tracksDao, IUserDao userDao, ISearchDao searchDao)
             : base(artistsDao, barcodesDao, collectionsDao, formatsDao, friendsDao, genresDao, imagesDao, labelsDao, librariesDao,
-                  recordBuilderDao, recordsArtistsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
+                  recordBuilderDao, recordsArtistsDao, recordsCollectionsDao, recordsExtraArtistsDao, recordsFormatsDao, recordsGenresDao, recordsLabelsDao,
                   recordService, tracksDao, userDao, searchDao)
         {
         }
@@ -41,6 +41,12 @@ namespace Capstone.Controllers
 
             try
             {
+                // reactivate collections, library, records_collections
+                _librariesDao.DeReactivateLibrary(username, true);
+                _collectionsDao.DeReactivateCollection(username, true);
+                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, true);
+                
+                // then reactivate the user
                 bool output = _userDao.ReactivateUser(username);
                 if (output)
                 {

@@ -9,6 +9,7 @@ namespace Capstone.DAO.Interfaces
         public User GetUserById(int id);
         public User GetUserByUsername(string username);
         public string GetUserRole(string username); // don't expose in end point
+        public bool GetUserStatus(string username); // don't expose in end point
         public int GetUserCount();
         public User CreateUser(RegisterUser userParam);
         public bool DeactivateUser(string username);
