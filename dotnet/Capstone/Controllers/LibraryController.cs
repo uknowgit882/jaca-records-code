@@ -79,7 +79,7 @@ namespace Capstone.Controllers
         public ActionResult<bool> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+            username = "alizg"; // TODO remove hardcode
             try
             {
                 // get the record from the api and put it in our db

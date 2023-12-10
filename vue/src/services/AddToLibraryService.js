@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export default {
-    addToDB(id){
-       return axios.get(`Test/AddRecordToDb/${id}`) 
-    },
+    // addToDB(id){
+    //    return axios.get(`Test/AddRecordToDb/${id}`) 
+    // },
     addToLibrary(id){
         return axios.post('Library/', {
             "discogsId": id,

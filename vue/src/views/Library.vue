@@ -9,11 +9,24 @@
 
 <script>
 import RecordInLibrary from '@/components/RecordInLibraryComponent.vue';
+import AddToLibraryService from '../services/AddToLibraryService';
 
 
 export default{
     components: {
-        RecordInLibrary
+        RecordInLibrary,
+        AddToLibraryService
+    },
+    methods: {
+        // DisplayingLibrary() {
+        //     AddToLibraryService.displayRecordsInLibrary()
+        //         .then((response) => {
+        //             if (response.status == 200) {
+        //                 this.$store.commit('SHOW_RECORDS_IN_LIBRARY', response)
+        //                 this.$router.push({ name: "Library" });
+        //             }
+        //         })
+        // }
     }
 }
 </script>
