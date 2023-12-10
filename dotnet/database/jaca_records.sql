@@ -222,7 +222,6 @@ CREATE TABLE collections (
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_collections PRIMARY KEY (collection_id),
-	--CONSTRAINT UQ_collection_name UNIQUE(name),
 	CONSTRAINT UQ_collections_libary_record UNIQUE (username, name),
 	CONSTRAINT FK_collections_libraries FOREIGN KEY (username) REFERENCES users (username),
 )
@@ -237,7 +236,7 @@ CREATE TABLE records_collections(
 	created_date DATETIME DEFAULT getdate() NOT NULL,
 	updated_date DATETIME DEFAULT getdate() NOT NULL,
 	CONSTRAINT PK_records_collections PRIMARY KEY (records_collections_id),
-	CONSTRAINT UQ_records_collections UNIQUE (collection_id, discogs_id),
+	CONSTRAINT UQ_records_collections UNIQUE (library_id, collection_id, discogs_id),
 	CONSTRAINT FK_records_collections_library FOREIGN KEY (library_id) REFERENCES libraries (library_id),
 	CONSTRAINT FK_records_collections_collections FOREIGN KEY (collection_id) REFERENCES collections (collection_id),
 	CONSTRAINT FK_records_collections_records FOREIGN KEY (discogs_id) REFERENCES records (discogs_id)

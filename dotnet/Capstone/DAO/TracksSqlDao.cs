@@ -126,9 +126,10 @@ namespace Capstone.DAO
         /// Returns how many tracks are associated with this user. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Int number of tracks</returns>
         /// <exception cref="DaoException"></exception>
-        public int GetTrackCountByUsername(string username)
+        public int GetTrackCountByUsername(string username, bool isPremium)
         {
             int output = 0;
 
@@ -136,7 +137,7 @@ namespace Capstone.DAO
                 "FROM tracks " +
                 "JOIN records ON tracks.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -145,6 +146,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -160,50 +162,6 @@ namespace Capstone.DAO
                 throw new DaoException("Sql exception occurred", ex);
             }
         }
-
-        // I think I don't need this...
-        ///// <summary>
-        ///// Gets the track info associated for this record for this specific user. Includes title, position, duration
-        ///// </summary>
-        ///// <param name="discogId"></param>
-        ///// <param name="username"></param>
-        ///// <returns>List of tracks for this specific user. Only the title, position, duration should be sent to the front end - use JSONIgnore on the other properties</returns>
-        ///// <exception cref="DaoException"></exception>
-        //public List<Track> GetTracksByDiscogsIdAndUsername(int discogId, string username)
-        //{
-        //    List<Track> output = new List<Track>();
-        //    string sql = "SELECT tracks.title, position, duration " +
-        //        "FROM tracks " +
-        //        "JOIN records ON tracks.discogs_id = records.discogs_id " +
-        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-        //        "WHERE records.discogs_id = @discogId AND username = @username";
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand(sql, conn);
-        //            cmd.Parameters.AddWithValue("@discogId", discogId);
-        //            cmd.Parameters.AddWithValue("@username", username);
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            while (reader.Read())
-        //            {
-        //                Track row = new Track();
-        //                row.Title = Convert.ToString(reader["title"]);
-        //                row.Position = Convert.ToString(reader["position"]);
-        //                row.Duration = Convert.ToString(reader["duration"]);
-        //                output.Add(row);
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        throw new DaoException("Sql exception occurred", ex);
-        //    }
-        //    return output;
-        //}
 
         public bool AddTrack(Track track)
         {

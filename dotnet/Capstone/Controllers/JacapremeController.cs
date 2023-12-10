@@ -42,9 +42,9 @@ namespace Capstone.Controllers
             try
             {
                 // reactivate collections, library, records_collections
-                _librariesDao.DeReactivateLibrary(username, true);
-                _collectionsDao.DeReactivateCollection(username, true);
-                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, true);
+                _librariesDao.DeReactivateLibrary(username, IsActive);
+                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, IsActive);
+                _collectionsDao.DeReactivateCollection(username, IsActive);
                 
                 // then reactivate the user
                 bool output = _userDao.ReactivateUser(username);

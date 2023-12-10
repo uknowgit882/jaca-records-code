@@ -40,9 +40,9 @@ namespace Capstone.Controllers
             try
             {
                 // deactivate library, collections, record collections
-                _librariesDao.DeReactivateLibrary(username, false);
-                _collectionsDao.DeReactivateCollection(username, false);
-                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, false);
+                _librariesDao.DeReactivateLibrary(username, NotActive);
+                _recordsCollectionsDao.DeReactivateRecordsInCollection(username, NotActive);
+                _collectionsDao.DeReactivateCollection(username, NotActive);
 
                 // then deactivate the user
                 bool output = _userDao.DeactivateUser(username);
@@ -78,8 +78,8 @@ namespace Capstone.Controllers
             {
                 // have to update is_premium in places
                 // upgrade all records in libraries and collections to ispremium true
-                _librariesDao.ChangeAllRecordIsPremium(username, true);
-                _recordsCollectionsDao.ChangeAllRecordCollectionIsPremium(username, true);
+                _librariesDao.ChangeAllRecordIsPremium(username, IsPremium);
+                _recordsCollectionsDao.ChangeAllRecordCollectionIsPremium(username, IsPremium);
 
                 // restore all collections to is premium true
                 // get all the collections that are false
@@ -88,7 +88,7 @@ namespace Capstone.Controllers
                 // then make is premium is true
                 foreach(Collection collection in collections)
                 {
-                    _collectionsDao.ChangeCollectionIsPremium(collection.Name, username, true);
+                    _collectionsDao.ChangeCollectionIsPremium(collection.Name, username, IsPremium);
                 }
 
                 // then upgrade
@@ -132,16 +132,16 @@ namespace Capstone.Controllers
                 // mark just them as is premium false
                 foreach(Library record in freeRecords)
                 {
-                    _librariesDao.ChangeRecordIsPremium(record.Discog_Id, username, false);
+                    _librariesDao.ChangeRecordIsPremium(record.Discog_Id, username, NotPremium);
                     // and also in records collections
-                    _recordsCollectionsDao.ChangeSingleRecordCollectionIsPremium(record.Discog_Id, username, false);
+                    _recordsCollectionsDao.ChangeSingleRecordCollectionIsPremium(record.Discog_Id, username, NotPremium);
                 }
 
                 // add a collection "free" from collections
                 _collectionsDao.AddCollection(username, "Free Collection");
 
                 // set it to is premium false
-                _collectionsDao.ChangeCollectionIsPremium("Free Collection", username, false);
+                _collectionsDao.ChangeCollectionIsPremium("Free Collection", username, NotPremium);
 
                 // then downgrade the user
                 bool output = _userDao.DowngradeUser(username);
