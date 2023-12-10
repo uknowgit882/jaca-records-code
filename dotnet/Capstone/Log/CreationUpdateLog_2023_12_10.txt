@@ -257,3 +257,60 @@ Trying to change record in library to free/premium | For user, record: 11948258 
 Trying to de/reactivate collection | For user | DeReactivateCollection | The wrong number of rows is impacted | 12/10/2023 5:26:23 PM
 --- END OF ACTION ---
 
+Trying to get artist count for user | jakel get failed | GetArtistCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 6:42:34 PM
+--- END OF ACTION ---
+
+Trying to do stuff | For jakel | GetUserStats | Sql exception occurred | 12/10/2023 6:42:34 PM
+--- END OF ACTION ---
+
+Trying to get artist count for user | jakel get failed | GetArtistCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 6:43:25 PM
+--- END OF ACTION ---
+
+Trying to get extra artist count for user | jakel get failed | GetExtraArtistCountByUsername | Invalid column name 'artist_id'.
+Ambiguous column name 'is_active'. | 12/10/2023 6:51:05 PM
+--- END OF ACTION ---
+
+Trying to get extra artist count for user | jakel get failed | GetExtraArtistCountByUsername | Invalid column name 'extra_artist'. | 12/10/2023 6:58:01 PM
+--- END OF ACTION ---
+
+Trying to get format count | For jakel | GetFormatCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 6:59:33 PM
+--- END OF ACTION ---
+
+Trying to get users genre | For jakel | GetGenreCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 7:21:09 PM
+--- END OF ACTION ---
+
+Trying to get image count for this user | For jakel | GetImageCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 7:26:52 PM
+--- END OF ACTION ---
+
+Trying to get label count for user | For jakel | GetLabelCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 7:30:25 PM
+--- END OF ACTION ---
+
+Trying to get records in collection count | For jakel | CountOfRecordsInAllCollectionsByUsername | Ambiguous column name 'is_premium'. | 12/10/2023 7:32:03 PM
+--- END OF ACTION ---
+
+Trying to get track count for user | For jakel | GetTrackCountByUsername | Ambiguous column name 'is_active'. | 12/10/2023 7:38:59 PM
+--- END OF ACTION ---
+
+Trying to get record count by type for user | jakel get failed | GetFormatAndRecordCountByUsername | The multi-part identifier "format.type" could not be bound.
+The multi-part identifier "format.type" could not be bound. | 12/10/2023 7:41:08 PM
+--- END OF ACTION ---
+
+Trying to get record count by type for user | jakel get failed | GetFormatAndRecordCountByUsername | The multi-part identifier "format.type" could not be bound.
+The multi-part identifier "format.type" could not be bound. | 12/10/2023 7:42:13 PM
+--- END OF ACTION ---
+
+Trying to do stuff | For jakel | GetUserStats | Sql exception occurred | 12/10/2023 7:42:13 PM
+--- END OF ACTION ---
+
+Trying to get record count by type for user | jakel get failed | GetFormatAndRecordCountByUsername | The multi-part identifier "format.type" could not be bound.
+The multi-part identifier "format.type" could not be bound. | 12/10/2023 7:42:41 PM
+--- END OF ACTION ---
+
+Trying to get record count by genre for user | jakel get failed | GetGenreAndRecordCountByUsername | The multi-part identifier "genre.name" could not be bound.
+The multi-part identifier "genre.name" could not be bound. | 12/10/2023 7:47:10 PM
+--- END OF ACTION ---
+
+Trying to get record count by label for user | jakel get failed | GetLabelAndRecordCountByUsername | The multi-part identifier "label.name" could not be bound.
+The multi-part identifier "label.name" could not be bound. | 12/10/2023 7:53:02 PM
+--- END OF ACTION ---
+

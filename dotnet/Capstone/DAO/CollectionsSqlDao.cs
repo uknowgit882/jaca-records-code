@@ -485,7 +485,7 @@ namespace Capstone.DAO
             string sql = "SELECT username, count(records_collections.discogs_id) AS count " +
                 "FROM collections " +
                 "JOIN records_collections ON collections.collection_id = records_collections.collection_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND collections.is_active = 1 " +
+                "WHERE username = @username AND collections.is_premium = @isPremium AND collections.is_active = 1 " +
                 "GROUP BY username;";
             try
             {

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Capstone.DAO
 {
@@ -130,14 +131,23 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public int GetLabelCountByUsername(string username, bool isPremium)
         {
-            int output = 0;
+            List<int> output = new List<int>();
 
-            string sql = "SELECT count(labels.label_id) AS count " +
+            string sql = "SELECT count(labels.name) AS count " +
                 "FROM labels " +
                 "JOIN records_labels ON labels.label_id = records_labels.label_id " +
                 "JOIN records ON records_labels.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND labels.is_active = 1 " +
+                "GROUP BY labels.name";
+            //SELECT count(labels.name) AS count
+            //    FROM labels
+            //    JOIN records_labels ON labels.label_id = records_labels.label_id
+            //    JOIN records ON records_labels.discogs_id = records.discogs_id
+            //    JOIN libraries ON records.discogs_id = libraries.discogs_id
+            //    WHERE username = 'jakel' AND is_premium = 1 AND labels.is_active = 1
+
+            //    GROUP BY labels.name
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -149,11 +159,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = Convert.ToInt32(reader["count"]);
+                        output.Add(Convert.ToInt32(reader["count"]));
                     }
-                    return output;
+                    return output.Count;
                 }
             }
             catch (SqlException ex)
@@ -174,13 +184,13 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT label.name, count(records.discogs_id) AS record_count " +
+            string sql = "SELECT labels.name, count(records.discogs_id) AS record_count " +
                 "FROM labels " +
                 "JOIN records_labels ON labels.label_id = records_labels.label_id " +
                 "JOIN records ON records_labels.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
                 "WHERE username = @username AND is_premium = @isPremium AND records.is_active = 1 " +
-                "GROUP BY label.name";
+                "GROUP BY labels.name";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))

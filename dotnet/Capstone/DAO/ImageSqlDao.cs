@@ -138,7 +138,7 @@ namespace Capstone.DAO
                 "FROM images " +
                 "JOIN records ON images.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND images.is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
