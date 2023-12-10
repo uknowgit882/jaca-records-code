@@ -1,22 +1,23 @@
 <template>
-    <div class="display" v-if="$store.state.searchResults.data">
-        <!-- <div class="box" id="Carousel" v-for="item in $store.state.searchResults.data.results" :key="item.id">Carosuel 
+  <div class="display" v-if="$store.state.searchResults.data">
+    <!-- <div class="box" id="Carousel" v-for="item in $store.state.searchResults.data.results" :key="item.id">Carosuel 
             <div>{{ item.title }}</div>
             <img class="result-thumbnail" v-bind:src="item.thumb" />
         </div> -->
-    </div>
-    <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
-      <Slide v-for="n in 50" :key="n">
-        <div class="carousel__item">
-            <!-- <v-img :src="this.image[n-1]" height="50px"></v-img> -->
-            <img src="https://www.lpl.com/content/dam/lpl-www/images/newsroom/read/insider/insider-blog-meme-stocks-what-do-they-mean_article-hero-450x450.png"/>
-        </div>
-      </Slide>
-      <template #addons>
+  </div>
+  <Carousel :itemsToShow="3.95" :autoplay="3000" :wrapAround="true" :transition="500">
+    <Slide v-for="n in 50" :key="n">
+      <div class="carousel__item">
+        <!-- <v-img :src="this.image[n-1]" height="50px"></v-img> -->
+        <img
+          src="https://i.discogs.com/xAuuOx6MzpbgVhBF2BD-XEBhJsK1bDfgCbGYlsbTeEE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0NjI1/MzI1LTE2NjQxMDIz/NDgtMjQzNy5qcGVn.jpeg" />
+      </div>
+    </Slide>
+    <template #addons>
       <Navigation />
       <Pagination />
     </template>
-    </Carousel>
+  </Carousel>
 </template>
 
 <script>
@@ -26,8 +27,8 @@ import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 
 import 'vue3-carousel/dist/carousel.css'
 
-export default{
-    name: 'Autoplay',
+export default {
+  name: 'Autoplay',
   components: {
     Carousel,
     Slide,
@@ -37,27 +38,29 @@ export default{
   },
   data() {
     return {
-        image: [
-            "https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUEIbxGhXurYC9gDshTflQ0DpnZyNqzWDvTiuUchMApUMdj-f4kPid9aW6-E2qrVshy-A&usqp=CAU",
-            "https://www.lifewire.com/thmb/PiAB30sXKFcKSO_r72hP5-Hwq_E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/BabywithFistmeme2-0c317ccc4d3a44c68098cd08f4ecac74.jpg"
-        ]
+      image: [
+        "https://assets.justinmind.com/wp-content/uploads/2018/05/top-10-worst-90s-website-designs-header.png",
+      ]
     }
   }
 }
 </script>
 
 <style scoped>
-#Carousel{
-    display: flex;
+#Carousel {
+  display: flex;
   align-items: center;
   justify-content: center;
-    width: 1500px;
-    height: 500px;
+  width: 1500px;
+  height: 500px;
 
 }
+
 .carousel__slide {
-  padding: 5px;
+  display: flex;
+  padding: 80px;
+  padding-top: 33px;
+  margin-right: 0.2px;
 }
 
 .carousel__viewport {
@@ -73,26 +76,31 @@ export default{
 }
 
 .carousel__slide {
-  opacity: 0.9;
+  opacity: -1;
   transform: rotateY(-20deg) scale(0.9);
 }
 
-.carousel__slide--active ~ .carousel__slide {
-  transform: rotateY(20deg) scale(0.9);
+.carousel__slide--active~.carousel__slide {
+  transform: rotateY(20deg) scale(0.94);
 }
 
 .carousel__slide--prev {
   opacity: 1;
-  transform: rotateY(-10deg) scale(0.95);
+  transform: rotateY(-18deg) scale(0.93);
 }
 
 .carousel__slide--next {
   opacity: 1;
-  transform: rotateY(10deg) scale(0.95);
+  transform: rotateY(10deg) scale(.95);
 }
 
 .carousel__slide--active {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
+}
+
+.carousel_pagination {
+  display: flex;
+  columns: center;
 }
 </style>

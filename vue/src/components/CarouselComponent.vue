@@ -1,10 +1,12 @@
 <template>
-    <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
+    <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500" > 
+      <!-- :autoplay="3000" -->
       <Slide v-for="n in 50" :key="n">
         <div class="carousel__item">
             <!-- <v-img :src="this.image[n-1]" height="50px"></v-img> -->
-            <img src="https://www.lpl.com/content/dam/lpl-www/images/newsroom/read/insider/insider-blog-meme-stocks-what-do-they-mean_article-hero-450x450.png"/>
-        </div>
+            <img src="https://i.discogs.com/xAuuOx6MzpbgVhBF2BD-XEBhJsK1bDfgCbGYlsbTeEE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0NjI1/MzI1LTE2NjQxMDIz/NDgtMjQzNy5qcGVn.jpeg"/>
+            <router-link :to="{name: 'Collections'}">Collections</router-link>
+          </div>
       </Slide>
       <template #addons>
       <Navigation />
@@ -41,8 +43,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#Carousel{
+    display: flex;
+  align-items: center;
+  justify-content: center;
+    width: 1500px;
+    height: 500px;
+
+}
+
 .carousel__slide {
-  padding: 5px;
+  display: flex;
+  padding: 20px;
 }
 
 .carousel__viewport {
@@ -58,26 +70,27 @@ export default defineComponent({
 }
 
 .carousel__slide {
-  opacity: 0.9;
+  opacity: -1;
   transform: rotateY(-20deg) scale(0.9);
 }
 
 .carousel__slide--active ~ .carousel__slide {
-  transform: rotateY(20deg) scale(0.9);
+  transform: rotateY(20deg) scale(0.94);
 }
 
 .carousel__slide--prev {
   opacity: 1;
-  transform: rotateY(-10deg) scale(0.95);
+  transform: rotateY(-18deg) scale(0.93);
 }
 
 .carousel__slide--next {
   opacity: 1;
-  transform: rotateY(10deg) scale(0.95);
+  transform: rotateY(10deg) scale(.95);
 }
 
 .carousel__slide--active {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
 }
+
 </style>
