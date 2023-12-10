@@ -20,15 +20,14 @@ namespace Capstone.DAO
         /// <summary>
         /// Gets all records in a collection. Use the get methods in collections to obtain the record by username/name.
         /// </summary>
-        /// <param name="discogsId"></param>
         /// <param name="collectionId"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public List<RecordCollection> GetAllRecordsInCollectionByCollectionId(int collectionId)
+        public List<int> GetAllRecordsInCollectionByCollectionId(int collectionId)
         {
-            List<RecordCollection> output = new List<RecordCollection>();
+            List<int> output = new List<int>();
 
-            string sql = "SELECT records_collections_id, is_premium " +
+            string sql = "SELECT discogs_id  " +
                 "FROM records_collections " +
                 "WHERE collection_id = @collectionId AND is_active = 1 ";
 
@@ -44,7 +43,7 @@ namespace Capstone.DAO
 
                     if (reader.Read())
                     {
-                        RecordCollection row = MapRowToRecordCollection(reader);
+                        int row = Convert.ToInt32(reader["discogs_id"]);
                         output.Add(row);
                     }
                 }
@@ -232,11 +231,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@collectionId", collectionId);
-                    NumberOfRows = cmd.ExecuteNonQuery();
-                    if (NumberOfRows != 1)
-                    {
-                        throw new DaoException("The wrong number of rows were impacted");
-                    }
+                    NumberOfRows = cmd.ExecuteNonQuery(); 
                 }
             }
             catch (SqlException ex)

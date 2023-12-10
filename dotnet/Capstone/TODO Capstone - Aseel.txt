@@ -1,22 +1,13 @@
 TODO:
 update the registration page to accept first, last, email
 update profile page to display last login
-need a collection creation page
 colleciton page needs a delete button (and a confirmation prompt) to delete the collection
 collection page needs an edit button
 something about CORS???
 FOR JAKE - if you enter a general query, it'll return all records
 
-remove hardcoded user role "free" in each of the controller's methods everywhere
-
 search for a record by username
 	also want to return which collection it's in, if any
-Controller decorations for authorization
-
-registration - work on premium/free status
-to remove a record from your library, you must remove it from your records_collections first
-update controllers so they all have error log reporting in their catches
-
  
 
 14881
@@ -34,8 +25,3 @@ update controllers so they all have error log reporting in their catches
 24735206
 11948258
 
-
-anonymous collections
-collections
-jacapreme
-userfunctions

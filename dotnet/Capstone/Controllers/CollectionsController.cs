@@ -43,6 +43,11 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
 
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Please provide a username");
+            }
+
             try
             {
                 // find the user's role
@@ -69,14 +74,15 @@ namespace Capstone.Controllers
                     OutboundCollectionWithFullRecords collectionWithRecords = new OutboundCollectionWithFullRecords();
 
                     collectionWithRecords.Name = collection.Name;
+                    collectionWithRecords.Is_Private = collection.IsPrivate;
 
                     // have the collection id. Need a list of records for them
-                    List<RecordCollection> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
+                    List<int> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
 
                     // then for each of those records, build the full record and attach it to the outbound object
-                    foreach (RecordCollection record in recordsInCollection)
+                    foreach (int record in recordsInCollection)
                     {
-                        collectionWithRecords.Records.Add(BuildFullRecord(record.Discogs_Id));
+                        collectionWithRecords.Records.Add(BuildFullRecord(record));
                     }
 
                     // then when you get here, add that collectionWithRecords to the output
@@ -104,6 +110,11 @@ namespace Capstone.Controllers
         [HttpPost]
         public ActionResult<Collection> CreateCollection(IncomingCollectionRequest newCollection)
         {
+            if(newCollection.Name == null)
+            {
+                return BadRequest("Please provide the new collection's name");
+            }
+
             string username = User.Identity.Name;
 
             try
@@ -159,6 +170,11 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Please provide the collection's name");
+            }
+
             try
             {
                 OutboundCollectionWithFullRecords output = new OutboundCollectionWithFullRecords();
@@ -167,14 +183,15 @@ namespace Capstone.Controllers
                 Collection collection = _collectionsDao.GetNamedCollection(username, name);
 
                 output.Name = collection.Name;
+                output.Is_Private = collection.IsPrivate;
 
                 // get the records in this collection
-                List<RecordCollection> recordsInCollection = new List<RecordCollection>();
+                List<int> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
 
-                foreach(RecordCollection recordInCollection in recordsInCollection)
+                foreach (int record in recordsInCollection)
                 {
                     // add the full record to the output
-                    output.Records.Add(BuildFullRecord(recordInCollection.Discogs_Id));
+                    output.Records.Add(BuildFullRecord(record));
                 }
 
                 if (output.Records.Count != 0)
@@ -198,6 +215,11 @@ namespace Capstone.Controllers
         public ActionResult<Collection> DeleteSpecificCollection(string name)
         {
             string username = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Please provide the collection's name");
+            }
 
             try
             {
@@ -236,6 +258,11 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(request.Name))
+            {
+                return BadRequest("Please provide the collection's name");
+            }
+
             try
             {
                 // check if the resource exists
@@ -252,7 +279,7 @@ namespace Capstone.Controllers
                 if (output)
                 {
                     // if successful, send back the updated collection
-                    return Ok(_collectionsDao.GetNamedCollection(username, name));
+                    return Ok(_collectionsDao.GetNamedCollection(username, request.Name));
                 }
                 else
                 {
@@ -271,6 +298,11 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(request.Name))
+            {
+                return BadRequest("Please provide the collection's name");
+            }
+
             try
             {
                 // check if the resource exists
@@ -279,6 +311,10 @@ namespace Capstone.Controllers
                 if (collectionToUpdate == null)
                 {
                     return NotFound();
+                }
+                else if (collectionToUpdate.IsPrivate == request.Is_Private)
+                {
+                    return BadRequest("This collection already has this privacy setting");
                 }
 
                 // then update the collection
@@ -306,6 +342,11 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToCollection(string name, IncomingRecord recordToAdd)
         {
             string username = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(username) || recordToAdd.Discogs_Id == 0)
+            {
+                return BadRequest("Please provide the collection's name and the record ID you want to add");
+            }
 
             try
             {
@@ -355,6 +396,11 @@ namespace Capstone.Controllers
         public ActionResult<Collection> RemoveRecordFromCollection(string name, int id)
         {
             string username = User.Identity.Name;
+            
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Please provide a username");
+            }
 
             try
             {
@@ -396,6 +442,11 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> GetRecordInCollection(string name, int id)
         {
             string username = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Please provide a username");
+            }
 
             try
             {

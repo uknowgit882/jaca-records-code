@@ -46,12 +46,12 @@ namespace Capstone.Controllers
                     collectionWithRecords.Name = collection.Name;
 
                     // have the collection id. Need a list of records for them
-                    List<RecordCollection> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
+                    List<int> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
 
                     // then for each of those records, build the full record and attach it to the outbound object
-                    foreach (RecordCollection record in recordsInCollection)
+                    foreach (int record in recordsInCollection)
                     {
-                        collectionWithRecords.Records.Add(BuildFullRecord(record.Discogs_Id));
+                        collectionWithRecords.Records.Add(BuildFullRecord(record));
                     }
 
                     // then when you get here, add that collectionWithRecords to the output
