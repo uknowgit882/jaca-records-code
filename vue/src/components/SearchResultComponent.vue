@@ -24,10 +24,6 @@
         </div>
         <!-- First dropdown ends -->
 
-        <!-- <ul class="result-genre">
-            <li v-for="item in result.genre" v-bind:key="item">{{ item }}</li>
-        </ul> -->
-
         <span class="result-country">{{ result.country }}</span>
 
         <!-- Second dropdown starts: -->
@@ -49,20 +45,8 @@
             </div>
         </div>
 
-        
-
-
         <!-- Second dropdown stops here -->
 
-        <!-- <ul class="result-label">
-            <li v-for="item in result.label" v-bind:key="item">{{ item }}</li>
-        </ul> -->
-
-        <!-- <span class="result-barcode">
-            <div class="radio" >
-                <input type="radio" name="answer">
-            </div>
-        </span> -->
         <AddToLibrary v-bind:key="result.id" v-bind:id="result.id">{{ result.id }}</AddToLibrary>
 
 

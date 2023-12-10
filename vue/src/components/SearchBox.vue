@@ -71,21 +71,6 @@
         </div>
     </div>
 </div>
-    <!-- <div class="level-item">
-        <div class="field is-grouped is-grouped-centered">
-            <div class="control">
-                <input class="input is-medium" type="text" placeholder="Find a Record, Artist etc."
-                    v-model="Search.General">
-            </div>
-            <div class="control">
-                <a class="button is-info is-medium" v-on:click="sendSearch()">
-                    Search
-                </a>
-            </div>
-            <button class="button" v-on:click="showForm = !showForm">Advanced Search</button>
-        </div>
-
-    </div> -->
 </template>
 
 <script>
@@ -115,7 +100,6 @@ export default {
 
             },
             showForm: false,
-            // searchResults: []
 
 
         }
@@ -125,8 +109,6 @@ export default {
         sendSearch() {
             SearchService.search(this.Search)
                 .then((response) => {
-                    //this.searchResults = response.data;
-                    //this.isVisible = true;
                     if (response.status == 200){
                         this.$store.commit('ADD_SEARCH_RESULT', response);
                         this.$router.push({name: "SearchResult"})

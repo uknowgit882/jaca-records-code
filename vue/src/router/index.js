@@ -14,6 +14,7 @@ import SearchResult from'@/views/SearchResult.vue'
 import Carousel from '@/views/CarousalView.vue'
 import ProfilePageView from '@/views/ProfilePageView.vue'
 import HomeA from '@/views/HomeAView.vue'
+import popupViewTest from '@/views/popupViewTEST.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -108,6 +109,14 @@ const routes = [
     path: "/Carousel",
     name: "Carousel",
     component: Carousel,
+    meta: {
+      requiresAuth: false,
+    } 
+  },
+  {
+    path: "/popup",
+    name: "popup",
+    component: popupViewTest,
     meta: {
       requiresAuth: false,
     } 
