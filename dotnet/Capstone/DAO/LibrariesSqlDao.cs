@@ -409,22 +409,24 @@ namespace Capstone.DAO
         /// <param name="discogsId"></param>
         /// <param name="username"></param>
         /// <param name="notes"></param>
+        /// <param name="quantity"></param>
+        /// <param name="isPremium"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecord(int discogsId, string username, string notes = "")
+        public bool AddRecord(int discogsId, string username, int quantity, bool isPremium, string notes = "")
         {
             int recordCheck = GetRecordFromLibrary(username, discogsId);
 
             if (recordCheck > 0)
             {
-                throw new DaoException("This record already exists in your library");
+                return false;
             }
 
             int libraryId = 0;
 
-            string sql = "INSERT INTO libraries (username, discogs_id, notes, quantity) " +
+            string sql = "INSERT INTO libraries (username, discogs_id, notes, quantity, is_premium) " +
                 "OUTPUT INSERTED.library_id " +
-                "VALUES (@username, @discogs_id, @notes, @quantity);";
+                "VALUES (@username, @discogs_id, @notes, @quantity, @isPremium);";
 
             try
             {
@@ -436,7 +438,8 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@discogs_id", discogsId);
                     cmd.Parameters.AddWithValue("@notes", notes);
-                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
 
                     libraryId = Convert.ToInt32(cmd.ExecuteScalar());
                     return true;
@@ -649,7 +652,7 @@ namespace Capstone.DAO
         {
             int numberOfRows = 0;
 
-            string userSql = "DELETE FROM library " +
+            string userSql = "DELETE FROM libraries " +
                 "WHERE username = @username AND discogs_id = @discogs_id";
 
             try

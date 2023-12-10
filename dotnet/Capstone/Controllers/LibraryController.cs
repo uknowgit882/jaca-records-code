@@ -62,7 +62,7 @@ namespace Capstone.Controllers
                     OutboundLibraryWithFullRecords entry = new OutboundLibraryWithFullRecords();
                     entry.Quantity = row.Quantity;
                     entry.Notes = row.Notes;
-                    entry.Record = BuildFullRecord(row.Library_Id);
+                    entry.Record = BuildFullRecord(row.Discog_Id);
                     output.Add(entry);
                 }
 
@@ -86,6 +86,10 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
+            if(request.DiscogsId == 0)
+            {
+                return BadRequest("Please provide the record ID you want to add to your library");
+            }
 
             try
             {
@@ -109,7 +113,7 @@ namespace Capstone.Controllers
                 }
 
                 // if all good, add
-                bool addRecordSuccess = _librariesDao.AddRecord(request.DiscogsId, username, request.Notes);
+                bool addRecordSuccess = _librariesDao.AddRecord(request.DiscogsId, username, request.Quantity, (userRole == FreeAccountName ? NotPremium : IsPremium), request.Notes);
                 if (addRecordSuccess)
                 {
                     return Created(CreationPathReRoute, BuildFullRecord(request.DiscogsId));
@@ -117,24 +121,30 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok("This record already exists in your library");
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Something went wrong trying to add this record to your library");
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<RecordClient> GetFromLibrary(int discogsId)
+        public ActionResult<RecordClient> GetFromLibrary(int id)
         {
             string username = User.Identity.Name;
 
             try
             {
                 // check if the user has the record in the library
-                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, discogsId);
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, id);
+
+                if (returnedDiscogsId == 0)
+                {
+                    return NotFound("You don't have this record in your library");
+                }
+
                 RecordClient output = BuildFullRecord(returnedDiscogsId);
 
                 if (output != null)
@@ -149,19 +159,19 @@ namespace Capstone.Controllers
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<bool> DeleteRecordFromLibrary(int discogsId)
+        public ActionResult<bool> DeleteRecordFromLibrary(int id)
         {
             string username = User.Identity.Name;
 
             try
             {
-                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, discogsId);
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, id);
 
                 if (returnedDiscogsId == 0)
                 {
@@ -169,15 +179,15 @@ namespace Capstone.Controllers
                 }
                 // to delete from library, it needs to be deleted from any records_collections and collections
                 // find any collections the record is in
-                List<int> collectionsForDiscogId = _recordsCollectionsDao.GetAllCollectionsForThisDiscogsIdByUsername(discogsId, username);
+                List<int> collectionsForDiscogId = _recordsCollectionsDao.GetAllCollectionsForThisDiscogsIdByUsername(id, username);
 
                 // delete the record from those collections
                 foreach(int collectionId in collectionsForDiscogId)
                 {
-                    _recordsCollectionsDao.DeleteRecordCollectionByDiscogsIdAndCollectionId(discogsId, collectionId);
+                    _recordsCollectionsDao.DeleteRecordCollectionByDiscogsIdAndCollectionId(id, collectionId);
                 }
                 // then delete the record from the library                
-                bool output = _librariesDao.DeleteRecord(discogsId, username);
+                bool output = _librariesDao.DeleteRecord(id, username);
                 if (output)
                 {
                     return Ok($"You removed a record from your library");
@@ -190,19 +200,26 @@ namespace Capstone.Controllers
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}/notes")]
-        public ActionResult<bool> UpdateNoteForRecordInLibrary(IncomingLibraryRequest request)
+        public ActionResult<bool> UpdateNoteForRecordInLibrary(int id, IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
 
             try
             {
-                string output = _librariesDao.ChangeNote(username, request.DiscogsId, request.Notes);
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, id);
+
+                if (returnedDiscogsId == 0)
+                {
+                    return NotFound("You don't have this record in your library");
+                }
+
+                string output = _librariesDao.ChangeNote(username, id, request.Notes);
                 if (output != null)
                 {
                     return Ok(output);
@@ -215,22 +232,29 @@ namespace Capstone.Controllers
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to update note", $"For {username}, {request.DiscogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to update note", $"For {username}, {id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}/quantity")]
-        public ActionResult<bool> UpdateQuantityForRecordInLibrary(IncomingLibraryRequest request)
+        public ActionResult<bool> UpdateQuantityForRecordInLibrary(int id, IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
 
             try
             {
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, id);
+
+                if (returnedDiscogsId == 0)
+                {
+                    return NotFound("You don't have this record in your library");
+                }
+
                 int output = _librariesDao.ChangeQuantity(username, request.DiscogsId, request.Quantity);
                 if (output > 0)
                 {
-                    return Ok(output);
+                    return Ok($"You now have {request.Quantity} of this record");
 
                 }
                 else
@@ -240,7 +264,7 @@ namespace Capstone.Controllers
             }
             catch (Exception ex)
             {
-                ErrorLog.WriteLog("Trying to change quantity", $"For {username}, {request.DiscogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                ErrorLog.WriteLog("Trying to change quantity", $"For {username}, {id}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 return BadRequest(ex.Message);
             }
         }
