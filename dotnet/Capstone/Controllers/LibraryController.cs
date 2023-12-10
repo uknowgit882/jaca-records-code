@@ -32,7 +32,6 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
             //TODO remove hardcode
-            username = "alizg";
 
             // container for the outbound records
             List<OutboundLibraryWithFullRecords> output = new List<OutboundLibraryWithFullRecords>();
