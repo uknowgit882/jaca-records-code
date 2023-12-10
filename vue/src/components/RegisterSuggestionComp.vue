@@ -66,7 +66,7 @@
     width: 500px;
     height: 460px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(rgb(11, 122, 225), rgb(117, 192, 219));
+    background-image: linear-gradient(#1CA2C0, rgb(117, 192, 219));
     border-radius: 10px;
     margin-right: 20px;
     margin-left: 20px;
@@ -92,11 +92,12 @@ h4 {
     width: 500px;
     height: 460px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(rgb(246, 227, 83), rgb(230, 191, 146));
+    background-image: linear-gradient(#D1D301, #f5f698);
     border-radius: 10px;
-    margin-right: -120px;
+    margin-right: -80px;
     justify-content: center;
     align-items: start;
+;
 
 }
 
@@ -113,15 +114,16 @@ h4 {
 
 .box-info {
     display: flex;
-    width: 700px;
+    width: 960px;
     height: 460px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(rgb(218, 50, 87), rgb(236, 188, 201));
+    background-image: linear-gradient(#01B48E, #c5e4dd);
     border-radius: 10px;
     justify-content: center;
     align-items: start;
-    padding-right: 23%;
+    padding-right: 36%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
+    margin-left: 30px;
 }
 
 .fa-solid {
@@ -130,58 +132,52 @@ h4 {
 }
 
 .button {
-    text-decoration: none;
-    position: relative;
-    border: none;
-    font-size: 14px;
-    font-family: inherit;
-    color: #fff;
-    width: 30em;
-    height: 3em;
-    line-height: 2em;
-    text-align: center;
-    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-    background-size: 300%;
-    border-radius: 30px;
-    z-index: 1;
-}
-
-.button:hover {
-    animation: ani 8s linear infinite;
-    border: none;
-
-}
-
-@keyframes ani {
-    0% {
-        background-position: 0%;
-    }
-
-    100% {
-        background-position: 400%;
-    }
+ --color: #000000;
+ font-family: inherit;
+ display: inline-block;
+ width: 20em;
+ height: 2.6em;
+ line-height: 1.5em;
+ margin: 20px;
+ position: relative;
+ overflow: hidden;
+ border: 2px solid var(--color);
+ transition: color .5s;
+ z-index: 1;
+ font-size: 17px;
+ border-radius: 6px;
+ font-weight: 500;
+ color: var(--color);
+ 
 }
 
 .button:before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    z-index: -1;
-    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-    background-size: 400%;
-    border-radius: 35px;
-    transition: 1s;
-
+ content: "";
+ position: absolute;
+ z-index: -1;
+ background: var(--color);
+ height: 115px;
+ width: 500px;
+ border-radius: 50%;
 }
 
-.button:hover::before {
-    filter: blur(20px);
+.button:hover {
+ color: #fff;
 }
 
-.button:active {
-    background: linear-gradient(32deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+.button:before {
+ top: 100%;
+ left: 100%;
+ transition: all .7s;
+}
+
+.button:hover:before {
+ top: -30px;
+ left: -30px;
+}
+
+.button:active:before {
+ background: #3a0ca3;
+ transition: background 0s;
 }
 </style>
