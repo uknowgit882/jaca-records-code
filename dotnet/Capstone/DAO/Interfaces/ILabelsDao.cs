@@ -8,12 +8,11 @@ namespace Capstone.DAO.Interfaces
         public Label GetLabel(Label label);
         public bool AddLabel(Label label);
         public List<Label> GetLabelsByDiscogsId(int discogId);
-        public int GetLabelCountByUsername(string username);
+        public int GetLabelCountByUsername(string username, bool isPremium);
         public int GetLabelCount();
-        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username);
-        public Dictionary<string, int> GetGenreAndRecordCount();
+        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username, bool isPremium);
+        public Dictionary<string, int> GetLabelAndRecordCount();
 
-        //public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username); // might not need
         public Label UpdateLabel(Label updatedLabel);
     }
 }

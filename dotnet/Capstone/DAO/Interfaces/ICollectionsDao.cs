@@ -7,14 +7,16 @@ namespace Capstone.DAO.Interfaces
     {
         public List<Collection> GetAllCollections(string username);
         public List<Collection> GetAllCollectionsByRole(string username, bool isPremium);
-        public List<Collection> GetPubOrPrivAllCollections(string username, bool isPremium, bool isPrivate = false);
+        public List<Collection> GetPubOrPrivAllCollections(bool isPrivate = false);
         public Collection GetNamedCollection(string username, string name, bool isPremium);
-        public Collection GetPubOrPrivCollection(string username, string name, bool isPremium, bool isPrivate = false);
+        public Collection GetNamedCollection(string username, string name);
+        public Collection GetPubOrPrivCollection(string username, string name, bool isPrivate = false);
         public List<int> GetAllRecordsInCollectionByUsernameAndName(string username, string name, bool isPremium, bool isPrivate = false);
-        public int GetCollectionCountByUsername(string username);
+        public int GetCollectionCountByUsername(string username, bool isPremium);
+        public int GetFreeUserCollectionCountByUsername(string username);
         public int GetCollectionCount();
         public int CountOfRecordsInSpecificCollectionByUsername(string username, string name);
-        public int CountOfRecordsInAllCollectionsByUsername(string username);
+        public int CountOfRecordsInAllCollectionsByUsername(string username, bool isPremium);
         public int CountOfRecordsInAllCollections();
         public int AddCollection(string username, string name);
         public bool UpdateCollectionTitle(string name, string username, string newName);

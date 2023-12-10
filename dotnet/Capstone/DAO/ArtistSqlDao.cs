@@ -129,13 +129,16 @@ namespace Capstone.DAO
             return output;
         }
 
+
+
         /// <summary>
         /// Returns how many artists are associated with this user. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="role"></param>
         /// <returns>Int number of artists</returns>
         /// <exception cref="DaoException"></exception>
-        public int GetArtistCountByUsername(string username)
+        public int GetArtistCountByUsername(string username, bool isPremium)
         {
             int output = 0;
 
@@ -144,7 +147,7 @@ namespace Capstone.DAO
                 "JOIN records_artists ON artists.artist_id = records_artists.artist_id " +
                 "JOIN records ON records_artists.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -153,6 +156,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -169,13 +173,57 @@ namespace Capstone.DAO
             }
         }
 
+
+        /// <summary>
+        /// Returns how many extra artists (I guess featured/supporting artists) are associated with this user. Active users only.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="isPremium"></param>
+        /// <returns>Int number of extra artists</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetExtraArtistCountByUsername(string username, bool isPremium)
+        {
+            int output = 0;
+
+            string sql = "SELECT count(artists.artist_id) AS count " +
+                "FROM artists " +
+                "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.artist_id " +
+                "JOIN records ON records_extra_artists.discogs_id = records.discogs_id " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get extra artist count for user", $"{username} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
         /// <summary>
         /// Returns the record count by artists in this user's library. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Dictionary of key, artist name, value, count of records</returns>
         /// <exception cref="DaoException"></exception>
-        public Dictionary<string, int> GetArtistAndRecordCountByUsername(string username)
+        public Dictionary<string, int> GetArtistAndRecordCountByUsername(string username, bool isPremium)
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
@@ -184,7 +232,7 @@ namespace Capstone.DAO
                 "JOIN records_artists ON artists.artist_id = records_artists.artist_id " +
                 "JOIN records ON records_artists.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND records.is_active = 1 " +
+                "WHERE username = @username AND is_premium = @isPremium AND records.is_active = 1 " +
                 "GROUP BY artists.name";
             try
             {
@@ -194,6 +242,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -209,6 +258,7 @@ namespace Capstone.DAO
                 throw new DaoException("Sql exception occurred", ex);
             }
         }
+
 
         /// <summary>
         /// Returns the record count by artists in the entire database. Active users only.
@@ -249,45 +299,6 @@ namespace Capstone.DAO
             }
         }
 
-        /// <summary>
-        /// Returns how many extra artists (I guess featured/supporting artists) are associated with this user. Active users only.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns>Int number of extra artists</returns>
-        /// <exception cref="DaoException"></exception>
-        public int GetExtraArtistCountByUsername(string username)
-        {
-            int output = 0;
-
-            string sql = "SELECT count(artists.artist_id) AS count " +
-                "FROM artists " +
-                "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.artist_id " +
-                "JOIN records ON records_extra_artists.discogs_id = records.discogs_id " +
-                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_active = 1 ";
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@username", username);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        output = Convert.ToInt32(reader["count"]);
-                    }
-                    return output;
-                }
-            }
-            catch (SqlException ex)
-            {
-                ErrorLog.WriteLog("Trying to get extra artist count for user", $"{username} get failed", MethodBase.GetCurrentMethod().Name, ex.Message);
-                throw new DaoException("Sql exception occurred", ex);
-            }
-        }
 
         /// <summary>
         /// Returns how many artists (includes extra artists) are in the entire database.
@@ -322,92 +333,6 @@ namespace Capstone.DAO
                 throw new DaoException("Sql exception occurred", ex);
             }
         }
-
-        // I don't think I need this..
-        ///// <summary>
-        ///// Gets the artists associated for this record for this specific user
-        ///// </summary>
-        ///// <param name="discogId"></param>
-        ///// <param name="username"></param>
-        ///// <returns>List of artists for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
-        ///// <exception cref="DaoException"></exception>
-        //public List<Artist> GetArtistsByDiscogsIdAndUsername(int discogId, string username)
-        //{
-        //    List<Artist> output = new List<Artist>();
-        //    string sql = "SELECT name " +
-        //        "FROM artists " +
-        //        "JOIN records_artists ON artists.artist_id = records_artists.artist_id " +
-        //        "JOIN records ON records_artists.discogs_id = records.discogs_id " +
-        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-        //        "WHERE records.discogs_id = @discogId AND username = @username";
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand(sql, conn);
-        //            cmd.Parameters.AddWithValue("@discogId", discogId);
-        //            cmd.Parameters.AddWithValue("@username", username);
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            while (reader.Read())
-        //            {
-        //                Artist row = new Artist();
-        //                row.Name = Convert.ToString(reader["name"]);
-        //                output.Add(row);
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        throw new DaoException("Sql exception occurred", ex);
-        //    }
-        //    return output;
-        //}
-
-        // I don't think I need this..
-        ///// <summary>
-        ///// Gets the EXTRA artists associated for this record for this specific user
-        ///// </summary>
-        ///// <param name="discogId"></param>
-        ///// <param name="username"></param>
-        ///// <returns>List of extra artists for this specific user. Only the name should be sent to the front end - use JSONIgnore on the other properties</returns>
-        ///// <exception cref="DaoException"></exception>
-        //public List<Artist> GetExtraArtistsByDiscogsIdAndUsername(int discogId, string username)
-        //{
-        //    List<Artist> output = new List<Artist>();
-        //    string sql = "SELECT artists.name " +
-        //        "FROM artists " +
-        //        "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.extra_artist_id " +
-        //        "JOIN records ON records_extra_artists.discogs_id = records.discogs_id " +
-        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-        //        "WHERE records.discogs_id = @discogId AND username = @username";
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand(sql, conn);
-        //            cmd.Parameters.AddWithValue("@discogId", discogId);
-        //            cmd.Parameters.AddWithValue("@username", username);
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            while (reader.Read())
-        //            {
-        //                Artist row = new Artist();
-        //                row.Name = Convert.ToString(reader["name"]);
-        //                output.Add(row);
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        throw new DaoException("Sql exception occurred", ex);
-        //    }
-        //    return output;
-        //}
 
         public bool AddArtist(Artist artist)
         {

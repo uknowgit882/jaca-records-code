@@ -141,6 +141,45 @@ namespace Capstone.DAO
         }
 
         /// <summary>
+        /// Checks if the discogId supplied is in the user's library and returns it if so
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="discogsId"></param>
+        /// <returns>String note</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetRecordFromLibrary(string username, int discogsId)
+        {
+            int output = 0;
+
+            string sql = "SELECT discogs_id FROM libraries " +
+                "WHERE username = @username AND discogs_id = @discogs_id";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["discogs_id"]);
+                    }
+
+                }
+            }
+            catch (DaoException ex)
+            {
+                ErrorLog.WriteLog("Trying to get discog_id", $"For {username}, record: {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Returns the note (only) for the record specified in this user's library
         /// </summary>
         /// <param name="username"></param>
@@ -256,6 +295,44 @@ namespace Capstone.DAO
         }
 
         /// <summary>
+        /// Returns how many records marked is_premium false are in the free user's library. Active users only. Should not exceed 25
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetFreeUserRecordCountByUsername(string username)
+        {
+            int output = 0;
+
+            string sql = "SELECT username, count(username) AS count " +
+                "FROM libraries " +
+                "WHERE username = @username AND is_active = 1 AND is_premium = 0 " +
+                "GROUP BY username;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get library record count", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
         /// Returns how many records are in the entire database for all active users.
         /// </summary>
         /// <param name="username"></param>
@@ -302,8 +379,15 @@ namespace Capstone.DAO
         /// <param name="notes"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecord(int discogsId, string username, string notes)
+        public bool AddRecord(int discogsId, string username, string notes = "")
         {
+            int recordCheck = GetRecordFromLibrary(username, discogsId);
+
+            if (recordCheck > 0)
+            {
+                throw new DaoException("This record already exists in your library");
+            }
+
             int libraryId = 0;
 
             string sql = "INSERT INTO libraries (username, discogs_id, notes, quantity) " +

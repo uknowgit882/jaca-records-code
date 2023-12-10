@@ -70,4 +70,4 @@ USERREGISTRATIONINFO:
 alizg, alizgjacapreme16
 caleba, calebajacapreme88
 jakel, jakeljacapreme45
-aseelt, aseeltjacapreme29
+aseelt, aseeltjacapreme29, JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2IiwibmFtZSI6ImFzZWVsdCIsInJvbGUiOiJqYWNhcHJlbWUiLCJuYmYiOjE3MDIxNTQ0NDgsImV4cCI6MTcwMjc1OTI0OCwiaWF0IjoxNzAyMTU0NDQ4fQ.FyvK-JybQsTk2Fz6r-nMfFAhGsvc33FZYYFqwRmJXto

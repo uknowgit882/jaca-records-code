@@ -1,5 +1,5 @@
 <template>
-<button class="button is-rounded" v-on:click="clickedAdd()">Add to Library</button>
+    <button class="button is-rounded" v-on:click="clickedAdd()">Add to Library</button>
 </template>
 
 <script>
@@ -7,14 +7,14 @@
 import AddToLibraryService from '@/services/AddToLibraryService.js'
 
 export default {
-    props:{
+    props: {
         id: {
             type: Number,
             required: true,
         }
     },
-    data(){
-        return{
+    data() {
+        return {
             Records: {
                 General: "",
                 Artist: "",
@@ -29,19 +29,36 @@ export default {
     },
     methods: {
         clickedAdd() {
-           AddToLibraryService.addToLibrary(this.id)
-           .then((response) => {
-            if(response.status == 201){
-                this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
-                this.$router.push({name: "Library"})
+            AddToLibraryService.addToDB(this.id)
+                .then((response) => {
+                    if (response.status == 200) {
+                        this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
+                        this.$router.push({ name: "Library" });
+                        this.addingRecordToLibrary();
 
-            }
+                    }
 
-           })
-        //    .catch((error) => {
-        //             this.handleErrorResponse(error, 'Search Query')
-        //         })
+                })
+            //    .catch((error) => {
+            //             this.handleErrorResponse(error, 'Search Query')
+            //         })
+        },
+        addingRecordToLibrary() {
+            AddToLibraryService. addToLibrary(this.id)
+                .then((response) => {
+                    if (response.status == 201) {
+                        this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
+                    }
+                })
         }
+        // DisplayingLibrary(){
+        //     AddToLibraryService.displayRecordsInLibrary()
+        //     .then((response) => {
+        //         if (response.status == 200){
+        //             this.$store.commit( 'SHOW_RECORDS_IN_LIBRARY', response)
+        //         }
+        //     })
+        // }
     }
 }
 </script>
