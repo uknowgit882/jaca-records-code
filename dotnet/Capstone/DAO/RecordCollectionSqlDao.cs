@@ -57,6 +57,41 @@ namespace Capstone.DAO
             return output;
         }
 
+        public List<int> GetAllCollectionsForThisDiscogsIdByUsername(int discogsId, string username)
+        {
+            List<int> output = new List<int>();
+
+            string sql = "SELECT records_collections.collection_id " +
+                "FROM records_collections " +
+                "JOIN collections ON records_collections.collection_id = collections.collection_id " +
+                "WHERE username = @username AND discogs_id = @discogsId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        int row = Convert.ToInt32(reader["collection_id"]);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to get all collections that this record appears in for this user", $"For {username}, {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
+            }
+            return output;
+        }
+
         /// <summary>
         /// Gets singular record in a collection. Use the get methods in collections to obtain the record by username/name.
         /// </summary>

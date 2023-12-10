@@ -160,6 +160,22 @@ namespace Capstone.Controllers
             username = "user"; // TODO remove hardcode
             try
             {
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, discogsId);
+
+                if (returnedDiscogsId == 0)
+                {
+                    return NotFound("You don't have this record in your library");
+                }
+                // to delete from library, it needs to be deleted from any records_collections and collections
+                // find any collections the record is in
+                List<int> collectionsForDiscogId = _recordsCollectionsDao.GetAllCollectionsForThisDiscogsIdByUsername(discogsId, username);
+
+                // delete the record from those collections
+                foreach(int collectionId in collectionsForDiscogId)
+                {
+                    _recordsCollectionsDao.DeleteRecordCollectionByDiscogsIdAndCollectionId(discogsId, collectionId);
+                }
+                // then delete the record from the library                
                 bool output = _librariesDao.DeleteRecord(discogsId, username);
                 if (output)
                 {
