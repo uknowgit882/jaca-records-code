@@ -140,6 +140,38 @@ namespace Capstone.DAO
             return output;
         }
 
+        public int GetLibraryIdByUsernameByDiscogsId(string username, int discogsId)
+        {
+            int output = 0;
+
+            string sql = "SELECT library_id FROM libraries " +
+                "WHERE username = @username AND discogs_id = @discogsId";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["library_id"]);
+                    }
+
+                }
+            }
+            catch (DaoException ex)
+            {
+                ErrorLog.WriteLog("Trying to get library_id", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
         /// <summary>
         /// Checks if the discogId supplied is in the user's library and returns it if so
         /// </summary>
@@ -443,11 +475,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@toggleIsPremium", toggleIsPremium);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@discogs_id", discogsId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
 
                     recordsAffected = cmd.ExecuteNonQuery();
 
-                    if (recordsAffected != 0)
+                    if (recordsAffected != 1)
                     {
                         throw new DaoException("The wrong number of rows were affected");
                     }
@@ -489,7 +521,7 @@ namespace Capstone.DAO
 
                     recordsAffected = cmd.ExecuteNonQuery();
 
-                    if (recordsAffected != 0)
+                    if (recordsAffected == 0)
                     {
                         throw new DaoException("The wrong number of rows were affected");
                     }

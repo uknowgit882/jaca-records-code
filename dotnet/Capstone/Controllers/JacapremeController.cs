@@ -27,7 +27,7 @@ namespace Capstone.Controllers
         }
         
         // only admins should be able to reactivate
-        [HttpPut("userfunctions/reactivate/{username}")]
+        [HttpPut("reactivate/{username}")]
         public ActionResult<string> ReactivateUser(string username)
         {
             // don't need authentication that it matches the user to action
@@ -41,6 +41,14 @@ namespace Capstone.Controllers
 
             try
             {
+                // check if the user is inactive
+                User user = _userDao.GetUserByUsername(username);
+
+                if (user.IsActive)
+                {
+                    return BadRequest($"{username} is already active");
+                }
+
                 // reactivate collections, library, records_collections
                 _librariesDao.DeReactivateLibrary(username, IsActive);
                 _recordsCollectionsDao.DeReactivateRecordsInCollection(username, IsActive);
@@ -63,7 +71,7 @@ namespace Capstone.Controllers
                 return BadRequest("Something went wrong reactivating this user");
             }
         }
-        [HttpPut("userfunctions/upgradetoadmin/{username}")]
+        [HttpPut("upgradetoadmin/{username}")]
         public ActionResult<string> UpgradeUserToAdmin(string username)
         {
             // don't need authentication that it matches the user to action
@@ -77,10 +85,18 @@ namespace Capstone.Controllers
 
             try
             {
+                // check if the user is already an admin
+                User user = _userDao.GetUserByUsername(username);
+
+                if (user.Role == AdminAccountName)
+                {
+                    return BadRequest($"{username} is already one of us");
+                }
+
                 bool output = _userDao.UpgradeAdmin(username);
                 if (output)
                 {
-                    return Ok($"{username} was reactivated");
+                    return Ok($"{username} was upgraded to the Jacapreme crew. Welcome!");
 
                 }
                 else
@@ -93,7 +109,7 @@ namespace Capstone.Controllers
                 return BadRequest("Something went wrong upgrading this user to an admin");
             }
         }
-        [HttpPut("userfunctions/downgradefromadmin/{username}")]
+        [HttpPut("downgradefromadmin/{username}")]
         public ActionResult<string> DowngradeAdmin(string username)
         {
             // don't need authentication that it matches the user to action
@@ -107,10 +123,18 @@ namespace Capstone.Controllers
 
             try
             {
+                // check if the user is already an admin
+                User user = _userDao.GetUserByUsername(username);
+
+                if (user.Role == PremiumAccountName || user.Role == FreeAccountName)
+                {
+                    return BadRequest($"{username} isn't one of us");
+                }
+
                 bool output = _userDao.DowngradeAdmin(username);
                 if (output)
                 {
-                    return Ok($"{username} was reactivated");
+                    return Ok($"{username} was kicked out of the Jacapreme crew. Good riddance!");
 
                 }
                 else

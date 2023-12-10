@@ -9,11 +9,13 @@ using Capstone.Service;
 using System.Collections.Generic;
 using Capstone.Utils;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class LibraryController : CommonController
     {
         public LibraryController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
@@ -31,8 +33,7 @@ namespace Capstone.Controllers
         public ActionResult<List<OutboundLibraryWithFullRecords>> GetLibrary()
         {
             string username = User.Identity.Name;
-            //TODO remove hardcode
-            username = "user";
+
 
             // container for the outbound records
             List<OutboundLibraryWithFullRecords> output = new List<OutboundLibraryWithFullRecords>();
@@ -85,7 +86,7 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+
             try
             {
                 // get the record from the api and put it in our db
@@ -129,7 +130,7 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> GetFromLibrary(int discogsId)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+
             try
             {
                 // check if the user has the record in the library
@@ -157,7 +158,7 @@ namespace Capstone.Controllers
         public ActionResult<bool> DeleteRecordFromLibrary(int discogsId)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+
             try
             {
                 int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, discogsId);
@@ -198,7 +199,7 @@ namespace Capstone.Controllers
         public ActionResult<bool> UpdateNoteForRecordInLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+
             try
             {
                 string output = _librariesDao.ChangeNote(username, request.DiscogsId, request.Notes);
@@ -223,7 +224,7 @@ namespace Capstone.Controllers
         public ActionResult<bool> UpdateQuantityForRecordInLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-            username = "user"; // TODO remove hardcode
+
             try
             {
                 int output = _librariesDao.ChangeQuantity(username, request.DiscogsId, request.Quantity);

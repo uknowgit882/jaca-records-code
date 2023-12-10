@@ -47,27 +47,7 @@ FOR JAKE - if you enter a general query, it'll return all records
 
 remove temp registration info from below:
 
-USERREGISTRATIONINFO:
-{
-  "username": "aseelt",
-  "first_Name": "aseelt",
-  "last_Name": "aseelt",
-  "email_Address": "aseelt@aseelt.com",
-  "password": "aseeltaseelt",
-  "confirmPassword": "aseeltaseelt",
-  "role": "jacapreme"
-}
-{
-  "username": "basilt",
-  "first_Name": "basilt",
-  "last_Name": "basilt",
-  "email_Address": "basilt@basilt.com",
-  "password": "basiltbasilt",
-  "confirmPassword": "basiltbasilt",
-  "role": "free"
-}
-
-alizg, alizgjacapreme16
-caleba, calebajacapreme88
-jakel, jakeljacapreme45
+alizg, alizgjacapreme16, JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwibmFtZSI6ImFsaXpnIiwicm9sZSI6ImphY2FwcmVtZSIsIm5iZiI6MTcwMjIyOTc2OSwiZXhwIjoxNzAyODM0NTY5LCJpYXQiOjE3MDIyMjk3Njl9.DRDKE2f-mo2MM-pmnnRLkwXskCsxZJ7XMpJkB3mBbp8
+caleba, calebajacapreme88, JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwibmFtZSI6ImNhbGViYSIsInJvbGUiOiJqYWNhcHJlbWUiLCJuYmYiOjE3MDIyMjk3OTMsImV4cCI6MTcwMjgzNDU5MywiaWF0IjoxNzAyMjI5NzkzfQ.qEPpODm36STv7h_K2VTHZLQ4E2qzKFhGFxPB7-iPbW4
+jakel, jakeljacapreme45, JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwibmFtZSI6Impha2VsIiwicm9sZSI6ImphY2FwcmVtZSIsIm5iZiI6MTcwMjIyOTgxMywiZXhwIjoxNzAyODM0NjEzLCJpYXQiOjE3MDIyMjk4MTN9._AEf8yrBYoL4UblTBvVedkCnyjCDvGXHi88_nGW_6vw
 aseelt, aseeltjacapreme29, JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2IiwibmFtZSI6ImFzZWVsdCIsInJvbGUiOiJqYWNhcHJlbWUiLCJuYmYiOjE3MDIxNTQ0NDgsImV4cCI6MTcwMjc1OTI0OCwiaWF0IjoxNzAyMTU0NDQ4fQ.FyvK-JybQsTk2Fz6r-nMfFAhGsvc33FZYYFqwRmJXto
