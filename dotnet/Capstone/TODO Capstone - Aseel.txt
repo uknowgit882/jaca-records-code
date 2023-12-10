@@ -17,28 +17,7 @@ registration - work on premium/free status
 to remove a record from your library, you must remove it from your records_collections first
 update controllers so they all have error log reporting in their catches
 
-COLLECTIONSCONTROLLER
-/COLLECTIONS
-	GET - get all my collections as a user DONE
-	POST - add a new collection DONE
-/COLLECTIONS/{name}
-	GET - get this specific collection DONE
-	DELETE - delete this specific collection DONE
-/COLLECTIONS/{name}/name 
-		PUT - change the title of this collection DONE
-/COLLECTIONS/{name}/privacy
-		PUT - change the privacy of this collection DONE
-/COLLECTIONS/{name}/record
-	POST - add a record to this collection DONE
-	{id} DELETE - delete a record from this collection DONE
-/COLLECTIONS/{name}/record/{id}
-	GET - get this specific record in this specific collection DONE
-
-ANONYMOUSCONTROLLER
-	FOR GETTING PUBLIC LISTS
-/ANONYMOUS/publiccollections
-	GET - get public collections
-
+ 
 
 14881
 18038
@@ -47,6 +26,16 @@ ANONYMOUSCONTROLLER
 3110951 - queen
 12339174 - queen latifah
 801907 - queen latifah
-31526 
+31526
 1852573 - queen
+456663
+10210431
+12477638
+24735206
+11948258
 
+
+anonymous collections
+collections
+jacapreme
+userfunctions

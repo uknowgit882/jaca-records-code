@@ -4,6 +4,7 @@ using Capstone.Models;
 using Capstone.Security;
 using Capstone.DAO.Interfaces;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Capstone.Controllers
 {

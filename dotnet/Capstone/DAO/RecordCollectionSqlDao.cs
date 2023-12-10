@@ -99,11 +99,11 @@ namespace Capstone.DAO
         /// <param name="collectionId"></param>
         /// <returns></returns>
         /// <exception cref="DaoException"></exception>
-        public RecordCollection GetRecordCollectionByDiscogsIdAndCollectionId(int discogsId, int collectionId)
+        public int GetRecordCollectionByDiscogsIdAndCollectionId(int discogsId, int collectionId)
         {
-            RecordCollection output = null; 
+            int output = 0; 
 
-            string sql = "SELECT records_collections_id, is_premium " +
+            string sql = "SELECT records_collections_id " +
                 "FROM records_collections " +
                 "WHERE discogs_id = @discogsId AND collection_id = @collectionId AND is_active = 1 ";
 
@@ -120,7 +120,7 @@ namespace Capstone.DAO
 
                     if (reader.Read())
                     {
-                        output = MapRowToRecordCollection(reader);
+                        output = Convert.ToInt32(reader["records_collections_id"]);
                     }
                 }
             }
@@ -138,26 +138,30 @@ namespace Capstone.DAO
         /// </summary>
         /// <param name="discogsId">From the record</param>
         /// <param name="collectionId">From the collections table - use GetCollections</param>
+        /// <param name="libraryId"></param>
+        /// <param name="isPremium"></param>
         /// <returns>True if successful, false if already exists</returns>
         /// <exception cref="DaoException"></exception>
-        public bool AddRecordCollections(int discogsId, int collectionId)
+        public bool AddRecordCollections(int discogsId, int collectionId, int libraryId, bool isPremium)
         {
-            if (GetRecordCollectionByDiscogsIdAndCollectionId(discogsId, collectionId) != null)
+            if (GetRecordCollectionByDiscogsIdAndCollectionId(discogsId, collectionId) != 0)
             {
                 return false;
             }
 
-            string sql = "INSERT INTO records_collections_id (discogs_id, collection_id) " +
-                "OUTPUT INSERTED.records_formats_id " +
-                "VALUES (@discogsId, @formatId);";
+            string sql = "INSERT INTO records_collections (library_id, collection_id, discogs_id, is_premium) " +
+                "OUTPUT INSERTED.records_collections_id " +
+                "VALUES (@libraryId, @collectionId, @discogsId, @isPremium);";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@libraryId", libraryId);
                     cmd.Parameters.AddWithValue("@collectionId", collectionId);
+                    cmd.Parameters.AddWithValue("@discogsId", discogsId);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     cmd.ExecuteScalar();
                     return true;
                 }
@@ -259,7 +263,7 @@ namespace Capstone.DAO
                 "SET rc.is_premium = @isPremium, rc.updated_date = @updated_date " +
                 "FROM collections AS c " +
                 "JOIN records_collections AS rc ON c.collection_id = rc.collection_id " +
-                "WHERE username = @username AND records_collections.discogs_id = @discogsId";
+                "WHERE username = @username AND discogs_id = @discogsId";
 
             try
             {
@@ -273,10 +277,8 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@discogsId", discogsId);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
-                    if (numberOfRows != 1)
-                    {
-                        throw new DaoException("The wrong number of rows were impacted");
-                    }
+                    
+
                 }
             }
             catch (Exception ex)

@@ -7,11 +7,13 @@ using System;
 using Capstone.DAO;
 using Capstone.Service;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class UserFunctionsController : CommonController
     {
         public UserFunctionsController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
@@ -25,20 +27,19 @@ namespace Capstone.Controllers
         {
         }
 
-        [HttpPut("deactivate/{username}")]
-        public ActionResult<string> DeactivateUser(string username)
+        [HttpPut("deactivate")]
+        public ActionResult<string> DeactivateUser()
         {
-            // check if you have a valid value, and it matches the user who is logged in (for security)
-            // so they are actioning their own profile
-            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
-            {
-                // validation of the input
-                // if fails, stop
-                return BadRequest("You must enter a valid username");
-            }
+            string username = User.Identity.Name;
 
             try
             {
+                User user = _userDao.GetUserByUsername(username);
+
+                if (!user.IsActive)
+                {
+                    return BadRequest($"{username} is already inactive");
+                }
                 // deactivate library, collections, record collections
                 _librariesDao.DeReactivateLibrary(username, NotActive);
                 _recordsCollectionsDao.DeReactivateRecordsInCollection(username, NotActive);
@@ -62,20 +63,21 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpPut("upgrade/{username}")]
-        public ActionResult<string> UpgradeUser(string username)
+        [HttpPut("upgrade")]
+        public ActionResult<string> UpgradeUser()
         {
-            // check if you have a valid value, and it matches the user who is logged in (for security)
-            // so they are actioning their own profile
-            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
-            {
-                // validation of the input
-                // if fails, stop
-                return BadRequest("You must enter a valid username");
-            }
+            string username = User.Identity.Name;
 
             try
             {
+                // get user's current role
+                string role = _userDao.GetUserRole(username);
+
+                if (role == PremiumAccountName)
+                {
+                    return BadRequest($"{username} is already a premium user");
+                }
+
                 // have to update is_premium in places
                 // upgrade all records in libraries and collections to ispremium true
                 _librariesDao.ChangeAllRecordIsPremium(username, IsPremium);
@@ -86,7 +88,7 @@ namespace Capstone.Controllers
                 List<Collection> collections = _collectionsDao.GetAllCollections(username);
 
                 // then make is premium is true
-                foreach(Collection collection in collections)
+                foreach (Collection collection in collections)
                 {
                     _collectionsDao.ChangeCollectionIsPremium(collection.Name, username, IsPremium);
                 }
@@ -108,29 +110,30 @@ namespace Capstone.Controllers
                 return BadRequest("Something went wrong upgrading this user");
             }
         }
-        [HttpPut("downgrade/{username}")]
-        public ActionResult<string> DowngradeUser(string username)
+        [HttpPut("downgrade")]
+        public ActionResult<string> DowngradeUser()
         {
-            // check if you have a valid value, and it matches the user who is logged in (for security)
-            // so they are actioning their own profile
-            if (string.IsNullOrEmpty(username) || User.Identity.Name != username)
-            {
-                // validation of the input
-                // if fails, stop
-                return BadRequest("You must enter a valid username");
-            }
+            string username = User.Identity.Name;
 
             try
             {
+                // get user's current role
+                string role = _userDao.GetUserRole(username);
+
+                if (role == FreeAccountName)
+                {
+                    return BadRequest($"{username} is already a free user");
+                }
+
                 // demote user has impacts
                 // will reduce record count to the last 25 records added
                 // will reduce collection to the last one created
 
                 // get the most recent 25 records from library
                 List<Library> freeRecords = _librariesDao.Get25MostRecentDiscogsIdsInLibrary(username);
-                
+
                 // mark just them as is premium false
-                foreach(Library record in freeRecords)
+                foreach (Library record in freeRecords)
                 {
                     _librariesDao.ChangeRecordIsPremium(record.Discog_Id, username, NotPremium);
                     // and also in records collections
@@ -138,10 +141,10 @@ namespace Capstone.Controllers
                 }
 
                 // add a collection "free" from collections
-                _collectionsDao.AddCollection(username, "Free Collection");
+                _collectionsDao.AddCollection(username, "Free Collection", NotPremium);
 
                 // set it to is premium false
-                _collectionsDao.ChangeCollectionIsPremium("Free Collection", username, NotPremium);
+                //_collectionsDao.ChangeCollectionIsPremium("Free Collection", username, NotPremium);
 
                 // then downgrade the user
                 bool output = _userDao.DowngradeUser(username);

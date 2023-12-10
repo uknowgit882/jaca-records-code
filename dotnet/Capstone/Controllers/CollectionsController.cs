@@ -13,11 +13,13 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class CollectionsController : CommonController
     {
         public CollectionsController(IArtistsDao artistsDao, IBarcodesDao barcodesDao, ICollectionsDao collectionsDao, IFormatsDao formatsDao,
@@ -40,8 +42,6 @@ namespace Capstone.Controllers
         public ActionResult<List<OutboundCollectionWithFullRecords>> GetAllCollectionsByRoleForUser()
         {
             string username = User.Identity.Name;
-
-            username = "user";
 
             try
             {
@@ -105,13 +105,19 @@ namespace Capstone.Controllers
         public ActionResult<Collection> CreateCollection(IncomingCollectionRequest newCollection)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
 
                 // find the user's role
                 string userRole = _userDao.GetUserRole(username);
+
+                // check if the collection exists already
+                Collection check = _collectionsDao.GetNamedCollection(username, newCollection.Name);
+                if (check != null)
+                {
+                    return BadRequest("This collection already exists");
+                }
 
                 // check if they're a free user. If so, check if they have a collection already, if so, reject. If not, add
                 if (userRole == FreeAccountName)
@@ -124,10 +130,10 @@ namespace Capstone.Controllers
                     }
                 }
 
-                int collectionId = _collectionsDao.AddCollection(username, newCollection.Name);
+                int collectionId = _collectionsDao.AddCollection(username, newCollection.Name, (userRole == FreeAccountName ? NotPremium : IsPremium));
 
                 // get the full collection
-                Collection output = _collectionsDao.GetNamedCollection(username, newCollection.Name, (userRole == FreeAccountName ? NotPremium : IsPremium));
+                Collection output = _collectionsDao.GetNamedCollection(username, newCollection.Name);
 
                 if (output != null)
                 {
@@ -152,7 +158,6 @@ namespace Capstone.Controllers
         public ActionResult<OutboundCollectionWithFullRecords> GetSpecificCollection(string name)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
@@ -193,7 +198,6 @@ namespace Capstone.Controllers
         public ActionResult<Collection> DeleteSpecificCollection(string name)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
@@ -231,7 +235,6 @@ namespace Capstone.Controllers
         public ActionResult<Collection> ChangeCollectionName(string name, IncomingCollectionRequest request)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
@@ -267,7 +270,6 @@ namespace Capstone.Controllers
         public ActionResult<Collection> ChangeCollectionPrivacy(string name, IncomingCollectionRequest request)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
@@ -304,10 +306,11 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToCollection(string name, IncomingRecord recordToAdd)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
+                // get the user's role
+                string userRole = _userDao.GetUserRole(username);
                 // check if the resource exists
                 Collection collectionToUpdate = _collectionsDao.GetNamedCollection(username, name);
                 // check if the record is in the collection
@@ -321,8 +324,15 @@ namespace Capstone.Controllers
                 {
                     return NotFound("This record has not yet been added to a library successfully");
                 }
+                // check if it's in their library by getting the libraryId
+                int libraryId = _librariesDao.GetLibraryIdByUsernameByDiscogsId(username, recordToAdd.Discogs_Id);
 
-                bool recordAdded = _recordsCollectionsDao.AddRecordCollections(recordToAdd.Discogs_Id, collectionToUpdate.Collection_Id);
+                if (libraryId == 0)
+                {
+                    return NotFound("This record does not exist in your library. Please add it to your library first before adding it to a collection");
+                }
+
+                bool recordAdded = _recordsCollectionsDao.AddRecordCollections(recordToAdd.Discogs_Id, collectionToUpdate.Collection_Id, libraryId, (userRole == FreeAccountName ? NotPremium : IsPremium));
 
                 if (recordAdded)
                 {
@@ -331,7 +341,7 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest($"You already have this record in your {name} collection");
                 }
             }
             catch (Exception ex)
@@ -345,7 +355,6 @@ namespace Capstone.Controllers
         public ActionResult<Collection> RemoveRecordFromCollection(string name, int id)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
@@ -387,7 +396,6 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> GetRecordInCollection(string name, int id)
         {
             string username = User.Identity.Name;
-            username = "user";
 
             try
             {
