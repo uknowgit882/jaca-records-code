@@ -182,3 +182,18 @@ Trying to add to library | For user, record: 4037553 | AddRecord | Violation of 
 Trying to get library | For user | GetLibrary | The wrong number of rows were retrieved - a free user should not have greater than 25 records in their library | 12/10/2023 5:04:51 PM
 --- END OF ACTION ---
 
+Getting RecordClient from external API | Discogs Input: 1749877 | GetRecord | Unsuccessful request to Discogs API | 12/10/2023 5:25:16 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 1749877 | AddRecordToDbById | Error occured - received non-success response. | 12/10/2023 5:25:16 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 1749877 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 5:25:16 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 256996 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 5:30:13 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 163814 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 5:31:07 PM
+--- END OF ACTION ---
+

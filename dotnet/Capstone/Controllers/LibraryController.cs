@@ -32,7 +32,7 @@ namespace Capstone.Controllers
         {
             string username = User.Identity.Name;
             //TODO remove hardcode
-            username = "user";
+            username = "alizg";
 
             // container for the outbound records
             List<OutboundLibraryWithFullRecords> output = new List<OutboundLibraryWithFullRecords>();
@@ -61,7 +61,7 @@ namespace Capstone.Controllers
                     OutboundLibraryWithFullRecords entry = new OutboundLibraryWithFullRecords();
                     entry.Quantity = row.Quantity;
                     entry.Notes = row.Notes;
-                    entry.Record = BuildFullRecord(row.Library_Id);
+                    entry.Record = BuildFullRecord(row.Discog_Id);
                     output.Add(entry);
                 }
 

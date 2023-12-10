@@ -1,7 +1,7 @@
 <template>
     
     <div class = "Library-container">
-        <record-in-library v-for="record in $store.state.records" v-bind:record="record" v-bind:key="record.id"/>
+        <record-in-library v-for="record in $store.state.records.data" v-bind:record="record" v-bind:key="record.id"/>
     
     </div>
     

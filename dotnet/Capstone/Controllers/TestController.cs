@@ -2,6 +2,7 @@
 using Capstone.DAO.Interfaces;
 using Capstone.Models;
 using Capstone.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class TestController : CommonController
     {
 

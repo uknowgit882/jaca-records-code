@@ -50,7 +50,7 @@ export default {
         //                 this.$router.push({ name: "Library" });
         //             }
         //         })
-        // }
+        // },
         DisplayingLibrary(){
             AddToLibraryService.displayRecordsInLibrary()
             .then((response) => {
