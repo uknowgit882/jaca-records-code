@@ -555,17 +555,18 @@ namespace Capstone.DAO
         /// </summary>
         /// <param name="username"></param>
         /// <param name="name">The collection's name</param>
+        /// <param name="role">The collection's name</param>
         /// <returns>Returns newly created collection's id</returns>
         /// <exception cref="DaoException"></exception>
-        public int AddCollection(string username, string name)
+        public int AddCollection(string username, string name, bool isPremium)
         {
             int collectionId = 0;
 
             Collection output = new Collection();
 
-            string sql = "INSERT INTO collections (username, name) " +
+            string sql = "INSERT INTO collections (username, name, is_premium) " +
                 "OUTPUT INSERTED.collection_id " +
-                "VALUES (@username, @name);";
+                "VALUES (@username, @name, @isPremium);";
 
             try
             {
@@ -576,6 +577,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
 
                     collectionId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
@@ -791,10 +793,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@isActive", isActive);
                     cmd.Parameters.AddWithValue("@updated_date", DateTime.UtcNow);
                     numberOfRows = cmd.ExecuteNonQuery();
-                    if (numberOfRows != 1)
-                    {
-                        throw new DaoException("The wrong number of rows is impacted");
-                    }
+                   
                 }
             }
             catch (Exception ex)

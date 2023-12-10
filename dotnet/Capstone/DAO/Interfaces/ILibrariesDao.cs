@@ -8,6 +8,7 @@ namespace Capstone.DAO.Interfaces
         public List<Library> GetPremiumUsersLibrary(string username);
         public List<Library> GetFreeUsersLibrary(string username);
         public List<Library> Get25MostRecentDiscogsIdsInLibrary(string username);
+        public int GetLibraryIdByUsernameByDiscogsId(string username, int discogsId);
         public int GetRecordFromLibrary(string username, int discogsId);
         public string GetNote(string username, int discogsId);
         public int GetQuantity(string username, int discogId);

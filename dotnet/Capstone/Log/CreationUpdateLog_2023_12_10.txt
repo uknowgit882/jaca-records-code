@@ -197,3 +197,63 @@ Trying to add to library | For alizg, record: 256996 | AddRecord | The INSERT st
 Trying to add to library | For alizg, record: 163814 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 5:31:07 PM
 --- END OF ACTION ---
 
+Trying to add collection | For user, adding first | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (user, first). | 12/10/2023 4:22:55 PM
+--- END OF ACTION ---
+
+Trying to add a collection | For user, first | CreateCollection | Exception occurred | 12/10/2023 4:22:58 PM
+--- END OF ACTION ---
+
+Trying to add collection | For user, adding third | AddCollection | Invalid column name 'role'. | 12/10/2023 4:33:17 PM
+--- END OF ACTION ---
+
+Trying to add record to collection | For 1852573, 6 | AddRecordCollections | Must declare the scalar variable "@formatId". | 12/10/2023 4:45:09 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 4:45:18 PM
+--- END OF ACTION ---
+
+Trying to add record to collection | For 1852573, 6 | AddRecordCollections | Invalid column name 'records_formats_id'. | 12/10/2023 4:47:15 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 4:47:15 PM
+--- END OF ACTION ---
+
+Trying to add record to collection | For 81013, 6 | AddRecordCollections | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_records_collections_library". The conflict occurred in database "jaca_records", table "dbo.libraries", column 'library_id'. | 12/10/2023 4:56:58 PM
+--- END OF ACTION ---
+
+Trying to get record in collection | For 1852573, 6 | GetRecordCollectionByDiscogsIdAndCollectionId | collection_id | 12/10/2023 4:58:09 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 4:58:23 PM
+--- END OF ACTION ---
+
+Trying to get record in collection | For 1852573, 6 | GetRecordCollectionByDiscogsIdAndCollectionId | collection_id | 12/10/2023 4:58:32 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 4:58:36 PM
+--- END OF ACTION ---
+
+Trying to get record in collection | For 1852573, 6 | GetRecordCollectionByDiscogsIdAndCollectionId | collection_id | 12/10/2023 4:58:42 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 4:58:44 PM
+--- END OF ACTION ---
+
+Trying to get record in collection | For 1852573, 6 | GetRecordCollectionByDiscogsIdAndCollectionId | is_premium | 12/10/2023 5:02:23 PM
+--- END OF ACTION ---
+
+Trying to add a record to a collection | For user, 1852573 | AddRecordToCollection | exception occurred | 12/10/2023 5:02:30 PM
+--- END OF ACTION ---
+
+Trying to get record in collection | For 1852573, 6 | GetRecordCollectionByDiscogsIdAndCollectionId | is_premium | 12/10/2023 5:02:44 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For user, record: 11948258 | ChangeRecordIsPremium | Must declare the scalar variable "@discogsId". | 12/10/2023 5:11:14 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For user, record: 11948258 | ChangeRecordIsPremium | The wrong number of rows were affected | 12/10/2023 5:13:11 PM
+--- END OF ACTION ---
+
+Trying to de/reactivate collection | For user | DeReactivateCollection | The wrong number of rows is impacted | 12/10/2023 5:26:23 PM
+--- END OF ACTION ---
+

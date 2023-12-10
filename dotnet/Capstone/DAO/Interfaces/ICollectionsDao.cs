@@ -18,7 +18,7 @@ namespace Capstone.DAO.Interfaces
         public int CountOfRecordsInSpecificCollectionByUsername(string username, string name);
         public int CountOfRecordsInAllCollectionsByUsername(string username, bool isPremium);
         public int CountOfRecordsInAllCollections();
-        public int AddCollection(string username, string name);
+        public int AddCollection(string username, string name, bool isPremium);
         public bool UpdateCollectionTitle(string name, string username, string newName);
         public bool DeleteCollection(string name, string username);
         public bool ChangeCollectionPrivacy(string name, string username, bool isPrivate);

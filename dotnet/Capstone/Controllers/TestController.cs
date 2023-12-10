@@ -30,7 +30,7 @@ namespace Capstone.Controllers
         public ActionResult<List<RecordClient>> SearchLibrary(string q, string artist, string title, string genre, string year, string country, string label, string barcode, int pageNumber = 1)
         {
             string username = User.Identity.Name;
-            username = "user";
+
             if (username == null)
             {
                 return BadRequest("You must be logged in to search a library");
@@ -90,9 +90,9 @@ namespace Capstone.Controllers
         {
             List<SearchResult> allResults = new List<SearchResult>();
             // need the username to search the library
-            //TODO
+  
             string username = User.Identity.Name;
-            username = "user";
+
             if (username == null)
             {
                 return BadRequest("You must be logged in to search a library");
@@ -129,9 +129,6 @@ namespace Capstone.Controllers
             }
 
 
-
-
-            return allResults;
         }
 
     }
