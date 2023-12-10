@@ -15,7 +15,7 @@ namespace Capstone.DAO.Interfaces
         public int GetRecordCountByUsername(string username);
         public int GetFreeUserRecordCountByUsername(string username);
         public int GetRecordCountForAllUsers();
-        public bool AddRecord(int discogsId, string username, string notes);
+        public bool AddRecord(int discogsId, string username, int quantity, bool isPremium, string notes = "");
         public bool ChangeRecordIsPremium(int discogsId, string username, bool toggleIsPremium);
         public bool ChangeAllRecordIsPremium(string username, bool toggleIsPremium);
         public string ChangeNote(string username, int discogsId, string notes);

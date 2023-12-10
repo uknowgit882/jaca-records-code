@@ -257,3 +257,39 @@ Trying to change record in library to free/premium | For user, record: 11948258 
 Trying to de/reactivate collection | For user | DeReactivateCollection | The wrong number of rows is impacted | 12/10/2023 5:26:23 PM
 --- END OF ACTION ---
 
+Trying to get named collection | For user | GetNamedCollection | The parameterized query '(@username nvarchar(4),@name nvarchar(4000))SELECT collection_id' expects the parameter '@name', which was not supplied. | 12/10/2023 6:03:35 PM
+--- END OF ACTION ---
+
+Trying to get all records in collection | For 6 | GetAllRecordsInCollectionByCollectionId | collection_id | 12/10/2023 6:43:59 PM
+--- END OF ACTION ---
+
+Trying to get all collections for this user | For user | GetAllCollectionsByRoleForUser | exception occurred | 12/10/2023 6:44:14 PM
+--- END OF ACTION ---
+
+Trying to delete a collection | For user | DeleteSpecificCollection | The wrong number of rows were impacted | 12/10/2023 6:59:55 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, record: 14881 | DeleteRecord | Invalid object name 'library'. | 12/10/2023 8:00:52 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, 14881 | DeleteRecordFromLibrary | Something went wrong deleting a record | 12/10/2023 8:00:52 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, record: 14881 | DeleteRecord | Invalid object name 'library'. | 12/10/2023 8:01:17 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, 14881 | DeleteRecordFromLibrary | Something went wrong deleting a record | 12/10/2023 8:01:25 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, record: 14881 | DeleteRecord | Invalid object name 'library'. | 12/10/2023 8:01:31 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For user, 14881 | DeleteRecordFromLibrary | Something went wrong deleting a record | 12/10/2023 8:01:34 PM
+--- END OF ACTION ---
+
+Trying to change note in library | For user, record: 148811 | ChangeNote | The wrong number of rows were impacted | 12/10/2023 8:20:00 PM
+--- END OF ACTION ---
+
+Trying to update note | For user, 148811 | UpdateNoteForRecordInLibrary | Exception occurred | 12/10/2023 8:20:00 PM
+--- END OF ACTION ---
+
