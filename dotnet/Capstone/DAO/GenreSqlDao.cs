@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
@@ -129,14 +131,15 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public int GetGenreCountByUsername(string username, bool isPremium)
         {
-            int output = 0;
+            List<int> output = new List<int>();
 
-            string sql = "SELECT count(genres.genre_id) AS count " +
+            string sql = "SELECT count(name) AS count " +
                 "FROM genres " +
                 "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
                 "JOIN records ON records_genres.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND genres.is_active = 1 " +
+                "GROUP BY genres.name ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -148,11 +151,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = Convert.ToInt32(reader["count"]);
+                        output.Add(Convert.ToInt32(reader["count"]));
                     }
-                    return output;
+                    return output.Count;
                 }
             }
             catch (SqlException ex)
@@ -173,13 +176,13 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT genre.name, count(records.discogs_id) AS record_count " +
+            string sql = "SELECT genres.name, count(records.discogs_id) AS record_count " +
                 "FROM genres " +
                 "JOIN records_genres ON genres.genre_id = records_genres.genre_id " +
                 "JOIN records ON records_genres.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
                 "WHERE username = @username AND is_premium = @isPremium AND records.is_active = 1 " +
-                "GROUP BY genre.name";
+                "GROUP BY genres.name";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))

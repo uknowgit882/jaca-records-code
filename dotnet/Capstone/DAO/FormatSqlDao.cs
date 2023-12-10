@@ -141,14 +141,24 @@ namespace Capstone.DAO
         /// <exception cref="DaoException"></exception>
         public int GetFormatCountByUsername(string username, bool isPremium)
         {
-            int output = 0;
+            List<int> output = new List<int>();
 
-            string sql = "SELECT count(formats.format_id) AS count " +
+            string sql = "SELECT count(type) AS count " +
                 "FROM formats " +
                 "JOIN records_formats ON formats.format_id = records_formats.format_id " +
-                "JOIN records ON records_formats.format_id = records.discogs_id " +
+                "JOIN records ON records_formats.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND formats.is_active = 1 " +
+                "GROUP BY formats.type";
+//            select count(type) AS count
+//from formats
+//JOIN records_formats ON formats.format_id = records_formats.format_id
+//                JOIN records ON records_formats.discogs_id = records.discogs_id
+//                JOIN libraries ON records.discogs_id = libraries.discogs_id
+//                WHERE username = 'jakel' AND is_premium = 1 AND formats.is_active = 1
+
+//                group by formats.type
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -160,11 +170,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        output = Convert.ToInt32(reader["count"]);
+                        output.Add(Convert.ToInt32(reader["count"]));
                     }
-                    return output;
+                    return output.Count;
                 }
             }
             catch (SqlException ex)
@@ -185,13 +195,13 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT format.type, count(records.discogs_id) AS record_count " +
+            string sql = "SELECT formats.type, count(records.discogs_id) AS record_count " +
                 "FROM formats " +
                 "JOIN records_formats ON formats.format_id = records_formats.format_id " +
                 "JOIN records ON records_formats.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
                 "WHERE username = @username AND is_premium = @isPremium AND records.is_active = 1 " +
-                "GROUP BY format.type";
+                "GROUP BY formats.type";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))

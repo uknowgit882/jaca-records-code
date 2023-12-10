@@ -147,7 +147,7 @@ namespace Capstone.DAO
                 "JOIN records_artists ON artists.artist_id = records_artists.artist_id " +
                 "JOIN records ON records_artists.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND artists.is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -187,10 +187,10 @@ namespace Capstone.DAO
 
             string sql = "SELECT count(artists.artist_id) AS count " +
                 "FROM artists " +
-                "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.artist_id " +
+                "JOIN records_extra_artists ON artists.artist_id = records_extra_artists.extra_artist_id " +
                 "JOIN records ON records_extra_artists.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND artists.is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
