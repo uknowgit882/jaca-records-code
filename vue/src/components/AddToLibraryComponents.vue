@@ -16,25 +16,24 @@ export default {
     data() {
         return {
             Records: {
-                General: "",
-                Artist: "",
-                Title: "",
-                Genre: "",
-                Year: "",
-                Country: "",
-                Label: "",
-                Barcode: ""
+                // General: "",
+                // Artist: "",
+                // Title: "",
+                // Genre: "",
+                // Year: "",
+                // Country: "",
+                // Label: "",
+                // Barcode: ""
             }
         }
     },
     methods: {
         clickedAdd() {
-            AddToLibraryService.addToDB(this.id)
+            AddToLibraryService. addToLibrary(this.id)
                 .then((response) => {
                     if (response.status == 200) {
                         this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
                         this.$router.push({ name: "Library" });
-                        this.addingRecordToLibrary();
 
                     }
 
@@ -43,22 +42,24 @@ export default {
             //             this.handleErrorResponse(error, 'Search Query')
             //         })
         },
-        addingRecordToLibrary() {
-            AddToLibraryService. addToLibrary(this.id)
-                .then((response) => {
-                    if (response.status == 201) {
-                        this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
-                    }
-                })
+        // addingRecordToLibrary() {
+        //     AddToLibraryService. addToLibrary(this.id)
+        //         .then((response) => {
+        //             if (response.status == 201) {
+        //                 this.$store.commit('ADD_RECORDS_TO_LIBRARY', response);
+        //                 this.$router.push({ name: "Library" });
+        //             }
+        //         })
+        // },
+        DisplayingLibrary(){
+            AddToLibraryService.displayRecordsInLibrary()
+            .then((response) => {
+                if (response.status == 200){
+                    this.$store.commit( 'SHOW_RECORDS_IN_LIBRARY', response)
+                    this.$router.push({ name: "Library" });
+                }
+            })
         }
-        // DisplayingLibrary(){
-        //     AddToLibraryService.displayRecordsInLibrary()
-        //     .then((response) => {
-        //         if (response.status == 200){
-        //             this.$store.commit( 'SHOW_RECORDS_IN_LIBRARY', response)
-        //         }
-        //     })
-        // }
     }
 }
 </script>

@@ -491,7 +491,7 @@ namespace Capstone.Controllers
                 return BadRequest("You must be logged in to search a library");
             }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode); // PaginationFilter filter
+            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
             List<RecordClient> output = new List<RecordClient>();
 
