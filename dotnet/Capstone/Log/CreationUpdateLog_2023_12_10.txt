@@ -1,0 +1,101 @@
+Trying to add to library | For user, record: 14881 | AddRecord | Violation of UNIQUE KEY constraint 'UQ_libraries_username_record'. Cannot insert duplicate key in object 'dbo.libraries'. The duplicate key value is (user, 14881). | 12/10/2023 2:11:27 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 18038 | AddRecord | Violation of UNIQUE KEY constraint 'UQ_libraries_username_record'. Cannot insert duplicate key in object 'dbo.libraries'. The duplicate key value is (user, 18038). | 12/10/2023 2:11:39 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 18038 | AddRecord | Violation of UNIQUE KEY constraint 'UQ_libraries_username_record'. Cannot insert duplicate key in object 'dbo.libraries'. The duplicate key value is (user, 18038). | 12/10/2023 2:11:41 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 18038 | AddRecord | Violation of UNIQUE KEY constraint 'UQ_libraries_username_record'. Cannot insert duplicate key in object 'dbo.libraries'. The duplicate key value is (user, 18038). | 12/10/2023 2:12:19 AM
+--- END OF ACTION ---
+
+Trying to add collection | For user, adding  | AddCollection | The parameterized query '(@username nvarchar(4),@name nvarchar(4000))INSERT INTO collecti' expects the parameter '@name', which was not supplied. | 12/10/2023 2:21:24 AM
+--- END OF ACTION ---
+
+Trying to add a collection | For user,  | CreateCollection | Exception occurred | 12/10/2023 2:21:24 AM
+--- END OF ACTION ---
+
+Trying to get record count by format for whole database |  | GetFormatAndRecordCount | The multi-part identifier "format.type" could not be bound.
+The multi-part identifier "format.type" could not be bound. | 12/10/2023 2:28:26 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:28:26 AM
+--- END OF ACTION ---
+
+Trying to get record count by format for whole database |  | GetFormatAndRecordCount | The multi-part identifier "format.type" could not be bound.
+The multi-part identifier "format.type" could not be bound. | 12/10/2023 2:28:36 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:28:44 AM
+--- END OF ACTION ---
+
+Trying to get record count by genre for whole database |  | GetGenreAndRecordCount | The multi-part identifier "genre.name" could not be bound.
+The multi-part identifier "genre.name" could not be bound. | 12/10/2023 2:30:29 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:30:33 AM
+--- END OF ACTION ---
+
+Trying to get record count by genre for whole database |  | GetGenreAndRecordCount | The multi-part identifier "genre.name" could not be bound.
+The multi-part identifier "genre.name" could not be bound. | 12/10/2023 2:31:16 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:31:16 AM
+--- END OF ACTION ---
+
+Trying to get record count by label for whole database |  | GetLabelAndRecordCount | The multi-part identifier "label.name" could not be bound.
+The multi-part identifier "label.name" could not be bound. | 12/10/2023 2:31:36 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:31:51 AM
+--- END OF ACTION ---
+
+Trying to get record count by label for whole database |  | GetLabelAndRecordCount | The multi-part identifier "label.name" could not be bound.
+The multi-part identifier "label.name" could not be bound. | 12/10/2023 2:32:10 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:32:10 AM
+--- END OF ACTION ---
+
+Trying to get record count by year from database |  | GetYearAndRecordCount | Conversion failed when converting date and/or time from character string. | 12/10/2023 2:32:25 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:32:28 AM
+--- END OF ACTION ---
+
+Trying to get record count by year from database |  | GetYearAndRecordCount | Conversion failed when converting date and/or time from character string. | 12/10/2023 2:32:35 AM
+--- END OF ACTION ---
+
+Getting aggregate stats |  | GetAggregateUserStats | Sql exception occurred | 12/10/2023 2:33:14 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 20415259 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'notes'. Truncated value: 'Issued in a 6-panel, triple gatefold jacket. All three records are on gold vinyl.
+Matrix numbers and'. | 12/10/2023 2:38:57 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 20415259 | AddRecordToDbById | Sql exception occured | 12/10/2023 2:38:57 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 20415259 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 2:38:57 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 27604608 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'notes'. Truncated value: 'Issued in a gatefold sleeve.
+Each record comes in a printed inner sleeve, with a photo on one side a'. | 12/10/2023 2:39:21 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 27604608 | AddRecordToDbById | Sql exception occured | 12/10/2023 2:39:21 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 27604608 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 2:39:21 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 10441595 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Irela'. | 12/10/2023 2:40:38 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 10441595 | AddRecordToDbById | Sql exception occured | 12/10/2023 2:40:38 AM
+--- END OF ACTION ---
+
+Trying to add to library | For user, record: 10441595 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/10/2023 2:40:38 AM
+--- END OF ACTION ---
+

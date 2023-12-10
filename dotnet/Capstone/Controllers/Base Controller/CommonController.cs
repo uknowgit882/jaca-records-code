@@ -14,6 +14,19 @@ namespace Capstone.Controllers
     //[ApiExplorerSettings(IgnoreApi = true)]
     public class CommonController : ControllerBase
     {
+        protected readonly string FreeAccountName = "free";
+        protected readonly string PremiumAccountName = "premium";
+        protected readonly string AdminAccountName = "jacapreme";
+        protected readonly bool IsPremium = true;
+        protected readonly bool NotPremium = false;
+        protected readonly bool IsActive = true;
+        protected readonly bool NotActive = false;
+        protected readonly bool IsPrivate = true;
+        protected readonly bool NotPrivate = false;
+        protected readonly int FreeUserRecordLimit = 25;
+        protected readonly int FreeUserCollectionLimit = 1;
+        protected readonly string CreationPathReRoute = "https://localhost:44315/";
+
         protected readonly IArtistsDao _artistsDao;
         protected readonly IBarcodesDao _barcodesDao;
         protected readonly ICollectionsDao _collectionsDao;

@@ -18,6 +18,46 @@ namespace Capstone.DAO
         }
 
         /// <summary>
+        /// Gets all records in a collection. Use the get methods in collections to obtain the record by username/name.
+        /// </summary>
+        /// <param name="discogsId"></param>
+        /// <param name="collectionId"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public List<RecordCollection> GetAllRecordsInCollectionByCollectionId(int collectionId)
+        {
+            List<RecordCollection> output = new List<RecordCollection>();
+
+            string sql = "SELECT records_collections_id, is_premium " +
+                "FROM records_collections " +
+                "WHERE collection_id = @collectionId AND is_active = 1 ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        RecordCollection row = MapRowToRecordCollection(reader);
+                        output.Add(row);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to get all records in collection", $"For {collectionId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Gets singular record in a collection. Use the get methods in collections to obtain the record by username/name.
         /// </summary>
         /// <param name="discogsId"></param>
@@ -127,6 +167,42 @@ namespace Capstone.DAO
             catch (SqlException ex)
             {
                 ErrorLog.WriteLog("Trying to delete record from collection", $"For {discogsId}, {collectionId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("exception occurred", ex);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes all records in a collection. Should be called before a colleciton is deleted.
+        /// </summary>
+        /// <param name="collectionId"></param>
+        /// <returns></returns>
+        /// <exception cref="DaoException"></exception>
+        public bool DeleteAllRecordsInCollectionByCollectionId(int collectionId)
+        {
+            int NumberOfRows = 0;
+
+            string sql = "DELETE FROM records_collections " +
+                "WHERE collection_id = @collectionId";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
+                    NumberOfRows = cmd.ExecuteNonQuery();
+                    if (NumberOfRows != 1)
+                    {
+                        throw new DaoException("The wrong number of rows were impacted");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to delete all records in a collection", $"For {collectionId}", MethodBase.GetCurrentMethod().Name, ex.Message);
                 throw new DaoException("exception occurred", ex);
             }
             return true;

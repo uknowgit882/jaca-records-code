@@ -127,9 +127,10 @@ namespace Capstone.DAO
         /// Returns how many images are associated with this user. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Int number of images</returns>
         /// <exception cref="DaoException"></exception>
-        public int GetImageCountByUsername(string username)
+        public int GetImageCountByUsername(string username, bool isPremium)
         {
             int output = 0;
 
@@ -137,7 +138,7 @@ namespace Capstone.DAO
                 "FROM images " +
                 "JOIN records ON images.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -146,6 +147,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())

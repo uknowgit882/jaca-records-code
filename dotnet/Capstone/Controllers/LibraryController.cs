@@ -28,14 +28,14 @@ namespace Capstone.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<RecordClient>> GetLibrary()
+        public ActionResult<List<OutboundLibraryWithFullRecords>> GetLibrary()
         {
             string username = User.Identity.Name;
             //TODO remove hardcode
             username = "user";
 
             // container for the outbound records
-            List<RecordClient> output = new List<RecordClient>();
+            List<OutboundLibraryWithFullRecords> output = new List<OutboundLibraryWithFullRecords>();
 
             try
             {
@@ -45,18 +45,24 @@ namespace Capstone.Controllers
                 // container
                 List<Library> usersLibrary = new List<Library>();
 
-                if(role == "free")
+                if (role == FreeAccountName)
                 {
-                    usersLibrary = _librariesDao.GetFreeUsersLibrary(username);    
+                    usersLibrary = _librariesDao.GetFreeUsersLibrary(username);
                 }
                 else
                 {
                     usersLibrary = _librariesDao.GetPremiumUsersLibrary(username);
                 }
 
-                foreach(Library row in usersLibrary)
+                foreach (Library row in usersLibrary)
                 {
-                    output.Add(BuildFullRecord(row.Discog_Id));
+                    // for each row, build the outbound object. It should have the quantity, notes,
+                    // and record itself so it's all in one place for the front end
+                    OutboundLibraryWithFullRecords entry = new OutboundLibraryWithFullRecords();
+                    entry.Quantity = row.Quantity;
+                    entry.Notes = row.Notes;
+                    entry.Record = BuildFullRecord(row.Library_Id);
+                    output.Add(entry);
                 }
 
                 if (output != null)
@@ -76,7 +82,7 @@ namespace Capstone.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<bool> AddRecordToLibrary(IncomingLibraryRequest request)
+        public ActionResult<RecordClient> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
             username = "user"; // TODO remove hardcode
@@ -86,10 +92,26 @@ namespace Capstone.Controllers
                 string errorMessage = "";
                 RecordClient dbLoadedRecord = AddRecordToDbById(request.DiscogsId, out errorMessage);
 
-                bool output = _librariesDao.AddRecord(request.DiscogsId, username, request.Notes);
-                if (output)
+                // get user's role
+                string userRole = _userDao.GetUserRole(username);
+
+                if (userRole == FreeAccountName)
                 {
-                    return Ok($"{dbLoadedRecord.Title} was added to your library");
+                    // get the count in the user's library
+                    int libraryRecordCount = _librariesDao.GetFreeUserRecordCountByUsername(username);
+
+                    // check if they've exceded the limit. If so, reject
+                    if (libraryRecordCount >= FreeUserRecordLimit)
+                    {
+                        return BadRequest($"As a free user, you cannot add more than {FreeUserRecordLimit} records to your library. Please upgrade or remove a record from your library.");
+                    }
+                }
+
+                // if all good, add
+                bool addRecordSuccess = _librariesDao.AddRecord(request.DiscogsId, username, request.Notes);
+                if (addRecordSuccess)
+                {
+                    return Created(CreationPathReRoute, BuildFullRecord(request.DiscogsId));
 
                 }
                 else
@@ -100,6 +122,34 @@ namespace Capstone.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<RecordClient> GetFromLibrary(int discogsId)
+        {
+            string username = User.Identity.Name;
+            username = "user"; // TODO remove hardcode
+            try
+            {
+                // check if the user has the record in the library
+                int returnedDiscogsId = _librariesDao.GetRecordFromLibrary(username, discogsId);
+                RecordClient output = BuildFullRecord(returnedDiscogsId);
+
+                if (output != null)
+                {
+                    return Ok(output);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to delete record from library", $"For {username}, {discogsId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
