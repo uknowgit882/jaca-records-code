@@ -16,7 +16,7 @@
         <table>
             <tr>
                 <search-result-component v-for="result in this.$store.state.searchResults.data.results"
-                    v-bind:key="result.id" v-bind:result="result" />
+                    v-bind:key="result.id" v-bind:result="result"  />
 
             </tr>
 

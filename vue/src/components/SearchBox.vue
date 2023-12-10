@@ -141,6 +141,11 @@ export default {
 
 <style scoped>
 .input{
+    margin-top: 11px;
     width: 800px;
+}
+
+.button {
+    margin-top: 11px;
 }
 </style>
