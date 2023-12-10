@@ -1,5 +1,6 @@
 ﻿namespace Capstone.Service;
 using Capstone.Models;
+using Capstone.Models.PaginationModels;
 using Capstone.Utils;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
