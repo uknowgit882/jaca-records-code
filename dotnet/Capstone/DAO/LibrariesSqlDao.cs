@@ -687,7 +687,7 @@ namespace Capstone.DAO
         {
             Library library = new Library();
             library.Library_Id = Convert.ToInt32(reader["library_id"]);
-            library.Username = Convert.ToInt32(reader["username"]);
+            library.Username = Convert.ToString(reader["username"]);
             library.Discog_Id = Convert.ToInt32(reader["discogs_id"]);
             library.Notes = Convert.ToString(reader["notes"]);
             library.Quantity = Convert.ToInt32(reader["quantity"]);
