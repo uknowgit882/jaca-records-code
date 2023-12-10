@@ -33,6 +33,7 @@ namespace Capstone.Models
     public class OutboundCollectionWithFullRecords
     {
         public string Name { get; set; }
+        public bool Is_Private { get; set; }
         public List<RecordClient> Records { get; set; } = new List<RecordClient>();
     }
 }

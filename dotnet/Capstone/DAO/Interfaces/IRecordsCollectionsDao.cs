@@ -5,7 +5,7 @@ namespace Capstone.DAO.Interfaces
 {
     public interface IRecordsCollectionsDao
     {
-        public List<RecordCollection> GetAllRecordsInCollectionByCollectionId(int collectionId);
+        public List<int> GetAllRecordsInCollectionByCollectionId(int collectionId);
         public List<int> GetAllCollectionsForThisDiscogsIdByUsername(int discogsId, string username);
         public int GetRecordCollectionByDiscogsIdAndCollectionId(int discogsId, int collectionId);
         public bool AddRecordCollections(int discogsId, int collectionId, int libraryId, bool isPremium);
