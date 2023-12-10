@@ -38,4 +38,9 @@ namespace Capstone.Models
             return Title + " | " + Tracklist.Count + " Tracks";
         }
     }
+
+    public class IncomingRecord
+    {
+        public int Discogs_Id { get; set; }
+    }
 }

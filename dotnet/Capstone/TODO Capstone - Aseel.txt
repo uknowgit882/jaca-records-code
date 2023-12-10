@@ -1,15 +1,44 @@
+TODO:
+update the registration page to accept first, last, email
+update profile page to display last login
+need a collection creation page
+colleciton page needs a delete button (and a confirmation prompt) to delete the collection
+collection page needs an edit button
+something about CORS???
+FOR JAKE - if you enter a general query, it'll return all records
+
+remove hardcoded user role "free" in each of the controller's methods everywhere
+
 search for a record by username
 	also want to return which collection it's in, if any
-searches by privacy
 Controller decorations for authorization
-collections/records join table
-Count how many in collection if free, don't allow more than 25
-If downgrading, remove free
-	was_free column for collections/records, collections, library
-	if premium, set to false
-	if goes to free, set to true
-	gets for for free people, it filters and they only see false stuff
-errors - better wording on endpoints
+
+registration - work on premium/free status
+to remove a record from your library, you must remove it from your records_collections first
+update controllers so they all have error log reporting in their catches
+
+COLLECTIONSCONTROLLER
+/COLLECTIONS
+	GET - get all my collections as a user DONE
+	POST - add a new collection DONE
+/COLLECTIONS/{name}
+	GET - get this specific collection DONE
+	DELETE - delete this specific collection DONE
+/COLLECTIONS/{name}/name 
+		PUT - change the title of this collection DONE
+/COLLECTIONS/{name}/privacy
+		PUT - change the privacy of this collection DONE
+/COLLECTIONS/{name}/record
+	POST - add a record to this collection DONE
+	{id} DELETE - delete a record from this collection DONE
+/COLLECTIONS/{name}/record/{id}
+	GET - get this specific record in this specific collection DONE
+
+ANONYMOUSCONTROLLER
+	FOR GETTING PUBLIC LISTS
+/ANONYMOUS/publiccollections
+	GET - get public collections
+
 
 14881
 18038
@@ -20,3 +49,4 @@ errors - better wording on endpoints
 801907 - queen latifah
 31526 
 1852573 - queen
+

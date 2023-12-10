@@ -48,44 +48,6 @@ namespace Capstone.DAO
             return output;
         }
         
-        // I don't think I need this...
-        ///// <summary>
-        ///// Gets the record for this specific user. Only gets active records
-        ///// </summary>
-        ///// <param name="discogsId"></param>
-        ///// <param name="username"></param>
-        ///// <returns>Singular record</returns>
-        ///// <exception cref="DaoException"></exception>
-        //public RecordTableData GetRecordByDiscogsIdAndUsername(int discogsId, string username)
-        //{
-        //    RecordTableData output = null;
-        //    string sql = "SELECT record_id, records.discogs_id, country, records.notes, released, title, url, discogs_date_changed, records.is_active " +
-        //        "FROM records " +
-        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-        //        "WHERE records.discogs_id = @discogsId AND username = @username AND records.is_active = 1";
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand(sql, conn);
-        //            cmd.Parameters.AddWithValue("@discogsId", discogsId);
-        //            cmd.Parameters.AddWithValue("@username", username);
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            if (reader.Read())
-        //            {
-        //                output = MapRowToRecordTableData(reader);
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        throw new DaoException("Sql exception occured", ex);
-        //    }
-        //    return output;
-        //}
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
@@ -159,7 +121,7 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT released AS year_released, count (discogs_id) AS record_count " +
+            string sql = "SELECT substring(released, 1, 4) AS year_released, count (discogs_id) AS record_count " +
                 "FROM records " +
                 "GROUP BY released " +
                 "ORDER by year_released DESC";
@@ -174,7 +136,16 @@ namespace Capstone.DAO
 
                     while (reader.Read())
                     {
-                        output[Convert.ToString(reader["year_released"])] = Convert.ToInt32(reader["record_count"]);
+                        string yearReleasedOutput = Convert.ToString(reader["year_released"]);
+                        int recordCount = Convert.ToInt32(reader["record_count"]);
+                        if (output.ContainsKey(yearReleasedOutput))
+                        {
+                            output[yearReleasedOutput] = output[yearReleasedOutput] + recordCount;
+                        }
+                        else
+                        {
+                            output.Add(yearReleasedOutput, recordCount);
+                        }
                     }
                     return output;
                 }

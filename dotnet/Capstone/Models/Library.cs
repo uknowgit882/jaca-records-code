@@ -29,4 +29,10 @@ namespace Capstone.Models
         public string Notes { get; set; } = "";
         public int Quantity { get; set; } = 1;
     }
+    public class OutboundLibraryWithFullRecords
+    {
+        public string Notes { get; set; }
+        public int Quantity { get; set; }
+        public RecordClient Record { get; set; }
+    }
 }

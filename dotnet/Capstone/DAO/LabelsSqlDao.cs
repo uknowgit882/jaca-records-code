@@ -125,9 +125,10 @@ namespace Capstone.DAO
         /// Returns how many labels are associated with this user. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Int number of labels</returns>
         /// <exception cref="DaoException"></exception>
-        public int GetLabelCountByUsername(string username)
+        public int GetLabelCountByUsername(string username, bool isPremium)
         {
             int output = 0;
 
@@ -136,7 +137,7 @@ namespace Capstone.DAO
                 "JOIN records_labels ON labels.label_id = records_labels.label_id " +
                 "JOIN records ON records_labels.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_active = 1 ";
+                "WHERE username = @username AND is_premium = @isPremium AND is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -145,6 +146,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
@@ -165,9 +167,10 @@ namespace Capstone.DAO
         /// Returns the record count by label in this user's library. Active users only.
         /// </summary>
         /// <param name="username"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Dictionary of key, label name, value, count of records</returns>
         /// <exception cref="DaoException"></exception>
-        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username)
+        public Dictionary<string, int> GetLabelAndRecordCountByUsername(string username, bool isPremium)
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
@@ -176,7 +179,7 @@ namespace Capstone.DAO
                 "JOIN records_labels ON labels.label_id = records_labels.label_id " +
                 "JOIN records ON records_labels.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND records.is_active = 1 " +
+                "WHERE username = @username AND is_premium = @isPremium AND records.is_active = 1 " +
                 "GROUP BY label.name";
             try
             {
@@ -186,6 +189,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -207,17 +211,17 @@ namespace Capstone.DAO
         /// </summary>
         /// <returns>Dictionary of key, genre name, value, count of records</returns>
         /// <exception cref="DaoException"></exception>
-        public Dictionary<string, int> GetGenreAndRecordCount()
+        public Dictionary<string, int> GetLabelAndRecordCount()
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT label.name, count(records.discogs_id) AS record_count " +
+            string sql = "SELECT name, count(records.discogs_id) AS record_count " +
                 "FROM labels " +
                 "JOIN records_labels ON labels.label_id = records_labels.label_id " +
                 "JOIN records ON records_labels.discogs_id = records.discogs_id " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
                 "WHERE records.is_active = 1 " +
-                "GROUP BY label.name"; 
+                "GROUP BY name"; 
 
             try
             {
@@ -242,49 +246,6 @@ namespace Capstone.DAO
             }
         }
 
-        // don't think I need this...
-        ///// <summary>
-        ///// Gets the labels associated for this record for this specific user
-        ///// </summary>
-        ///// <param name="discogId"></param>
-        ///// <param name="username"></param>
-        ///// <returns>List of labels for this specific user. Only the name and uri should be sent to the front end - use JSONIgnore on the other properties</returns>
-        ///// <exception cref="DaoException"></exception>
-        //public List<Label> GetLabelsByDiscogsIdAndUsername(int discogId, string username)
-        //{
-        //    List<Label> output = new List<Label>();
-        //    string sql = "SELECT name, labels.url " +
-        //        "FROM labels " +
-        //        "JOIN records_labels ON labels.label_id = records_labels.label_id " +
-        //        "JOIN records ON records_labels.discogs_id = records.discogs_id " +
-        //        "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-        //        "WHERE records.discogs_id = @discogId AND username = @username";
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand(sql, conn);
-        //            cmd.Parameters.AddWithValue("@discogId", discogId);
-        //            cmd.Parameters.AddWithValue("@username", username);
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            while (reader.Read())
-        //            {
-        //                Label row = new Label();
-        //                row.Name = Convert.ToString(reader["name"]);
-        //                row.Resource_Url = Convert.ToString(reader["url"]);
-        //                output.Add(row);
-        //            }
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        throw new DaoException("Sql exception occurred", ex);
-        //    }
-        //    return output;
-        //}
 
         public bool AddLabel(Label label)
         {
