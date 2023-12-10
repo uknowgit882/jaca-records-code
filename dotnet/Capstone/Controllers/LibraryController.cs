@@ -86,7 +86,6 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-
             try
             {
                 // get the record from the api and put it in our db

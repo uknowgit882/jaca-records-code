@@ -1,7 +1,7 @@
 <template>
     
     <div class = "Library-container">
-        <record-in-library v-for="record in $store.state.records" v-bind:record="record" v-bind:key="record.id"/>
+        <record-in-library v-for="record in $store.state.records.data" v-bind:record="record" v-bind:key="record.id"/>
     
     </div>
     
@@ -9,11 +9,24 @@
 
 <script>
 import RecordInLibrary from '@/components/RecordInLibraryComponent.vue';
+import AddToLibraryService from '../services/AddToLibraryService';
 
 
 export default{
     components: {
-        RecordInLibrary
+        RecordInLibrary,
+        AddToLibraryService
+    },
+    methods: {
+        // DisplayingLibrary() {
+        //     AddToLibraryService.displayRecordsInLibrary()
+        //         .then((response) => {
+        //             if (response.status == 200) {
+        //                 this.$store.commit('SHOW_RECORDS_IN_LIBRARY', response)
+        //                 this.$router.push({ name: "Library" });
+        //             }
+        //         })
+        // }
     }
 }
 </script>
