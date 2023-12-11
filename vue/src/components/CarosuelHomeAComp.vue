@@ -34,7 +34,7 @@ export default {
     Slide,
     Navigation,
     Pagination,
-    SearchResultComponentVue
+    //SearchResultComponentVue
   },
   data() {
     return {

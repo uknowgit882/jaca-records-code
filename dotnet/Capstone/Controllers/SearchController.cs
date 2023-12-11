@@ -132,7 +132,7 @@ namespace Capstone.Controllers
         // Searches for records in user collections
         [HttpGet("searchCollections")]
         [Authorize]
-        public ActionResult<List<RecordClient>> SearchCollections(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
+        public ActionResult<List<OutboundCollectionWithFullRecords>> SearchCollections(string q, string artist, string title, string genre, string year, string country, string label, string barcode)
         {
             string username = User.Identity.Name;
             if (username == null)
@@ -142,10 +142,12 @@ namespace Capstone.Controllers
 
             SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
 
-            List<RecordClient> output = new List<RecordClient>();
+            List<OutboundCollectionWithFullRecords> output = new List<OutboundCollectionWithFullRecords>();
 
             try
             {
+                string userRole = _userDao.GetUserRole(username);
+
                 List<int> recordIds = new List<int>();
                 if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
                 {
@@ -161,19 +163,38 @@ namespace Capstone.Controllers
                     return NotFound();
                 }
 
-                foreach (int discogId in recordIds)
+                if (recordIds.Count != 0)
                 {
-                    // this is much neater
-                    // refactored and put in the parent CommonController class as a helper method
-                    RecordClient newFullRecord = BuildFullRecord(discogId);
-
-                    if (newFullRecord != null)
+                    // for each record found
+                    foreach (int recordId in recordIds)
                     {
-                        output.Add(newFullRecord);
+                        // get me a list of all collections that this record appears in for this user
+                        List<int> collectionsIds = _recordsCollectionsDao.GetAllCollectionsForThisDiscogsIdByUsername(recordId, username);
+
+                        // foreach collection found
+                        foreach (int collectionId in collectionsIds)
+                        {
+                            // get me the whole collection
+                            Collection returnedCollection = _collectionsDao.GetCollectionByCollectionId(collectionId, (userRole == FreeAccountName ? NotPremium : IsPremium));
+
+                            // for the collection, associate the name and privacy status
+                            OutboundCollectionWithFullRecords outputRow = new OutboundCollectionWithFullRecords();
+                            outputRow.Name = returnedCollection.Name;
+                            outputRow.Is_Private = returnedCollection.IsPrivate;
+
+                            // find me all the records in this collection
+                            List<int> foundCollectionRecordsIds = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(returnedCollection.Collection_Id);
+
+                            // build the full record for the discogsid
+                            foreach (int foundRecordId in foundCollectionRecordsIds)
+                            {
+                                outputRow.Records.Add(BuildFullRecord(foundRecordId));
+                            }
+                            output.Add(outputRow);
+                        }
                     }
                 }
-
-                if (output != null)
+                if (output.Count != 0)
                 {
                     return Ok(output);
                 }
