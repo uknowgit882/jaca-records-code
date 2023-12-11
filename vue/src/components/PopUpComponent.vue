@@ -11,7 +11,7 @@
   </template>
   
   <script>
-  import Collections from '../services/Collections';
+  import Collections from '../services/CollectionsService';
   export default {
     data(){
         return {

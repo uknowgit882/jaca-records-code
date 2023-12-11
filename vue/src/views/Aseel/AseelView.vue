@@ -1,5 +1,5 @@
 <template>
-        <carousel-component></carousel-component>
+            <carousel-component></carousel-component>
 </template>
 
 <script>

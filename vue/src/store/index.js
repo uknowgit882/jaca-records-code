@@ -6,6 +6,7 @@ export function createStore(currentToken, currentUser) {
     state: {
       token: currentToken || '',
       user: currentUser || {},
+      library: [], // aseel added
       searchResults: [],
       searchLibraryResults: [],
       searchCollectionsResults: [],
@@ -65,15 +66,76 @@ export function createStore(currentToken, currentUser) {
                 "position": "string",
                 "duration": "string"
               }
-            ]
+            ],
+            recordsInDB: [], // AT: what is this?
+            records: [], // AT: what is this?
+            Collections:
+            {
+              "name": "Backstreet Boys",
+              "records": [
+                {
+                  "id": 1,
+                  "title": "DNA",
+                  "released": " 2019-01-29",
+                  "country": "Orlando,FL",
+                  "notes": "none",
+                  "uri": "https://www.discogs.com/artist/11002-Backstreet-Boys",
+                  "artists": [
+                    {
+                      "name": "blablabla "
+                    }
+                  ],
+                  "extraArtists": [
+                    {
+                      "name": "no"
+                    }
+                  ],
+                  "formats": [
+                    {
+                      "name": "no"
+                    }
+                  ],
+                  "genres": [
+                    "unicorn"
+                  ],
+                  "identifiers": [
+                    {
+                      "type": "they",
+                      "value": "bad"
+                    }
+                  ],
+                  "images": [
+                    {
+                      "uri": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg",
+                      "height": 250,
+                      "width": 250
+                    }
+                  ],
+                  "labels": [
+                    {
+                      "name": "nbbmb",
+                      "resource_Url": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg"
+                    }
+                  ],
+                  "tracklist": [
+                    {
+                      "title": "string",
+                      "position": "string",
+                      "duration": "string"
+                    }
+                  ]
 
+                }
+              ],
+            }
           }
-        ],
+        ]
+
       },
       StatsAggregate: [],
-      StatsUser: []
-    },
+      StatsUser: [],
 
+    },
     mutations: {
       SET_AUTH_TOKEN(state, token) {
         state.token = token;
@@ -105,6 +167,7 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_RECORDS_TO_LIBRARY(state, adding) {
         state.records = adding;
+        state.library = adding;
       },
       SHOW_RECORDS_IN_LIBRARY(state, result) {
         state.records = result;
@@ -117,11 +180,9 @@ export function createStore(currentToken, currentUser) {
       },
       DISPLAY_USER_STATS(state, stats) {
         state.StatsUser = stats;
-      }
+      },
+
     },
-
-
-
   });
   return store;
 }
