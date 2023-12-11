@@ -31,9 +31,6 @@
                         </h4>
                     </div>
                 </div>
-                <a href="/register">
-                    <button class="button is-success">Sign Up</button>
-                </a>
             </box>
         </div>
 
@@ -52,9 +49,6 @@
                         </h4>
                     </div>
                 </div>
-                <a href="/register">
-                    <button class="button is-success">Sign up</button>
-                </a>
             </box>
         </div>
     </div>
@@ -71,15 +65,22 @@
     margin-right: 20px;
     margin-left: 20px;
     justify-content: center;
-
-}
-
-.content {
-    height: 370px;
     transition: transform 0.3s ease;
+
 }
 
-.content:hover {
+.box-free:hover {
+    transition: transform 0.3s ease;
+    transform: translateY(-10px);
+}
+
+.box-premium:hover {
+    transition: transform 0.3s ease;
+    transform: translateY(-10px);
+}
+
+.box-info:hover {
+    transition: transform 0.3s ease;
     transform: translateY(-10px);
 }
 
@@ -97,7 +98,7 @@ h4 {
     margin-right: -80px;
     justify-content: center;
     align-items: start;
-;
+    transition: transform 0.3s ease;
 
 }
 
@@ -124,6 +125,7 @@ h4 {
     padding-right: 36%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
     margin-left: 30px;
+    transition: transform 0.3s ease;
 }
 
 .fa-solid {
@@ -131,53 +133,4 @@ h4 {
     padding-top: 15px;
 }
 
-.button {
- --color: #000000;
- font-family: inherit;
- display: inline-block;
- width: 20em;
- height: 2.6em;
- line-height: 1.5em;
- margin: 20px;
- position: relative;
- overflow: hidden;
- border: 2px solid var(--color);
- transition: color .5s;
- z-index: 1;
- font-size: 17px;
- border-radius: 6px;
- font-weight: 500;
- color: var(--color);
- 
-}
-
-.button:before {
- content: "";
- position: absolute;
- z-index: -1;
- background: var(--color);
- height: 115px;
- width: 500px;
- border-radius: 50%;
-}
-
-.button:hover {
- color: #fff;
-}
-
-.button:before {
- top: 100%;
- left: 100%;
- transition: all .7s;
-}
-
-.button:hover:before {
- top: -30px;
- left: -30px;
-}
-
-.button:active:before {
- background: #3a0ca3;
- transition: background 0s;
-}
 </style>
