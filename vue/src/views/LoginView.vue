@@ -1,9 +1,9 @@
 <template>
-  <h2 class="sign-in">&nbsp;&nbsp;Please Sign in:</h2>
+  <h2 class="sign-in">&nbsp;&nbsp;Please Sign In</h2>
   <div class="divClass" id="login">
     <form class="log-in" v-on:submit.prevent="login">
       <div role="alert" v-if="invalidCredentials">
-        Invalid username and password!
+        <strong>Invalid username and password!</strong>
       </div>
       <div role="alert" v-if="this.$route.query.registration">
         Thank you for registering, please sign in.
@@ -64,7 +64,8 @@ export default {
 
 <style scoped>
 .sign-in {
-  color: white
+  color: white;
+  text-align: center;
 }
 .form-input-group {
   margin-bottom: 1rem;
@@ -76,7 +77,6 @@ label {
   margin-right: 0.5rem;
   margin-left: 10px;
 }
-
 .input-box {
   background-color: #000000;
   color: white;
@@ -123,7 +123,6 @@ h2{
  font-weight: 500;
  color: var(--color);
  background-color: black;
- 
 }
 
 .button:before {

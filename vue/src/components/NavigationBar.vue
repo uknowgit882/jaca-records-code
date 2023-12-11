@@ -86,13 +86,17 @@ export default {
 
 
 <style scoped>
+
 .dropdown-content {
     background-color: #4D437F;
     margin-top: 7px;
+    padding-top: 1px;
+    padding-bottom: 22px;
 }
 
 .signup-text {
     color: white;
+    text-align: center;
 }
 
 .navbar {
@@ -102,7 +106,6 @@ export default {
     padding-right: 1%;
     background-color: #4D437F;
 }
-
 
 .search {
 
