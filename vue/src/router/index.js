@@ -10,11 +10,13 @@ import SearchBox from '../components/SearchBox.vue';
 import LibraryView from '../views/LibraryView.vue'
 import CollectionsView from '@/views/CollectionsView.vue'
 import DataView from '@/views/DataView.vue'
-import SearchResultView from'@/views/SearchResultView.vue'
+import SearchResultView from '@/views/SearchResultView.vue'
 import ProfilePageView from '@/views/Caleb/ProfilePageView.vue'
 import HomeA from '@/views/Caleb/HomeAView.vue'
 import popupViewTest from '@/views/Aseel/popupViewTEST.vue'
 import JakeView from '@/views/Jake/JakeView.vue'
+import AseelView from '../views/Aseel/AseelView.vue'
+import AggregateDataTestView from '../views/Aliz/AggregateDataTestView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -65,7 +67,7 @@ const routes = [
     }
   },
   {
-    path:"/Library",
+    path: "/Library",
     name: "Library",
     component: LibraryView,
     meta: {
@@ -73,7 +75,7 @@ const routes = [
     }
   },
   {
-    path:"/collections",
+    path: "/collections",
     name: "Collections",
     component: CollectionsView,
     meta: {
@@ -94,8 +96,8 @@ const routes = [
     component: SearchResultView,
     meta: {
       requiresAuth: false,
-    } 
-    
+    }
+
   },
   {
     path: "/Profile",
@@ -103,9 +105,9 @@ const routes = [
     component: ProfilePageView,
     meta: {
       requiresAuth: false,
-    } 
+    }
   },
-  
+
   {
     path: '/homeA',
     name: 'homeA',
@@ -120,12 +122,28 @@ const routes = [
     component: popupViewTest,
     meta: {
       requiresAuth: false,
-    } 
+    }
   },
   {
     path: "/JakeView",
     name: "JakeView",
     component: JakeView,
+    meta: {
+      requiresAuth: false,
+    }
+  },
+  {
+    path: "/data",
+    name: "data",
+    component: AggregateDataTestView,
+    meta: {
+      requiresAuth: false,
+    }
+  },
+  {
+    path: "/aseel",
+    name: "aseel",
+    component: AseelView,
     meta: {
       requiresAuth: false,
     }
@@ -148,7 +166,7 @@ router.beforeEach((to) => {
 
   // If it does and they are not logged in, send the user to "/login"
   if (requiresAuth && store.state.token === '') {
-    return {name: "login"};
+    return { name: "login" };
   }
   // Otherwise, do nothing and they'll go to their next destination
 });

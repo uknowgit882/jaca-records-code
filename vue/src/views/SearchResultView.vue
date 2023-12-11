@@ -1,37 +1,33 @@
 <template>
-    <!-- <button v-on:click="searchRecord">Test</button> -->
-
-    <div class="table-table">
-        <div class="tableHead">
-            <span class="thumb">Thumb</span>
-            <span class="artist">Artist & Title</span>
-            <span class="year">Year</span>
-            <span class="genre">Genre</span>
-            <span class="country">Country</span>
-            <span class="table-head-label">Label</span>
-            <span class="library">Add to Library</span>
-
-
+    <div class="searchResultsGrid" >
+        <div class="apiSearchResults">
+            <h2>Search Results:</h2>
+            <CarouselComponent v-bind:carouselRecords="$store.state.searchResults.results"
+                v-bind:carouselChooser="'searchAPI'"></CarouselComponent>
         </div>
-        <table>
-            <tr>
-                <search-result-component v-for="result in this.$store.state.searchResults.data.results"
-                    v-bind:key="result.id" v-bind:result="result"  />
-
-            </tr>
-
-        </table>
+        <div class="librarySearchResults">
+            <h2>Library Results:</h2>
+            <p>Records you own</p>
+            <CarouselComponent v-bind:carouselRecords="$store.state.searchLibraryResults"
+                v-bind:carouselChooser="'searchLibrary'"></CarouselComponent>
+        </div>
+        <div class="collectionsSearchResults">
+            <h2>Collection Results:</h2>
+            <p>Collections where you have saved this record</p>
+            <CarouselComponent v-bind:carouselRecords="$store.state.searchCollectionsResults"
+                v-bind:carouselChooser="'searchCollections'"></CarouselComponent>
+        </div>
     </div>
 </template>
 
 <script>
 import SearchService from '../services/SearchService'
 import SearchResultComponent from '@/components/SearchResultComponent.vue'
-
+import CarouselComponent from '../components/CarouselComponent.vue';
 
 export default {
     components: {
-        SearchResultComponent
+        CarouselComponent
     },
     data() {
         return {
@@ -47,7 +43,7 @@ export default {
                 Label: ""
 
             },
-            searchResults: [],
+            searchResults: []
         }
     },
     methods: {
@@ -64,7 +60,41 @@ export default {
     }
 }
 </script>
+
 <style scoped>
+.searchResultsGrid{
+    display: grid;
+    grid-template-areas:
+    "API"
+    "LIBRARY"
+    "COLLECTIONS";
+    height: 1vh;
+    margin-top: 20px
+}
+.apiSearchResults{
+    grid-template-areas: "API";
+}
+.librarySearchResults{
+    grid-template-areas: "LIBRARY";
+}
+.collectionsSearchResults{
+    grid-template-areas: "COLLECTIONS";
+}
+
+h2{
+    font-size: 2rem;
+    font-weight: bolder;
+    color: #D1D301;
+    text-align: left;
+    padding-left: 20px;
+}
+p{
+    font-weight: bolder;
+    color: #D1D301;
+    text-align: left;
+    padding-left: 20px;
+} 
+
 .tableHead {
     padding: 20px;
     display: grid;
@@ -79,7 +109,7 @@ export default {
 
 }
 
-.table-table{
+.table-table {
     background: rgba(0, 0, 0, 0.587);
 }
 

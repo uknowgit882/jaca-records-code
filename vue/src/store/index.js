@@ -10,8 +10,8 @@ export function createStore(currentToken, currentUser) {
       searchResults: [],
       searchLibraryResults: [],
       searchCollectionsResults: [],
-      recordsInDB: [],
-      records: [],
+      //recordsInDB: [],
+      //records: [],
       Collections:
       {
         "name": "Backstreet Boys",
@@ -175,10 +175,10 @@ export function createStore(currentToken, currentUser) {
       SHOW_INFO_FROM_COLLECTIONS(state, info) {
         state.Collections = info;
       },
-      DISPLAY_AGGREGATE_STATS(state, stats) {
+      ADD_AGGREGATE_STATS(state, stats) {
         state.StatsAggregate = stats;
       },
-      DISPLAY_USER_STATS(state, stats) {
+      ADD_USER_STATS(state, stats) {
         state.StatsUser = stats;
       },
       // CHANGE_USER_ROLE(state, user){

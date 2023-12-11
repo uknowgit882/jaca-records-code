@@ -34,7 +34,7 @@ export default {
     Slide,
     Navigation,
     Pagination,
-    SearchResultComponentVue
+    //SearchResultComponentVue
   },
   data() {
     return {
@@ -57,7 +57,7 @@ export default {
 }
 
 .carousel__slide {
-  display: flex;
+  display: grid;
   padding: 80px;
   padding-top: 33px;
   margin-right: 0.2px;
@@ -98,9 +98,9 @@ export default {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
 }
-
-.carousel_pagination {
+.carousel__pagination {
   display: flex;
   columns: center;
 }
+
 </style>

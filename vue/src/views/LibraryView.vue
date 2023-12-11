@@ -8,26 +8,15 @@
 </template>
 
 <script>
-import RecordInLibrary from '@/components/RecordInLibraryComponent.vue';
-import AddToLibraryService from '../services/AddToLibraryService';
+import RecordInLibrary from '@/components/RecordInLibraryComponent.vue'; 
 import LibraryService from '../services/LibraryService';
 
 
 export default{
     components: {
-        RecordInLibrary,
-        // AddToLibraryService
+        RecordInLibrary, 
     },
-    methods: {
-        // DisplayingLibrary() {
-        //     AddToLibraryService.displayRecordsInLibrary()
-        //         .then((response) => {
-        //             if (response.status == 200) {
-        //                 this.$store.commit('SHOW_RECORDS_IN_LIBRARY', response)
-        //                 this.$router.push({ name: "Library" });
-        //             }
-        //         })
-        // }
+    methods: { 
         getLibrary() {
             LibraryService.GetLibrary()
             .then( response => {

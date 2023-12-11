@@ -1,19 +1,31 @@
 <template>
-    <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500" > 
-      <!-- :autoplay="3000" -->
-      <Slide v-for="n in 50" :key="n">
-        <div class="carousel__item">
-            <!-- <v-img :src="this.image[n-1]" height="50px"></v-img> -->
-            <img src="https://i.discogs.com/xAuuOx6MzpbgVhBF2BD-XEBhJsK1bDfgCbGYlsbTeEE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0NjI1/MzI1LTE2NjQxMDIz/NDgtMjQzNy5qcGVn.jpeg"/>
-            <router-link :to="{name: 'Collections'}">Collections</router-link>
-          </div>
-      </Slide>
-      <template #addons>
-      <Navigation />
+  <Carousel :itemsToShow="3.95" :autoplay="3000" :wrapAround="true" :transition="500">
+    <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record">
+      <div v-if="carouselChooser == 'library'" class="carousel__item">
+        <img :src="record.record.images[0].uri" />
+      </div>
+      <div v-else-if="carouselChooser == 'collection'" class="carousel__item">
+      </div>
+      <div v-else-if="carouselChooser == 'searchAPI'" class="carousel__item">
+        <img class="carouselSearchCard_image" :src="record.thumb" />
+        <h2 class="carouselSearchCard_year">Year: {{ record.year }}</h2>
+        <h3 class="carouselSearchCard_title">{{ record.title }}</h3>
+        <!-- <carousel-search-card :carouselSearchCard="record"></carousel-search-card > -->
+      </div>
+      <div v-else-if="carouselChooser == 'searchLibrary'" class="carousel__item">
+        <img :src="record.images[0].uri" />
+      </div>
+      <div v-else-if="carouselChooser == 'searchCollections'" class="carousel__item">
+        <h2>{{ record.name }}</h2>
+        <img :src="record.records[0].images[0].uri" />
+      </div>
+    </Slide>
+    <template #addons>
       <Pagination />
+      <Navigation />
     </template>
-    </Carousel>
-  </template>
+  </Carousel>
+</template>
 
 
 <script>
@@ -29,27 +41,60 @@ export default defineComponent({
     Slide,
     Navigation,
     Pagination,
+    //CarouselSearchCard
+  },
+  props: {
+    carouselRecords: {
+      type: Object,
+      required: true
+    },
+    carouselChooser: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
-        image: [
-            "https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUEIbxGhXurYC9gDshTflQ0DpnZyNqzWDvTiuUchMApUMdj-f4kPid9aW6-E2qrVshy-A&usqp=CAU",
-            "https://www.lifewire.com/thmb/PiAB30sXKFcKSO_r72hP5-Hwq_E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/BabywithFistmeme2-0c317ccc4d3a44c68098cd08f4ecac74.jpg"
-        ]
+    }
+  },
+  methods: {
+    chosenCarousel() {
+      if (this.carouselChooser == 'library') {
+
+        return true;
+      }
+      return false;
     }
   }
-})
+});
+
 </script>
 
 <style scoped>
-#Carousel{
-    display: flex;
+
+.carouselSearchCard_container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 
+  "image year"
+  "title title";
+}
+.carouselSearchCard_image{
+  grid-area: image;
+}
+.carouselSearchCard_year{
+  grid-area: year;
+}
+.carouselSearchCard_title{
+  grid-area: title;
+}
+
+#Carousel {
+  display: flex;
   align-items: center;
   justify-content: center;
-    width: 1500px;
-    height: 500px;
-
+  width: 1500px;
+  height: 500px;
 }
 
 .carousel__slide {
@@ -65,6 +110,8 @@ export default defineComponent({
   transform-style: preserve-3d;
 }
 
+.carousel__item {}
+
 .carousel__slide--sliding {
   transition: 0.5s;
 }
@@ -74,7 +121,7 @@ export default defineComponent({
   transform: rotateY(-20deg) scale(0.9);
 }
 
-.carousel__slide--active ~ .carousel__slide {
+.carousel__slide--active~.carousel__slide {
   transform: rotateY(20deg) scale(0.94);
 }
 
@@ -92,5 +139,4 @@ export default defineComponent({
   opacity: 1;
   transform: rotateY(0) scale(1.1);
 }
-
 </style>
