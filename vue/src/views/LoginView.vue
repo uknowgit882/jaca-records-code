@@ -91,7 +91,7 @@ label {
 }
 
 .log-in {
-  margin-left: 3%;
+  margin-left: 0%;
   color: white;
 }
 .divClass{

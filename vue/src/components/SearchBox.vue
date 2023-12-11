@@ -137,7 +137,7 @@ export default {
       SearchService.searchDiscogs(this.Search)
         .then((response1) => {
           if (response1.status == 200) {
-            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+            this.$store.commit("ADD_SEARCH_RESULT", response1);
             this.$router.push({ name: "SearchResult" });
           }
         })
