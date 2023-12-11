@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import RegisterSuggestionComp from '../components/RegisterSuggestionComp.vue';
-import CarosuelHomeAComp from '../components/CarosuelHomeAComp.vue';
+import RegisterSuggestionComp from '../../components/RegisterSuggestionComp.vue';
+import CarosuelHomeAComp from '../../components/CarosuelHomeAComp.vue';
 
 export default {
     components: {
