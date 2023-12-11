@@ -14,6 +14,7 @@ import SearchResultView from'@/views/SearchResultView.vue'
 import ProfilePageView from '@/views/Caleb/ProfilePageView.vue'
 import HomeA from '@/views/Caleb/HomeAView.vue'
 import popupViewTest from '@/views/Aseel/popupViewTEST.vue'
+import AggregateDataTestView from '@/views/Aliz/AggregateDataTestView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -119,7 +120,15 @@ const routes = [
     component: popupViewTest,
     meta: {
       requiresAuth: false,
-    } 
+    }
+  },
+   {
+    path: "/data",
+    name: "data",
+    component:AggregateDataTestView,
+    meta: {
+      requiresAuth: false,
+    }
   },
 ];
 
