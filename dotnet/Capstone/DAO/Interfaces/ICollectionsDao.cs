@@ -10,6 +10,7 @@ namespace Capstone.DAO.Interfaces
         public List<Collection> GetPubOrPrivAllCollections(bool isPrivate = false);
         public Collection GetNamedCollection(string username, string name, bool isPremium);
         public Collection GetNamedCollection(string username, string name);
+        public Collection GetCollectionByCollectionId(int collectionId, bool isPremium);
         public Collection GetPubOrPrivCollection(string username, string name, bool isPrivate = false);
         public List<int> GetAllRecordsInCollectionByUsernameAndName(string username, string name, bool isPremium, bool isPrivate = false);
         public int GetCollectionCountByUsername(string username, bool isPremium);

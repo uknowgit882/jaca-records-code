@@ -1,44 +1,63 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="isLoading">
+    <img src="../../img/Logogif.gif" alt="">
+    </div>
+    <div v-else>
     <h1>Home</h1>
-    <p>You must be authenticated to see this</p>
-    <button v-on:click="searchRecord">Test</button>
-    <button v-on:click="logout">Logout</button>
+    <!-- <button v-on:click="logout">Logout</button> -->
+    <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'"></CarouselComponent>
   </div>
 </template>
 
 <script>
 
 import AuthService from '../services/AuthService';
+import LibraryService from '../services/LibraryService';
+import CarouselComponent from '../components/CarouselComponent.vue';
+
 export default {
   data() {
-        return {
-            Search: {
-                General: "",
-                Artist: "queen",
-                Title: "",
-                Genre: "",
-                Year: "",
-                Country: "",
-                Label: ""
+    return {
+      Search: {
+        General: "",
+        Artist: "queen",
+        Title: "",
+        Genre: "",
+        Year: "",
+        Country: "",
+        Label: ""
 
-            },
-        }
-    },
-    methods: {
-        searchRecord() {
-            AuthService.search(this.Search)
-                .then(response => {
-                    this.$store.commit('ADD_SEARCH_RESULT', response);
-                    this.isVisible = true;
-                })
-                .catch(error => {
-
-                })
-        },
-        logout(){
-          this.$store.commit('LOGOUT');
-        }
+      },
+      isLoading: true
     }
+  },
+  components: {
+    CarouselComponent
+  },
+  methods: {
+    searchRecord() {
+      AuthService.search(this.Search)
+        .then(response => {
+          this.$store.commit('ADD_SEARCH_RESULT', response);
+          this.isVisible = true;
+        })
+        .catch(error => {
+
+        })
+    },
+    getLibrary() {
+      LibraryService.GetLibrary()
+        .then(response => {
+          this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
+        })
+    },
+    logout() {
+      this.$store.commit('LOGOUT');
+    }
+  },
+  created() {
+    this.getLibrary();
+    this.isLoading = false;
+  }
 };
 </script>

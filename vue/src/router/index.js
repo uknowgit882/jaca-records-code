@@ -8,13 +8,14 @@ import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import SearchBox from '../components/SearchBox.vue';
 import LibraryView from '../views/LibraryView.vue'
-import CollectionsView from '@/views/CollectionsView.vue'
-import DataView from '@/views/DataView.vue'
-import SearchResultView from'@/views/SearchResultView.vue'
-import ProfilePageView from '@/views/Caleb/ProfilePageView.vue'
-import HomeA from '@/views/Caleb/HomeAView.vue'
-import popupViewTest from '@/views/Aseel/popupViewTEST.vue'
-import AggregateDataTestView from '@/views/Aliz/AggregateDataTestView.vue'
+import CollectionsView from '../views/CollectionsView.vue'
+import DataView from '../views/DataView.vue'
+import SearchResultView from'../views/SearchResultView.vue'
+import ProfilePageView from '../views/Caleb/ProfilePageView.vue'
+import HomeA from '../views/Caleb/HomeAView.vue'
+import popupViewTest from '../views/Aseel/popupViewTEST.vue'
+import AseelView from '../views/Aseel/AseelView.vue'
+import AggregateDataTestView from '../views/Aliz/AggregateDataTestView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -130,6 +131,14 @@ const routes = [
       requiresAuth: false,
     }
   },
+  {
+    path: "/aseel",
+    name: "aseel",
+    component: AseelView,
+    meta: {
+      requiresAuth: false,
+    } 
+  }
 ];
 
 // Create the router

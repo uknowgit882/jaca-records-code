@@ -183,6 +183,39 @@ namespace Capstone.DAO
             return output;
         }
 
+        public Collection GetCollectionByCollectionId(int collectionId, bool isPremium)
+        {
+            Collection output = null;
+
+            string sql = "SELECT collection_id, username, name, is_private, is_premium " +
+                "FROM collections " +
+                "WHERE collection_id = @collectionId " +
+                "AND is_active = 1 AND is_premium = @isPremium;";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        output = MapRowToCollection(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get collection by ID", $"For {collectionId}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+            return output;
+        }
+
         /// <summary>
         /// Gets the specific user's named collection, regardless of privacy or premium status.
         /// For all users. Overloaded method, no need for user role
