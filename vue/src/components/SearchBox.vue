@@ -138,7 +138,7 @@ export default {
         .then((response1) => {
           if (response1.status == 200) {
             this.$store.commit("ADD_SEARCH_RESULT", response1);
-            //this.$router.push({ name: "SearchResult" });
+            this.$router.push({ name: "SearchResult" });
           }
         })
         .catch((error) => {
@@ -147,7 +147,7 @@ export default {
       SearchService.searchLibrary(this.Search)
         .then((response2) => {
           if (response2.status == 200) {
-            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2)
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data)
             //this.$router.push({ name: "SearchResult" });
           }
         })
@@ -157,8 +157,8 @@ export default {
       SearchService.searchCollections(this.Search)
         .then((response3) => {
           if (response3.status == 200) {
-            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3)
-            this.$router.push({ name: "SearchResult" });
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data)
+            //this.$router.push({ name: "SearchResult" });
           }
         })
         .catch((error) => {

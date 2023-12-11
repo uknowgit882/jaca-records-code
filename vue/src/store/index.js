@@ -181,6 +181,12 @@ export function createStore(currentToken, currentUser) {
       DISPLAY_USER_STATS(state, stats) {
         state.StatsUser = stats;
       },
+      // CHANGE_USER_ROLE(state, user){
+      //   state.user = user;
+      // },
+      // DEACTIVATE_USER(state, user){
+      //   state.user = user;
+      // }
 
     },
   });
