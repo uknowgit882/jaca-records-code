@@ -10,12 +10,13 @@
 <script>
 import RecordInLibrary from '@/components/RecordInLibraryComponent.vue';
 import AddToLibraryService from '../services/AddToLibraryService';
+import LibraryService from '../services/LibraryService';
 
 
 export default{
     components: {
         RecordInLibrary,
-        AddToLibraryService
+        // AddToLibraryService
     },
     methods: {
         // DisplayingLibrary() {
@@ -27,6 +28,15 @@ export default{
         //             }
         //         })
         // }
+        getLibrary() {
+            LibraryService.GetLibrary()
+            .then( response => {
+                this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
+            })
+        }
+    },
+    created(){
+        this.getLibrary();
     }
 }
 </script>

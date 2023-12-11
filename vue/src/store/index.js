@@ -6,9 +6,10 @@ export function createStore(currentToken, currentUser) {
     state: {
       token: currentToken || '',
       user: currentUser || {},
+      library: [], // aseel added
       searchResults: [],
-      recordsInDB: [],
-      records: [],
+      recordsInDB: [], // AT: what is this?
+      records: [], // AT: what is this?
       Collections: 
         {
           "name": "Backstreet Boys",  
@@ -95,6 +96,7 @@ export function createStore(currentToken, currentUser) {
         },
         ADD_RECORDS_TO_LIBRARY(state, adding) {
           state.records = adding;
+          state.library = adding;
         },
         SHOW_RECORDS_IN_LIBRARY(state, result) {
           state.records = result;

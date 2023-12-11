@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import RegisterSuggestionComp from '../components/RegisterSuggestionComp.vue';
+import RegisterSuggestionComp from '../../components/RegisterSuggestionComp.vue';
 
 export default {
     components: {
