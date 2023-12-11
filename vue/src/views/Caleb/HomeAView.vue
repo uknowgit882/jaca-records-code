@@ -1,6 +1,12 @@
 <template>
-<carosuel-home-a-comp></carosuel-home-a-comp>
-    <register-suggestion-comp></register-suggestion-comp>
+    <div>
+        <carosuel-home-a-comp></carosuel-home-a-comp>
+
+    </div>
+    <div>
+        <register-suggestion-comp></register-suggestion-comp>
+
+    </div>
 
 </template>
 

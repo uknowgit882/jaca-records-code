@@ -138,7 +138,7 @@ export default {
         .then((response1) => {
           if (response1.status == 200) {
             this.$store.commit("ADD_SEARCH_RESULT", response1);
-            //this.$router.push({ name: "SearchResult" });
+            this.$router.push({ name: "SearchResult" });
           }
         })
         .catch((error) => {
