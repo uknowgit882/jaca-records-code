@@ -41,7 +41,7 @@ namespace Capstone.DAO
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
                         int row = Convert.ToInt32(reader["discogs_id"]);
                         output.Add(row);
