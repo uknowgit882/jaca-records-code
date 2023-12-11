@@ -10,8 +10,8 @@ export function createStore(currentToken, currentUser) {
       searchResults: [],
       searchLibraryResults: [],
       searchCollectionsResults: [],
-      recordsInDB: [],
-      records: [],
+      //recordsInDB: [],
+      //records: [],
       Collections:
       {
         "name": "Backstreet Boys",
