@@ -32,8 +32,10 @@
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <login-view></login-view>
-                                <h2 class="signup-text">&nbsp;&nbsp;Need an account? Sign up. </h2>
-                                <button class="button2 is-warning" id="premiumButton">Register</button>
+                                <h2 class="signup-text">&nbsp;&nbsp;Need an account? Sign up.</h2>
+                                <a class="button2 is-warning" href="/register" id="premiumButton">
+                                    Register
+                                </a>
                                 <!-- <img class="image is-50x50" src="img/logo2.png" style="max-height: none;"/> -->
                             </div>
                         </div>
@@ -59,7 +61,6 @@
                     <a class="navbar-item" href="/data">
                         Data
                     </a>
-
                 </div>
             </div>
 
@@ -86,6 +87,9 @@ export default {
 
 
 <style scoped>
+.dropdown-menu {
+
+}
 
 .dropdown-content {
     background-color: #4D437F;
@@ -100,6 +104,7 @@ export default {
 }
 
 .navbar {
+    display:flex;
     position: fixed;
     top: 0px;
     width: 100%;
@@ -107,8 +112,13 @@ export default {
     background-color: #4D437F;
 }
 
-.search {
+a {
+    padding-top: 7px;
+    align-items: center;
+    
+}
 
+.search {
     width: 200%;
 }
 
