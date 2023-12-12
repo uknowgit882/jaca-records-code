@@ -2,10 +2,7 @@
     <div v-if="showCard" class="popup">
       <div class="popup-inner">
         <h2>My Popup</h2>
-        <p> {{ record.title }}        </p>
-        <p v-for="artist in record.artists" v-bind:key="artist">{{ artist.name }}</p>
-
-        <button @click="showCard = !showCard">Exit</button>
+        <button @click="showCard = !showCard">x</button>
       </div>
     </div>
   </template>
@@ -20,16 +17,7 @@
     },
     props: ['record'],
     methods: {
-        getCollection(){
-            Collections.getInfoForCard()
-            .then((response) => {
-                if(response.status == 200){
-                    this.$store.commit('SHOW_INFO_FROM_COLLECTIONS',response)
-                    this.$router.push({name: "Collections"})
-                }
-            })
-
-        }
+         
     }
   };
   </script>

@@ -1,10 +1,13 @@
 <template>
+    
     <div class="home" v-if="!isLoading">
         <img src="../../img/Logogif.gif" alt="">
     </div>
     <div v-else>
         <div v-for="collection in $store.state.collections" v-bind:key="collection.name">
             <h2>{{ collection.name }}</h2>
+            <button>Change Collection Name</button>
+            <button>Delete</button>
             <div v-if="collection.records.length == 0">
                 <p>You have no records in this collection</p>
             </div>
@@ -29,7 +32,7 @@ export default {
         }
     },
     components: {
-        CarouselComponent
+        CarouselComponent,
     },
     methods: {
 
