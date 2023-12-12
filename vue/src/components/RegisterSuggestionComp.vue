@@ -66,7 +66,7 @@
     display: flex;
     width: 950px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(#01B48E, #c5e4dd);
+    background-image: linear-gradient(#07B6A0, #c5e4dd);
     border-radius: 10px;
     justify-content: center;
     align-items: start;
@@ -88,7 +88,7 @@
     display: flex;
     width: 500px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(#D1D301, #f5f698);
+    background-image: linear-gradient(#EEE810, #f5f6c9);
     border-radius: 10px;
     justify-content: left;
     transition: transform 0.3s ease;
@@ -106,7 +106,7 @@
     display: flex;
     width: 500px;
     border: 5px solid rgb(255, 255, 255);
-    background-image: linear-gradient(#1CA2C0, rgb(117, 192, 219));
+    background-image: linear-gradient(#08A2D9, rgb(176, 221, 237));
     border-radius: 10px;
     justify-content: left;
     text-align: left;

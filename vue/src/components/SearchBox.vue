@@ -1,8 +1,6 @@
 <template>
   <div class="SearchBar" @keyup.enter="sendSearch()">
-    <div
-      class="level-item is-flex is-flex-direction-column is-justify-content-end"
-    >
+    <div class="level-item is-flex is-flex-direction-column is-justify-content-end">
       <div class="field has-addons">
         <p class="control">
           <input
@@ -13,7 +11,7 @@
           />
         </p>
         <p class="control">
-          <button class="button" v-on:click="sendSearch()">Search</button>
+          <button class="button" v-on:click="sendSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
         </p>
         <p class="control-adv">
           <button class="button" v-on:click="showForm = !showForm">
@@ -197,6 +195,12 @@ export default {
 }
 
 .dropdown-content {
+  width: 38%;
+  padding-bottom: 50px;
+  scale: 97%;
+  position: relative;
+  left: 19%;
+  margin-top: -3.4%;
   background-color: #4d437f;
   margin-top: 7px;
   padding-top: 1px;
