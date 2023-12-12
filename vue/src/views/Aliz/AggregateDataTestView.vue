@@ -1,18 +1,18 @@
 <template>
  <!-- <aggregate-data-left-components ></aggregate-data-left-components > -->
- <aggregate-data-table-component/>
+ <aggregate-data-table-components/>
 </template>
 
 <script>
 
 import StatisticsService from '@/services/StatisticsService.js'
 // import AggregateDataLeftComponents from '@/components/AggregateDataLeftComponents.vue'
-import AggregateDataTableComponent from '../../components/AggregateDataTableComponent.vue'
+import AggregateDataTableComponents from '../../components/AggregateDataTableComponents.vue'
 
 export default {
     components: {
         // AggregateDataLeftComponents,
-        AggregateDataTableComponent
+        AggregateDataTableComponents
     },
     methods: {
         getAggregateForEveryone() {

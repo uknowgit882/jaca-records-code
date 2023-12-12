@@ -16,6 +16,7 @@ import HomeA from '../views/Caleb/HomeAView.vue'
 import popupViewTest from '../views/Aseel/popupViewTEST.vue'
 import AseelView from '../views/Aseel/AseelView.vue'
 import AggregateDataTestView from '../views/Aliz/AggregateDataTestView.vue'
+import JacaPremeView from '../views/Aliz/JacaPremeView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -138,7 +139,15 @@ const routes = [
     meta: {
       requiresAuth: false,
     } 
-  }
+  },
+  {
+    path: "/jacapreme",
+    name: "jacapreme",
+    component: JacaPremeView,
+    meta: {
+      requiresAuth: false,
+    } 
+  },
 ];
 
 // Create the router
