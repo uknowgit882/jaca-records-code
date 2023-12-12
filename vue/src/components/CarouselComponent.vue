@@ -5,6 +5,10 @@
         <img :src="record.record.images[0].uri" />
       </div>
       <div v-else-if="carouselChooser == 'collection'" class="carousel__item">
+        <img :src="record.images[0].uri"  style="height: 150px; width: 150px"/>
+      </div>
+      <div v-else-if="carouselChooser == 'publicCollection'" class="carousel__item">
+        <img :src="record.records[0].images[0].uri"  style="height: 150px; width: 150px"/>
       </div>
       <div v-else-if="carouselChooser == 'searchAPI'" class="carousel__item">
         <h3 class="carouselSearchCard_title">{{ record.title }}</h3>
@@ -19,7 +23,9 @@
       </div>
       <div v-else-if="carouselChooser == 'searchCollections'" class="carousel__item">
         <h3>{{ record.name }}</h3>
-        <img :src="record.records[0].images[0].uri"  style="height: 150px; width: 150px"/>
+        <div class="stackOne">
+          <img :src="record.records[0].images[0].uri"  style="height: 150px; width: 150px"/>
+        </div>
         <p></p>
       </div>
     </Slide>
@@ -159,5 +165,57 @@ p{
 .carousel__slide--active {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
+}
+.stackOne {
+    border: 6px solid #B452A8;
+    float: left;
+    height: 150px; width: 150px;
+    position: relative;
+    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    -moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.stackOne:before {
+  content: "";
+    height: 150px; width: 150px;
+    background: #EA5143;
+    border: 6px solid #F5EF17;
+     
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    left: -10px;
+     
+    -webkit-box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+    -moz-box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+    box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+     
+    -webkit-transform: rotate(-5deg);
+    -moz-transform: rotate(-5deg);
+    -o-transform: rotate(-5deg);
+    -ms-transform: rotate(-5deg);
+    transform: rotate(-5deg);
+}
+
+.stackOne:after {
+    content: "";
+    height: 150px; width: 150px;
+    background: #05B49C;
+    border: 6px solid #069FD6;
+    position: absolute;
+    z-index: -1;
+    top: 5px;
+    left: 0px;
+    
+    -webkit-box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+    -moz-box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+    box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.76);
+
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    -o-transform: rotate(4deg);
+    -ms-transform: rotate(4deg);
+    transform: rotate(4deg);
 }
 </style>
