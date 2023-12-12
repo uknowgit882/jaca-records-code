@@ -106,6 +106,71 @@ namespace Capstone.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all the records for a user. Intended for a user to see all their collections in one place, regardless of public/private
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("public")]
+        public ActionResult<List<OutboundCollectionWithFullRecords>> GetAllPublicCollections()
+        {
+
+            try
+            {
+
+                List<OutboundCollectionWithFullRecords> output = new List<OutboundCollectionWithFullRecords>();
+
+                List<Collection> collections = new List<Collection>();
+
+                // get the collections by user role
+                // free should only get <25 back
+                collections = _collectionsDao.GetPubOrPrivAllCollections(false);
+
+                if (collections == null)
+                {
+                    // short circuit and stop here if nothign was found
+                    return NotFound();
+                }
+
+                // otherwise, get all the records for these collections
+                foreach (Collection collection in collections)
+                {
+                    // create a new OutboundCollection object for this collection
+                    OutboundCollectionWithFullRecords collectionWithRecords = new OutboundCollectionWithFullRecords();
+
+                    collectionWithRecords.Name = collection.Name;
+                    collectionWithRecords.Is_Private = collection.IsPrivate;
+
+                    // have the collection id. Need a list of records for them
+                    List<int> recordsInCollection = _recordsCollectionsDao.GetAllRecordsInCollectionByCollectionId(collection.Collection_Id);
+
+                    // then for each of those records, build the full record and attach it to the outbound object
+                    foreach (int record in recordsInCollection)
+                    {
+                        collectionWithRecords.Records.Add(BuildFullRecord(record));
+                    }
+
+                    // then when you get here, add that collectionWithRecords to the output
+                    output.Add(collectionWithRecords);
+                }
+
+                if (output.Count != 0)
+                {
+                    return Ok(output);
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to get all public collections", $"", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPost]
         public ActionResult<Collection> CreateCollection(IncomingCollectionRequest newCollection)

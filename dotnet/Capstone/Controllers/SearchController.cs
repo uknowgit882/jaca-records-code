@@ -94,7 +94,8 @@ namespace Capstone.Controllers
 
                 if (recordIds.Count == 0)
                 {
-                    return NotFound();
+                    RecordClient dummyOut = new RecordClient();
+                    return Ok(dummyOut);
                 }
 
                 foreach (int discogId in recordIds)
@@ -160,7 +161,8 @@ namespace Capstone.Controllers
 
                 if (recordIds.Count == 0)
                 {
-                    return NotFound();
+                    List<OutboundCollectionWithFullRecords> dummyOut = new List<OutboundCollectionWithFullRecords>();
+                    return Ok(dummyOut);
                 }
 
                 if (recordIds.Count != 0)

@@ -1,42 +1,40 @@
 <template>
-    
-    <div class = "Library-container">
-        <record-in-library v-for="record in $store.state.records.data" v-bind:record="record" v-bind:key="record.id"/>
-    
+    <div class="home" v-if="!isLoading">
+      <img src="../../img/Logogif.gif" alt="">
     </div>
-    
-</template>
-
-<script>
-import RecordInLibrary from '@/components/RecordInLibraryComponent.vue'; 
-import LibraryService from '../services/LibraryService';
-
-
-export default{
+    <div v-else>
+      <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'" :autoplay="true">
+      </CarouselComponent>
+    </div>
+  </template>
+  
+  <script>
+  
+  import LibraryService from '../services/LibraryService';
+  import CarouselComponent from '../components/CarouselComponent.vue';
+  
+  export default {
+    data() {
+      return {
+        isLoading: false
+      }
+    },
     components: {
-        RecordInLibrary, 
+      CarouselComponent
+    }, 
+    methods: {
+      getLibrary() {
+        LibraryService.GetLibrary()
+          .then(response => {
+            this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
+            this.isLoading = true;
+            
+          })
+      } 
     },
-    methods: { 
-        getLibrary() {
-            LibraryService.GetLibrary()
-            .then( response => {
-                this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
-            })
-        }
-    },
-    created(){
-        this.getLibrary();
+    created() {
+      this.getLibrary();
     }
-}
-</script>
-
-<style scoped>
-.Library-container{
-    display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  /* background-color: black; */
-
-}
-
-</style>
+  };
+  </script>
+  
