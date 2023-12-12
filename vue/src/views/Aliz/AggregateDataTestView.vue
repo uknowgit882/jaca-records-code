@@ -1,5 +1,5 @@
 <template>
- <aggregate-data-left-components></aggregate-data-left-components>
+ <aggregate-data-left-components ></aggregate-data-left-components >
  <aggregate-data-right-components v-if="$store.state.token != ''"/>
 </template>
 
@@ -40,6 +40,7 @@ export default {
     
 }
 </script>
+
 
 <style scoped>
 </style>
