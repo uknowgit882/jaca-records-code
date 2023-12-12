@@ -8,7 +8,7 @@
           <input
             class="input"
             type="text"
-            placeholder="Find a Record, Artist etc."
+            placeholder="Find a Record, Artist, etc."
             v-model="Search.General"
           />
         </p>
@@ -33,7 +33,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="Nirvana"
+                    placeholder="e.g. Nirvana"
                     v-model="Search.Artist"
                   />
                 </div>
@@ -43,7 +43,7 @@
                     <input
                       class="input"
                       type="text"
-                      placeholder="Nirvana - nevermind"
+                      placeholder="e.g. Nevermind"
                       v-model="Search.Title"
                     />
                   </div>
@@ -55,7 +55,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="Rock"
+                    placeholder="e.g. Rock"
                     v-model="Search.Genre"
                   />
                 </div>
@@ -66,7 +66,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="1991"
+                    placeholder="e.g. 1991"
                     v-model="Search.Year"
                   />
                 </div>
@@ -77,7 +77,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="Canada"
+                    placeholder="e.g. Canada"
                     v-model="Search.Country"
                   />
                 </div>
@@ -88,7 +88,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="Dgc"
+                    placeholder="e.g. DGC"
                     v-model="Search.Label"
                   />
                 </div>
@@ -99,7 +99,7 @@
                   <input
                     class="input"
                     type="text"
-                    placeholder="123aAs3445"
+                    placeholder="e.g. 7 20642-44251 7"
                     v-model="Search.Barcode"
                   />
                 </div>
@@ -147,7 +147,7 @@ export default {
       SearchService.searchLibrary(this.Search)
         .then((response2) => {
           if (response2.status == 200) {
-            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data)
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
             //this.$router.push({ name: "SearchResult" });
           }
         })
@@ -157,7 +157,7 @@ export default {
       SearchService.searchCollections(this.Search)
         .then((response3) => {
           if (response3.status == 200) {
-            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data)
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
             //this.$router.push({ name: "SearchResult" });
           }
         })
@@ -194,5 +194,26 @@ export default {
 
 .button {
   margin-top: 11px;
+}
+
+.dropdown-content {
+  background-color: #4d437f;
+  margin-top: 7px;
+  padding-top: 1px;
+  padding-bottom: 22px;
+}
+
+.label {
+  color: white;
+  text-align: left;
+}
+
+.input {
+  background-color: #000000;
+  color: white;
+}
+
+::placeholder{
+  color: gray;
 }
 </style>

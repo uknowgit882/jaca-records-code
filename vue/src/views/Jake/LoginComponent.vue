@@ -81,7 +81,6 @@ label {
 .input-box {
   background-color: #000000;
   color: white;
-  
 }
 
 .img {

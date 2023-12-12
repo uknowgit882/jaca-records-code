@@ -11,7 +11,7 @@
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                        <side-menu-comp />
+                        <side-menu-component />
                 </div>
                 <div class="navbar-start">
                     <router-link class="navbar-item" :to="{ name: 'home' }">
@@ -39,20 +39,13 @@
 
 <script>
 import SearchBox from '@/components/SearchBox.vue'
-// import LoginComponent from '@/views/Jake/LoginComponent.vue';
-import SideMenuComp from './SideMenuComp.vue';
+import SideMenuComponent from './SideMenuComponent.vue';
 
 export default {
     components: {
         SearchBox,
-        // LoginComponent,
-        SideMenuComp
+        SideMenuComponent
     },
-    // data() {
-    //     return {
-    //         dropdownActive: false
-    //     }
-    // },
     methods: {
         RegisterPagePush(){
             this.$router.push({ name: "register" });
@@ -65,7 +58,7 @@ export default {
 <style scoped>
 
 .navbar {
-    /* position: fixed; */
+    position: fixed;
     top: 0px;
     width: 100%;
     padding-right: 1%;
