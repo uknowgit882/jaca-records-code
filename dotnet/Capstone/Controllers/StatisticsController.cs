@@ -52,8 +52,11 @@ namespace Capstone.Controllers
                 output.NumRecordsByFormat = _formatsDao.GetFormatAndRecordCountByUsername(username, isPremium);
                 output.NumRecordsByGenre = _genresDao.GetGenreAndRecordCountByUsername(username, isPremium);
                 output.NumRecordsByLabel = _labelsDao.GetLabelAndRecordCountByUsername(username, isPremium);
+                output.TotalRecords = _recordBuilderDao.GetRecordCountByUsername(username, isPremium);
+                output.NumRecordsByYear = _recordBuilderDao.GetYearAndRecordCountByUsername(username, isPremium);
+                output.NumRecordsByCountry = _recordBuilderDao.GetCountryAndRecordCountByUsername(username, isPremium);
 
-                    return Ok(output);
+                return Ok(output);
 
             }
             catch (Exception ex)

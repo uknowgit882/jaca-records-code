@@ -10,7 +10,8 @@
                     <CarouselComponent v-bind:carouselRecords="$store.state.searchResults.results"
                         v-bind:carouselChooser="'searchAPI'" :autoplay="false"></CarouselComponent>
                 </div>
-                <div>
+                <div v-if="libraryCarouselToggle">
+                    <!-- remove the v-if you want this to display -->
                     <div class="librarySearchResults">
                         <h2>Library Results:</h2>
                         <p>Records you own</p>
@@ -18,12 +19,14 @@
                             v-bind:carouselChooser="'searchLibrary'" :autoplay="false"></CarouselComponent>
                     </div>
                 </div>
-                <!-- <div v-else>
+                <div v-else>
+                    <!-- remove the v-else if you want this to display -->
                     <br>
                     <p>You don't have any records in your library</p>
                     <br>
-                </div> -->
-                <div >
+                </div>
+                <div v-if="collectionCarouselToggle">
+                    <!-- remove the v-if you want this to display -->
                     <div class="collectionsSearchResults">
                         <h2>Collection Results:</h2>
                         <p>Collections where you have saved this record</p>
@@ -31,11 +34,12 @@
                             v-bind:carouselChooser="'searchCollections'" :autoplay="false"></CarouselComponent>
                     </div>
                 </div>
-                <!-- <div v-else>
+                <div v-else>
+                    <!-- remove the v-else if you want this to display -->
                     <br>
                     <p>You don't have any collections with this record in it</p>
                     <br>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -65,6 +69,8 @@ export default {
 
             },
             hasResults: false,
+            collectionCarouselToggle: false,
+            libraryCarouselToggle: false,
             searchResults: []
         }
     },
@@ -98,17 +104,21 @@ export default {
             },
             hasLibraryResults() {
                 if (this.$store.state.searchLibraryResults > 0) {
+                    this.libraryCarouselToggle = true;
                     return true;
                 }
                 else {
+                    this.libraryCarouselToggle = false;
                     return false;
                 }
             },
             hasCollectionResults() {
                 if (this.$store.state.searchCollectionsResults > 0) {
+                    this.collectionCarouselToggle = true;
                     return true;
                 }
                 else {
+                    this.collectionCarouselToggle = false;
                     return false;
                 }
             },
