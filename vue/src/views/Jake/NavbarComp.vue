@@ -1,11 +1,6 @@
 <template>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <!-- <p class="profile">
-                <button class="button" href="/Profile">
-                    <strong><i class="fa-solid fa-circle-user" ></i></strong>
-                </button>
-            </p> -->
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -16,33 +11,7 @@
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                    <!-- <div class="buttons">
-                        <a class="button is-primary" href="/register">
-                            <strong>Sign up</strong>
-                        </a> -->
                         <side-menu-comp />
-                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive }">
-                        <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
-                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>Log in</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                            </button>
-                        </div>
-                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                            <div class="dropdown-content">
-                                <login-component></login-component>
-                                <h2 class="signup-text">&nbsp;&nbsp;Need an account? Sign up. </h2>
-                                <button class="button2 is-warning" id="premiumButton" @click="RegisterPagePush()">Register</button>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- <a class="button is-light" href="/login">
-                            Log in
-                        </a> -->
-                    <!-- </div> -->
                 </div>
                 <div class="navbar-start">
                     <router-link class="navbar-item" :to="{ name: 'home' }">
@@ -63,19 +32,19 @@
                 </div>
             </div>
 
-            <SearchBoxVue v-if="this.$store.state.token != ''" />
+            <SearchBox v-if="this.$store.state.token != ''" />
         </div>
     </nav>
 </template>
 
 <script>
-import SearchBoxVue from '@/components/SearchBox.vue'
+import SearchBox from '@/components/SearchBox.vue'
 // import LoginComponent from '@/views/Jake/LoginComponent.vue';
 import SideMenuComp from './SideMenuComp.vue';
 
 export default {
     components: {
-        SearchBoxVue,
+        SearchBox,
         // LoginComponent,
         SideMenuComp
     },

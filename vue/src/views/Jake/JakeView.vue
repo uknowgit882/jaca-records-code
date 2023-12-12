@@ -1,5 +1,4 @@
 <template>
-    <!-- <login-component /> -->
     <register-component />
     <navbar-comp />
 </template>
@@ -11,7 +10,6 @@ import NavbarComp from "./NavbarComp.vue";
 
 export default{
     components: {
-        // LoginComponent,
         RegisterComponent,
         NavbarComp
     }
