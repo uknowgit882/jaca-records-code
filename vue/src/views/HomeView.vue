@@ -14,6 +14,7 @@
 
 import AuthService from '../services/AuthService';
 import CollectionsService from '../services/CollectionsService';
+import AnonymousService from '../services/AnonymousService'
 import CarouselComponent from '../components/CarouselComponent.vue';
 
 export default {
@@ -38,7 +39,7 @@ export default {
       this.$store.commit('LOGOUT');
     },
     getPublicCollections() {
-        CollectionsService.GetAllPublicCollections()
+        AnonymousService.getPublicCollections()
           .then(response => {
             this.$store.commit('ADD_PUBLIC_COLLECTIONS_TO_LIBRARY', response.data)
             this.isLoading = true;
