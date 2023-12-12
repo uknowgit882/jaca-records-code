@@ -1,12 +1,22 @@
 <template>
+  <button @click="getCarouselObject">Print to log</button>
+  <button @click="displayCard2">Print card to log</button>
   <div v-if="showCard" class="popup">
         <div class="popup-inner">
-          <h3>MyCardPopup</h3>
-          <button @click="showCard = !showCard">x</button>
+          <div class="popup-inner-inner">
+            <button @click="showCard = !showCard">x</button>
+          <h3 >MyCardPopup</h3>
+          <ActiveCardComponent class="popup-inner-inner" v-bind:activeCard="this.activeCard" :cardType="carouselChooser"></ActiveCardComponent>
+          <!-- <p>Current Slide: {{this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value]}}</p> -->
+          <p >Current Slide: {{this.$props.carouselRecords[0].id}}</p>
+          <p >Current Slide: {{this.$refs.myCarousel.data.currentSlide}}</p>
+          <p >Active Record: {{ this.activeCard }}</p>
+        </div>
         </div>
       </div>
-  <Carousel :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500" @click="showCard = !showCard">
-    <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record">
+  <!-- <Carousel :ref="carousel => {myCarousel}" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500" > -->
+  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500" >
+    <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record" @click="showCard = !showCard">
       <div v-if="carouselChooser == 'library'" class="carousel__item">
         <img :src="record.record.images[0].uri" />
       </div>
@@ -46,9 +56,12 @@
 <script>
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
-import PopUpComponent from './PopUpComponent.vue';
+import { ref, onMounted } from 'vue'
+import ActiveCardComponent from './ActiveCardComponent.vue';
 
 import 'vue3-carousel/dist/carousel.css'
+
+const myCarousel = ref(null); 
 
 export default defineComponent({
   name: 'Autoplay',
@@ -57,6 +70,7 @@ export default defineComponent({
     Slide,
     Navigation,
     Pagination,
+    ActiveCardComponent
     //PopUpComponent
   },
   props: {
@@ -75,7 +89,20 @@ export default defineComponent({
   },
   data() {
     return {
-      showCard: false
+      showCard: false,
+      myCarousel: []
+    }
+  },
+  computed:{
+    displayCard(){
+      let cardNumber = this.$refs.myCarousel.data.value;
+      let records = this.$props.carouselRecords;
+      let cardToDisplay = records[cardNumber];
+      console.log(cardToDisplay);
+      return cardToDisplay;
+    },
+    activeCard(){
+      return this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value];
     }
   },
   methods: {
@@ -85,6 +112,17 @@ export default defineComponent({
         return true;
       }
       return false;
+    },
+    getCarouselObject(){
+      console.log(this.$refs.myCarousel)
+      console.log(this.$props.carouselRecords)
+    },
+    displayCard2(){
+      let cardNumber = this.$refs.myCarousel.data.currentSlide.value;
+      let records = this.$props.carouselRecords;
+      let cardToDisplay = records[cardNumber];
+      console.log(cardToDisplay);
+      return cardToDisplay;
     }
   }
 });
@@ -252,13 +290,27 @@ p {
     justify-content: center;
   }
   
-  .popup-inner {
+  .popup-inner scoped {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: black;
-    opacity: 0.50;
-    padding: 100px;
+    opacity: 0.75;
+    padding: 10px;
     text-align: center;
     height: 100%;
     width: 100%; 
+  }
+  
+  .popup-inner-inner {
+    background: white;
+    opacity: 200;
+    z-index: 2;
+    padding: 10px;
+    text-align: center;
+    height: 500px;
+    width: 800px; 
   }
   
   .popup-inner button {
