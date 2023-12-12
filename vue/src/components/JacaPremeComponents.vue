@@ -10,12 +10,37 @@
     <div class="popup-inner">
       <h2>You are about to reactivate user : {{ User.username }} </h2>
       <button class="button-reactivate" @click="reactivateUser()">Reactivate</button>
-      <button class="ExitButton">Exit</button>
+      <button class="ExitButton" @click="openup">Exit</button>
     </div>
   </div>
-  <button class="button-upgrade" @click="upgradeUser()">Upgrade</button>
-  <button class="button-downgrade" @click="downgradeUser()">Downgrade</button>
+
+  <button @click="openup2">Upgrade</button>
+  <div v-if="showPopup2" class="popup">
+    <div class="popup-inner">
+    </div>
+  </div>
+  <div v-if="showPopup2" class="popup">
+    <div class="popup-inner">
+      <h2>You are about to upgrade user : {{ User.username }} </h2>
+      <button class="button-upgrade" @click="upgradeUser()">Upgrade</button>
+      <button class="ExitButton" @click="openup2">Exit</button>
+    </div>
+  </div>
+
+  <button @click="openup3">Downgrade</button>
+  <div v-if="showPopup3" class="popup">
+    <div class="popup-inner">
+    </div>
+  </div>
+  <div v-if="showPopup3" class="popup">
+    <div class="popup-inner">
+      <h2>You are about to downgrade user : {{ User.username }} </h2>
+      <button class="button-downgrade" @click="downgradeUser()">Downgrade</button>
+      <button class="ExitButton" @click="openup3">Exit</button>
+    </div>
+  </div>
 </template>
+
 <script>
 import JacapremeService from '@/services/JacapremeService.js'
 import PopUpComponent from '@/components/PopUpComponent.vue';
@@ -29,12 +54,20 @@ export default {
       User: {
         username: "",
       },
-      showPopup: false
+      showPopup: false,
+      showPopup2: false,
+      showPopup3: false,
     }
   },
   methods: {
     openup(){
       this.showPopup = !this.showPopup
+    },
+    openup2(){
+      this.showPopup2 = !this.showPopup2
+    },
+    openup3(){
+      this.showPopup3 = !this.showPopup3
     },
     reactivateUser() {
       JacapremeService.reactivateUser(this.User.username)
@@ -58,7 +91,7 @@ export default {
       JacapremeService.downgradeUserFromAdmin(this.User.username)
         .then(response => {
           if (response.status == 200) {
-            console.log(`${this.User.username} was upgraded.`)
+            console.log(`${this.User.username} was downgraded.`)
           }
         })
     },
