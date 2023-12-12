@@ -28,7 +28,7 @@ namespace Capstone.Controllers
         {
         }
         [HttpGet("collections")]
-        public ActionResult<List<OutboundCollectionWithFullRecords>> GetPublicCollections(string username)
+        public ActionResult<List<OutboundCollectionWithFullRecords>> GetPublicCollections()
         { 
              
             try

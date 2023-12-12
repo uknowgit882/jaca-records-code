@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default {
-    reactiveUser(username){
+    reactivateUser(username){
         return axios.put(`Jacapreme/reactivate/${username}`);
     },
     upgradeUserToAdmin(username){
