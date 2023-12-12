@@ -29,6 +29,14 @@
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
       </div>
+      <div class="form-input-group">
+        <label for="userRole">Account Type</label>
+        <select v-model="user.role">
+          <option disabled value="">Please select one</option>
+          <option>Free</option>
+          <option>Premium</option>
+        </select>
+      </div>
       <button type="submit">Create Account</button>
       <!-- <p><router-link v-bind:to="{ name: 'login' }">Already have an account? Log in.</router-link></p> -->
     </form>
@@ -48,7 +56,7 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: '',
       },
       registrationErrors: false,
       registrationErrorMsg: 'There were problems registering this user.',
