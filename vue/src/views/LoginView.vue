@@ -148,7 +148,7 @@ h2{
 .button:hover:before {
  top: -30px;
  left: -30px;
- background-color: #D1D301;
+ background-color: #EEE810;
 }
 
 .button:active:before {

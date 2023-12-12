@@ -92,7 +92,7 @@ export default {
 }
 
 .dropdown-content {
-    background-color: #4D437F;
+    background-color: black;
     margin-top: 7px;
     padding-top: 1px;
     padding-bottom: 22px;
@@ -108,14 +108,13 @@ export default {
     position: fixed;
     top: 0px;
     width: 100%;
-    padding-right: 1%;
-    background-color: #4D437F;
+    padding-right: 0.7%;
+    background-color: #B856AB;
 }
 
 a {
     padding-top: 7px;
     align-items: center;
-    
 }
 
 .search {
@@ -180,11 +179,11 @@ h2 {
 .button2:hover:before {
     top: -30px;
     left: -30px;
-    background-color: #D1D301;
+    background-color: #EEE810;
 }
 
 .button2:active:before {
-    background: #4D437F;
+    background: #B856AB;
     transition: background 0s;
 }
 </style>
