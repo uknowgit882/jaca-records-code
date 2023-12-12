@@ -49,7 +49,7 @@
             <tr>
                 <td>Total Users</td>
                 <td>{{ this.$store.state.StatsAggregate.totalUsers }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalUsers }}</td>
+                <td  v-if="$store.state.token != ''">1</td>
             </tr>
             <tr>
                 <td>Total Records</td>
