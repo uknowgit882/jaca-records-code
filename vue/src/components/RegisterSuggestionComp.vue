@@ -8,7 +8,7 @@
                         <h2><strong> <i class="fa-solid fa-bolt"></i> ABOUT JACA</strong>
                         </h2>
                         <h4>
-                            <p>blablaJa a</p>
+                            <p><i class="fa-solid fa-info"></i>&nbsp;&nbsp;blablaJaca</p>
                         </h4>
                     </div>
                 </div>
@@ -61,7 +61,6 @@
     height: 45%;
     padding: 20px;
 }
-
 .box-info {
     display: flex;
     width: 950px;

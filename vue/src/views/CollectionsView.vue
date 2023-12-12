@@ -62,6 +62,5 @@ export default {
        font-weight: bolder;
        color: white;
        text-align: left;
-       padding-left: 20px;
    }
 </style>
