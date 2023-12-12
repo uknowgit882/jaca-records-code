@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="AggData">
         <div class="AggDataLeftAggregate">
             <h2> Total Artists: {{ this.$store.state.StatsAggregate.totalArtists }}</h2>
@@ -13,6 +13,9 @@
             <h2> Total Records: {{ this.$store.state.StatsAggregate.totalRecords }}</h2>
             <h2 v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist" :key="artist">
                 Number of Records By Artist ({{ artist }}): {{ numRecords }}
+            </h2>
+            <h2 v-for="(format, numRecords) in $store.state.StatsAggregate.numRecordsByFormat" :key="format">
+                Number of Records By Format ({{ format }}): {{ numRecords }}
             </h2>
             <h2 v-for="(genre, numRecords) in $store.state.StatsAggregate.numRecordsByGenre" :key="genre">
                 Number of Records By Genre ({{ genre }}): {{ numRecords }}
@@ -52,4 +55,4 @@ h2 {
     width: 50vw;
     background: red;
 }
-</style>
+</style> -->

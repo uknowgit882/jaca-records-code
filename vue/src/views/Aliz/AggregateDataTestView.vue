@@ -1,18 +1,18 @@
 <template>
- <aggregate-data-left-components ></aggregate-data-left-components >
- <aggregate-data-right-components v-if="$store.state.token != ''"/>
+ <!-- <aggregate-data-left-components ></aggregate-data-left-components > -->
+ <aggregate-data-table-component/>
 </template>
 
 <script>
 
 import StatisticsService from '@/services/StatisticsService.js'
-import AggregateDataLeftComponents from '@/components/AggregateDataLeftComponents.vue'
-import AggregateDataRightComponents from '../../components/AggregateDataRightComponents.vue'
+// import AggregateDataLeftComponents from '@/components/AggregateDataLeftComponents.vue'
+import AggregateDataTableComponent from '../../components/AggregateDataTableComponent.vue'
 
 export default {
     components: {
-        AggregateDataLeftComponents,
-        AggregateDataRightComponents
+        // AggregateDataLeftComponents,
+        AggregateDataTableComponent
     },
     methods: {
         getAggregateForEveryone() {
