@@ -1,11 +1,5 @@
 <template>
-    <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'"></CarouselComponent>
-
-    <div class="carouselSearchCard_container">
-        <p class="carouselSearchCard_image">Img</p>
-        <p class="carouselSearchCard_year">Year</p>
-        <p class="carouselSearchCard_title">Title and Artist</p>
-    </div>
+ 
 </template>
 
 <script>

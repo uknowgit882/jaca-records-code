@@ -1,5 +1,5 @@
 <template>
-  <Carousel :itemsToShow="3.95" :autoplay="3000" :wrapAround="true" :transition="500">
+  <Carousel :itemsToShow="3.95" :autoplay="autoplay? 3000 : false" :wrapAround="true" :transition="500">
     <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record">
       <div v-if="carouselChooser == 'library'" class="carousel__item">
         <img :src="record.record.images[0].uri" />
@@ -7,17 +7,20 @@
       <div v-else-if="carouselChooser == 'collection'" class="carousel__item">
       </div>
       <div v-else-if="carouselChooser == 'searchAPI'" class="carousel__item">
-        <img class="carouselSearchCard_image" :src="record.thumb" />
-        <h2 class="carouselSearchCard_year">Year: {{ record.year }}</h2>
         <h3 class="carouselSearchCard_title">{{ record.title }}</h3>
+        <p class="carouselSearchCard_year">{{ record.year }}</p>
+        <img class="carouselSearchCard_image" :src="record.thumb" style="height: 150px; width: 150px"/>
         <!-- <carousel-search-card :carouselSearchCard="record"></carousel-search-card > -->
       </div>
       <div v-else-if="carouselChooser == 'searchLibrary'" class="carousel__item">
-        <img :src="record.images[0].uri" />
+        <p></p>
+        <img :src="record.images[0].uri" style="height: 150px; width: 150px"/>
+        <p></p>
       </div>
       <div v-else-if="carouselChooser == 'searchCollections'" class="carousel__item">
-        <h2>{{ record.name }}</h2>
-        <img :src="record.records[0].images[0].uri" />
+        <h3>{{ record.name }}</h3>
+        <img :src="record.records[0].images[0].uri"  style="height: 150px; width: 150px"/>
+        <p></p>
       </div>
     </Slide>
     <template #addons>
@@ -50,6 +53,10 @@ export default defineComponent({
     },
     carouselChooser: {
       type: String,
+      required: true
+    },
+    autoplay: {
+      type: Boolean,
       required: true
     }
   },
@@ -88,6 +95,12 @@ export default defineComponent({
 .carouselSearchCard_title{
   grid-area: title;
 }
+h3{
+  color: white;
+}
+p{
+  color: white;
+}
 
 #Carousel {
   display: flex;
@@ -96,7 +109,15 @@ export default defineComponent({
   width: 1500px;
   height: 500px;
 }
-
+.carousel__pagination{
+  color: white
+}
+.carousel__pagination-button{
+  color: white
+}
+.carousel__pagination-button--active{
+  color: white
+}
 .carousel__slide {
   display: flex;
   padding: 20px;
@@ -126,12 +147,12 @@ export default defineComponent({
 }
 
 .carousel__slide--prev {
-  opacity: 1;
+  opacity: 0.5;
   transform: rotateY(-18deg) scale(0.93);
 }
 
 .carousel__slide--next {
-  opacity: 1;
+  opacity: 0.5;
   transform: rotateY(10deg) scale(.95);
 }
 

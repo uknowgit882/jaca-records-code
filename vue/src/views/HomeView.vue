@@ -1,11 +1,12 @@
 <template>
   <div class="home" v-if="isLoading">
     <img src="../../img/Logogif.gif" alt="">
-    </div>
-    <div v-else>
+  </div>
+  <div v-else>
     <h1>Home</h1>
     <!-- <button v-on:click="logout">Logout</button> -->
-    <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'"></CarouselComponent>
+    <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'" :autoplay="true">
+    </CarouselComponent>
   </div>
 </template>
 
@@ -49,6 +50,7 @@ export default {
       LibraryService.GetLibrary()
         .then(response => {
           this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
+          this.isLoading = false;
         })
     },
     logout() {
@@ -57,7 +59,6 @@ export default {
   },
   created() {
     this.getLibrary();
-    this.isLoading = false;
   }
 };
 </script>
