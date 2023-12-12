@@ -3,7 +3,12 @@
     <div class="level-item is-flex is-flex-direction-column is-justify-content-end">
       <div class="field has-addons">
         <p class="control">
-          <input class="input" type="text" placeholder="Find a Record, Artist etc." v-model="Search.General" />
+          <input
+            class="input"
+            type="text"
+            placeholder="Find a Record, Artist, etc."
+            v-model="Search.General"
+          />
         </p>
         <p class="control">
           <button class="button" v-on:click="sendSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -23,43 +28,78 @@
               <div class="field">
                 <label class="label">Artist</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Nirvana" v-model="Search.Artist" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. Nirvana"
+                    v-model="Search.Artist"
+                  />
                 </div>
                 <div class="field">
                   <label class="label">Title</label>
                   <div class="control">
-                    <input class="input" type="text" placeholder="Nirvana - nevermind" v-model="Search.Title" />
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="e.g. Nevermind"
+                      v-model="Search.Title"
+                    />
                   </div>
                 </div>
               </div>
               <div class="field">
                 <label class="label">Genre</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Rock" v-model="Search.Genre" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. Rock"
+                    v-model="Search.Genre"
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="label">Year</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="1991" v-model="Search.Year" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. 1991"
+                    v-model="Search.Year"
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="label">Country</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Canada" v-model="Search.Country" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. Canada"
+                    v-model="Search.Country"
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="label">Label</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Dgc" v-model="Search.Label" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. DGC"
+                    v-model="Search.Label"
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="label">Barcode</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="123aAs3445" v-model="Search.Barcode" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="e.g. 7 20642-44251 7"
+                    v-model="Search.Barcode"
+                  />
                 </div>
               </div>
             </form>
@@ -105,7 +145,7 @@ export default {
       SearchService.searchLibrary(this.Search)
         .then((response2) => {
           if (response2.status == 200) {
-            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data)
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
             //this.$router.push({ name: "SearchResult" });
           }
         })
@@ -115,7 +155,7 @@ export default {
       SearchService.searchCollections(this.Search)
         .then((response3) => {
           if (response3.status == 200) {
-            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data)
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
             //this.$router.push({ name: "SearchResult" });
           }
         })
@@ -161,6 +201,23 @@ export default {
   position: relative;
   left: 19%;
   margin-top: -3.4%;
+  background-color: #4d437f;
+  margin-top: 7px;
+  padding-top: 1px;
+  padding-bottom: 22px;
 }
 
+.label {
+  color: white;
+  text-align: left;
+}
+
+.input {
+  background-color: #000000;
+  color: white;
+}
+
+::placeholder{
+  color: gray;
+}
 </style>

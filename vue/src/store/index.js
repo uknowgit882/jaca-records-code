@@ -7,131 +7,11 @@ export function createStore(currentToken, currentUser) {
       token: currentToken || '',
       user: currentUser || {},
       library: [], // aseel added
+      collections: [],
+      publicCollections: [],
       searchResults: [],
       searchLibraryResults: [],
       searchCollectionsResults: [],
-      //recordsInDB: [],
-      //records: [],
-      Collections:
-      {
-        "name": "Backstreet Boys",
-        "records": [
-          {
-            "id": 1,
-            "title": "DNA",
-            "released": " 2019-01-29",
-            "country": "Orlando,FL",
-            "notes": "none",
-            "uri": "https://www.discogs.com/artist/11002-Backstreet-Boys",
-            "artists": [
-              {
-                "name": "blablabla "
-              }
-            ],
-            "extraArtists": [
-              {
-                "name": "no"
-              }
-            ],
-            "formats": [
-              {
-                "name": "no"
-              }
-            ],
-            "genres": [
-              "unicorn"
-            ],
-            "identifiers": [
-              {
-                "type": "they",
-                "value": "bad"
-              }
-            ],
-            "images": [
-              {
-                "uri": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg",
-                "height": 250,
-                "width": 250
-              }
-            ],
-            "labels": [
-              {
-                "name": "nbbmb",
-                "resource_Url": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg"
-              }
-            ],
-            "tracklist": [
-              {
-                "title": "string",
-                "position": "string",
-                "duration": "string"
-              }
-            ],
-            recordsInDB: [], // AT: what is this?
-            records: [], // AT: what is this?
-            Collections:
-            {
-              "name": "Backstreet Boys",
-              "records": [
-                {
-                  "id": 1,
-                  "title": "DNA",
-                  "released": " 2019-01-29",
-                  "country": "Orlando,FL",
-                  "notes": "none",
-                  "uri": "https://www.discogs.com/artist/11002-Backstreet-Boys",
-                  "artists": [
-                    {
-                      "name": "blablabla "
-                    }
-                  ],
-                  "extraArtists": [
-                    {
-                      "name": "no"
-                    }
-                  ],
-                  "formats": [
-                    {
-                      "name": "no"
-                    }
-                  ],
-                  "genres": [
-                    "unicorn"
-                  ],
-                  "identifiers": [
-                    {
-                      "type": "they",
-                      "value": "bad"
-                    }
-                  ],
-                  "images": [
-                    {
-                      "uri": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg",
-                      "height": 250,
-                      "width": 250
-                    }
-                  ],
-                  "labels": [
-                    {
-                      "name": "nbbmb",
-                      "resource_Url": "https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l500.jpg"
-                    }
-                  ],
-                  "tracklist": [
-                    {
-                      "title": "string",
-                      "position": "string",
-                      "duration": "string"
-                    }
-                  ]
-
-                }
-              ],
-            }
-          }
-        ]
-
-      },
       StatsAggregate: [],
       StatsUser: [],
 
@@ -162,32 +42,33 @@ export function createStore(currentToken, currentUser) {
       ADD_SEARCH_COLLECTIONS_RESULT(state, result) {
         state.searchCollectionsResults = result;
       },
-      ADD_RECORDS_TO_DB(state, bibub) {
-        state.recordsInDB = bibub;
-      },
+      // ADD_RECORDS_TO_DB(state, bibub) {
+      //   state.recordsInDB = bibub;
+      // },
       ADD_RECORDS_TO_LIBRARY(state, adding) {
-        state.records = adding;
         state.library = adding;
       },
-      SHOW_RECORDS_IN_LIBRARY(state, result) {
-        state.records = result;
+      ADD_COLLECTIONS_TO_LIBRARY(state, collections){
+        state.collections = collections;
       },
-      SHOW_INFO_FROM_COLLECTIONS(state, info) {
-        state.Collections = info;
+      ADD_PUBLIC_COLLECTIONS_TO_LIBRARY(state, collections){
+        state.publicCollections = collections;
       },
+      // SHOW_RECORDS_IN_LIBRARY(state, result) {
+      //   state.records = result;
+      // },
+      // SHOW_INFO_FROM_COLLECTIONS(state, info) {
+      //   state.Collections = info;
+      // },
       ADD_AGGREGATE_STATS(state, stats) {
         state.StatsAggregate = stats;
       },
       ADD_USER_STATS(state, stats) {
         state.StatsUser = stats;
       },
-      // CHANGE_USER_ROLE(state, user){
-      //   state.user = user;
-      // },
-      // DEACTIVATE_USER(state, user){
-      //   state.user = user;
-      // }
-
+      CHANGE_USER(state, user){
+        state.user = user;
+      },
     },
   });
   return store;
