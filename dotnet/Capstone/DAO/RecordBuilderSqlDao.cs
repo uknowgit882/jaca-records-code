@@ -2,6 +2,7 @@
 using Capstone.Exceptions;
 using Capstone.Models;
 using Capstone.Utils;
+using Microsoft.AspNetCore.Connections;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -47,7 +48,7 @@ namespace Capstone.DAO
             }
             return output;
         }
-        
+
         public RecordTableData GetRecordByRecordId(int recordId)
         {
             RecordTableData output = null;
@@ -113,6 +114,44 @@ namespace Capstone.DAO
         }
 
         /// <summary>
+        /// Returns how many records are in the user's library.
+        /// </summary>
+        /// <returns>Int number of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public int GetRecordCountByUsername(string username, bool isPremium)
+        {
+            int output = 0;
+
+            string sql = "SELECT count(discogs_id) AS count " +
+                "FROM records " +
+                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
+                "WHERE username = @username AND is_active = 1";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+
+                    if (reader.Read())
+                    {
+                        output = Convert.ToInt32(reader["count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Getting all records from user's library", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
         /// Returns the record count by year in the database. Active users only.
         /// </summary>
         /// <returns>Dictionary of key, year, value, count of records</returns>
@@ -158,7 +197,96 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Returns the record count by country in the database. Active users only.
+        /// Returns the record count by year in the library. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, year, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetYearAndRecordCountByUsername(string username, bool isPremium)
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT substring(released, 1, 4) AS year_released, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
+                "GROUP BY released " +
+                "ORDER by year_released DESC";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string yearReleasedOutput = Convert.ToString(reader["year_released"]);
+                        int recordCount = Convert.ToInt32(reader["record_count"]);
+                        if (output.ContainsKey(yearReleasedOutput))
+                        {
+                            output[yearReleasedOutput] = output[yearReleasedOutput] + recordCount;
+                        }
+                        else
+                        {
+                            output.Add(yearReleasedOutput, recordCount);
+                        }
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by year from library", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by country in the for this user. Active users only.
+        /// </summary>
+        /// <returns>Dictionary of key, country, value, count of records</returns>
+        /// <exception cref="DaoException"></exception>
+        public Dictionary<string, int> GetCountryAndRecordCountByUsername(string username, bool isPremium)
+        {
+            Dictionary<string, int> output = new Dictionary<string, int>();
+
+            string sql = "SELECT country, count (discogs_id) AS record_count " +
+                "FROM records " +
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
+                "GROUP BY country " +
+                "ORDER by country";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        output[Convert.ToString(reader["country"])] = Convert.ToInt32(reader["record_count"]);
+                    }
+                    return output;
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get record count by country for library", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("Sql exception occurred", ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the record count by country for the database. Active users only.
         /// </summary>
         /// <returns>Dictionary of key, country, value, count of records</returns>
         /// <exception cref="DaoException"></exception>
@@ -226,7 +354,7 @@ namespace Capstone.DAO
                     // default creation of record is false
                     // only changed to active when record build is complete
                     cmd.Parameters.AddWithValue("@isActive", 0);
-                    
+
                     newRecordId = Convert.ToInt32(cmd.ExecuteScalar());
 
                 }
@@ -263,7 +391,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@discogsId", discogsId);
-                    
+
                     numberOfRowsAffected = cmd.ExecuteNonQuery();
 
                     if (numberOfRowsAffected != 1)
@@ -293,12 +421,12 @@ namespace Capstone.DAO
         {
             // double check it exists (although should always exist if you're calling this method)
             RecordTableData existenceCheck = GetRecordByDiscogsId(input.Id);
-            if(existenceCheck == null)
+            if (existenceCheck == null)
             {
                 // if it doesn't exist, try and create it and send it back
                 return AddRecord(input);
             }
-            
+
             RecordTableData output = null;
 
             string sql = "UPDATE records " +
@@ -325,7 +453,7 @@ namespace Capstone.DAO
 
                     numberOfRowsAffected = cmd.ExecuteNonQuery();
 
-                    if(numberOfRowsAffected != 1)
+                    if (numberOfRowsAffected != 1)
                     {
                         throw new DaoException("The wrong number of rows were affected");
                     }
