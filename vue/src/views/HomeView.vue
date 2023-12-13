@@ -5,6 +5,7 @@
   <div v-else>
     <h1>Home</h1>
     <button v-on:click="logout">Logout</button>
+    <!-- <button class="button2" type="submit" v-on:click="logout">Logout</button> -->
     <CarouselComponent v-bind:carouselRecords="filteredCollections" v-bind:carouselChooser="'searchCollections'" :autoplay="true">
       </CarouselComponent>
   </div>

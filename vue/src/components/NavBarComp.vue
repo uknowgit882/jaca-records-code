@@ -18,11 +18,11 @@
                         Home
                     </router-link>
 
-                    <a class="navbar-item" href="/library">
+                    <a class="navbar-item" href="/library" v-if="this.$store.state.token != ''">
                         Library
                     </a>
 
-                    <a class="navbar-item" href="/collections">
+                    <a class="navbar-item" href="/collections" v-if="this.$store.state.token != ''">
                         Collections
                     </a>
                     <a class="navbar-item" href="/data">
