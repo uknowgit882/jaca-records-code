@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="role" class="box container is-fullheight is-flex is-align-items-center">
+  <div v-if="this.$store.state.user.role == 'jacapreme'" class="box container is-fullheight is-flex is-align-items-center">
     <img src="img/logo2.png"/>
     <box class="box-jaca">
       <input class="input-users" type="text" placeholder="Enter Username" v-model="User.username">
@@ -12,10 +12,15 @@
       </div>
       <div v-if="showPopup" class="popup">
         <div class="popup-inner">
+          <div v-if="message == ''">
           <h2>You are about to reactivate user : {{ User.username }} </h2>
           <button class="button" @click="reactivateUser()">Reactivate</button>
-          <h2 @click="reactivateUser()" v-if="message"> {{ message }}</h2>
           <button class="ExitButton" @click="openup">Exit</button>
+          </div>
+          <div v-else>
+          <h2 @click="reactivateUser()" v-show="this.message"> {{ message }}</h2>
+          <button class="ExitButton" @click="openup">Exit</button>
+        </div>
         </div>
       </div>
 
@@ -26,10 +31,15 @@
       </div>
       <div v-if="showPopup2" class="popup">
         <div class="popup-inner">
-          <h2>You are about to upgrade user : {{ User.username }} </h2>
-          <button class="button" @click="upgradeUser()">Upgrade</button>
-          <h2 @click="upgradeUser()" v-if="message2"> {{ message2 }}</h2>
-          <button class="ExitButton" @click="openup2">Exit</button>
+          <div v-if="message2 === ''">
+            <h2>You are about to upgrade user : {{ User.username }} </h2>
+            <button class="button" @click="upgradeUser()">Upgrade</button>
+            <button class="ExitButton" @click="openup2">Exit</button>
+          </div>
+          <div v-else>
+            <h2 @click="upgradeUser()" v-if="message2"> {{ message2 }}</h2>
+            <button class="ExitButton" @click="openup2">Exit</button>
+          </div>
         </div>
       </div>
 
@@ -40,11 +50,16 @@
       </div>
       <div v-if="showPopup3" class="popup">
         <div class="popup-inner">
+          <div v-if="message3 === ''">
           <h2>You are about to downgrade user : {{ User.username }} </h2>
           <button class="button" @click="downgradeUser()">Downgrade</button>
+          <button class="ExitButton" @click="openup3">Exit</button>
+          </div>
+          <div v-else>
           <h2 @click="downgradeUser()" v-if="message3"> {{ message3 }}</h2>
           <button class="ExitButton" @click="openup3">Exit</button>
         </div>
+      </div>
       </div>
     </box>
   </div>
@@ -62,7 +77,6 @@ export default {
     return {
       User: {
         username: "",
-        role: "jacapreme"
       },
       showPopup: false,
       showPopup2: false,
@@ -83,6 +97,7 @@ export default {
       this.showPopup3 = !this.showPopup3
     },
     reactivateUser() {
+      this.message == '';
       JacapremeService.reactivateUser(this.User.username)
         .then(response => {
           if (response.status == 200) {
@@ -96,10 +111,11 @@ export default {
         })
     },
     upgradeUser() {
+      this.message2 == '';
+
       JacapremeService.upgradeUserToAdmin(this.User.username)
         .then(response => {
           if (response.status == 200) {
-            this.showPopup2 = false;
             this.message2 = `You have successfully upgraded ${this.User.username}`;
           }
         })
@@ -108,6 +124,7 @@ export default {
         })
     },
     downgradeUser() {
+      this.message3 == '';
       JacapremeService.downgradeUserFromAdmin(this.User.username)
         .then(response => {
           if (response.status == 200) {

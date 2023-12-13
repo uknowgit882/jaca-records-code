@@ -14,6 +14,8 @@ namespace Capstone.DAO.Interfaces
         public User CreateUser(RegisterUser userParam);
         public bool DeactivateUser(string username);
         public bool ReactivateUser(string username);
+        public User GetInactiveUserByUsername(string username);
+
         public bool UpgradeUser(string username);
         public bool DowngradeUser(string username);
         public bool UpgradeAdmin(string username);

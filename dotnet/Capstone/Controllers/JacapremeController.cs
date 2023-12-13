@@ -42,7 +42,7 @@ namespace Capstone.Controllers
             try
             {
                 // check if the user is inactive
-                User user = _userDao.GetUserByUsername(username);
+                User user = _userDao.GetInactiveUserByUsername(username);
 
                 if (user.IsActive)
                 {
