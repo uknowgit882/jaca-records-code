@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="!isLoadingDiscogs">
+    <!-- <div v-if="!hasResults">
       <img class="spinningLogo" src="../../img/Logogif.gif" alt="" />
-    </div>
-    <div v-else>
+    </div> -->
+    <div>
       <div class="searchResultsGrid">
         <div class="apiSearchResults">
           <h2>Search Results:</h2>
@@ -81,57 +81,59 @@ export default {
       //collectionCarouselToggle: false,
       //libraryCarouselToggle: false,
       searchResults: [],
+      searchLibraryResults: [],
+      searchCollectionsResults: [],
       isLoadingDiscogs: false,
       //isLoadingLibrary: false,
       //isLoadingCollections: false
     };
   },
-  methods: {
-    searchRecord(request) {
-      SearchService.searchDiscogs(request)
-        .then((response1) => {
-          if (response1.status == 200) {
-            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
-            this.isLoadingDiscogs = true;
-            //this.$router.push({ name: "SearchResult" });
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-      SearchService.searchLibrary(request)
-        .then((response2) => {
-          if (response2.status == 200) {
-            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
-            //this.isLoadingLibrary = true;
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-        SearchService.searchCollections(request)
-        .then((response3) => {
-          if(response3.status == 200) {
-            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
-            //this.isLoadingCollections = true;
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-    },
-    handleErrorResponse(error, verb) {
-      if (error.response) {
-        console.log(
-          `Error ${verb} topic. Response received was "${error.response.statusText}".`
-        );
-      } else if (error.request) {
-        console.log(`Error ${verb} topic. Server could not be reached.`);
-      } else {
-        console.log(`Error ${verb} topic. Request could not be created.`);
-      }
-    },
-  },
+  // methods: {
+  //   searchRecord(request) {
+  //     SearchService.searchDiscogs(request)
+  //       .then((response1) => {
+  //         if (response1.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+  //           this.isLoadingDiscogs = true;
+  //           //this.$router.push({ name: "SearchResult" });
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //     SearchService.searchLibrary(request)
+  //       .then((response2) => {
+  //         if (response2.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
+  //           //this.isLoadingLibrary = true;
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //       SearchService.searchCollections(request)
+  //       .then((response3) => {
+  //         if(response3.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
+  //           //this.isLoadingCollections = true;
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //   },
+  //   handleErrorResponse(error, verb) {
+  //     if (error.response) {
+  //       console.log(
+  //         `Error ${verb} topic. Response received was "${error.response.statusText}".`
+  //       );
+  //     } else if (error.request) {
+  //       console.log(`Error ${verb} topic. Server could not be reached.`);
+  //     } else {
+  //       console.log(`Error ${verb} topic. Request could not be created.`);
+  //     }
+  //   },
+  // },
   computed: {
     emptySearch() {
       if (this.Search != undefined) {
@@ -170,7 +172,12 @@ export default {
     },
   },
   created() {
-    this.searchRecord(this.$store.state.searchRequest);
+    // this.Search = this.$store.state.searchRequest;
+    // this.searchRecord(this.Search);
+    this.searchResults = this.$store.state.searchResults;
+    this.searchLibraryResults = this.$store.state.searchLibraryResults;
+    this.searchCollectionsResults = this.$store.state.searchCollectionsResults;
+    //this.hasResults = this.foundResults();
   },
 };
 </script>

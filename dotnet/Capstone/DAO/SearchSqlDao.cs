@@ -284,13 +284,16 @@ namespace Capstone.DAO
 
         protected List<string> searchWords(string searchString)
         {
-            string[] searchStringSplit = searchString.Split(' ');
             List<string> searchStringWords = new List<string>();
-            foreach (string word in searchStringSplit)
+            if (searchString != null)
             {
-                if (word != "the" && word != "a" && word != "an")
+                string[] searchStringSplit = searchString.Split(' ');
+                foreach (string word in searchStringSplit)
                 {
-                    searchStringWords.Add(word);
+                    if (word != "the" && word != "a" && word != "an")
+                    {
+                        searchStringWords.Add(word);
+                    }
                 }
             }
             return searchStringWords;
