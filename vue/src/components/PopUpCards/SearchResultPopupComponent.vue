@@ -104,7 +104,7 @@ export default {
             showAddRecordPopup: false,
             errorPopup: false,
             addRecord: {
-                discogsId: this.activeCard.id,
+                discogs_Id: this.activeCard.id,
                 notes: "",
                 quantity: 1
             },

@@ -661,13 +661,9 @@ export default {
  .carousel__item {
      min-height: 200px;
      width: 100%;
-     background-color: var(--vc-clr-primary);
      color: var(--vc-clr-white);
      font-size: 20px;
      border-radius: 8px;
-     display: flex;
-     justify-content: center;
-     align-items: center;
  }
 
  .carousel__slide {

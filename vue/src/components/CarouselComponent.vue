@@ -19,8 +19,9 @@
         </div>
       </div>
       <div v-else-if="carouselChooser == 'searchAPI'" class="carousel__item">
-        <h3 class="carouselSearchCard_title">{{ record.title }}</h3>
-        <p class="carouselSearchCard_year">{{ record.year }}</p>
+        <h3 class="carouselSearchCard_title" style="text-align: center">{{ record.title }}</h3>
+        <span class="carouselSearchCard_year" style="text-align: center">{{ record.year }}</span>
+        <br>
         <img class="carouselSearchCard_image" :src="record.thumb" style="height: 150px; width: 150px" />
         <!-- <carousel-search-card :carouselSearchCard="record"></carousel-search-card > -->
       </div>
@@ -182,7 +183,14 @@ p {
   transform-style: preserve-3d;
 }
 
-.carousel__item {}
+.carousel__item {
+  display: flex;
+  flex-direction: column; 
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  align-items: center;
+}
 
 .carousel__slide--sliding {
   transition: 0.5s;
@@ -191,6 +199,8 @@ p {
 .carousel__slide {
   opacity: -1;
   transform: rotateY(-20deg) scale(0.9);
+  justify-content: center;
+  align-items: center;
 }
 
 .carousel__slide--active~.carousel__slide {

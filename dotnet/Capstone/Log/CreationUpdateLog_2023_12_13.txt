@@ -121,3 +121,12 @@ Trying to change record quantity library | For aseelt, record: 0 | ChangeQuantit
 Trying to change quantity | For aseelt, 14488 | UpdateQuantityForRecordInLibrary | Exception occurred | 12/13/2023 1:38:53 PM
 --- END OF ACTION ---
 
+Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:58:40 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:16 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aseelt, record: 122684 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:28 PM
+--- END OF ACTION ---
+
