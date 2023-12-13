@@ -141,7 +141,7 @@ namespace Capstone.Controllers
                 }
 
                 // add a collection "free" from collections
-                _collectionsDao.AddCollection(username, "Free Collection", NotPremium);
+                _collectionsDao.AddCollection(username, "Free Collection", NotPrivate, NotPremium);
 
                 // set it to is premium false
                 //_collectionsDao.ChangeCollectionIsPremium("Free Collection", username, NotPremium);

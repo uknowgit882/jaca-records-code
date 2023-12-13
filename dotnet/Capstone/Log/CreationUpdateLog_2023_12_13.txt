@@ -130,3 +130,12 @@ Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT s
 Trying to add to library | For aseelt, record: 122684 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:28 PM
 --- END OF ACTION ---
 
+Getting RecordClient from external API | Discogs Input: 2736779 | GetRecord | Unsuccessful request to Discogs API | 12/13/2023 5:18:18 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 2736779 | AddRecordToDbById | Error occured - received non-success response. | 12/13/2023 5:18:18 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aseelt, record: 2736779 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 5:18:18 PM
+--- END OF ACTION ---
+

@@ -90,7 +90,7 @@ namespace Capstone.DAO
             User user = null;
 
             string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
-                "FROM users WHERE username = @username";
+                "FROM users WHERE username = @username AND is_active = 1";
 
             try
             {
