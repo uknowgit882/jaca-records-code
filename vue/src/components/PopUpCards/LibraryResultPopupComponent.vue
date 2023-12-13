@@ -2,8 +2,7 @@
     <div v-if="showRecordOptionsPopup" class="library-popup-RecordOptions-popup">
         <div class="library-popup-RecordOptions-popup-inner">
             <button class="popup-exit-button" @click.prevent="showRecordOptionsPopup = !showRecordOptionsPopup">X</button>
-            <div class="library-popup-RecordOptions-popup-inner-inner"
-                :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox' : ''">
+            <div class="library-popup-RecordOptions-popup-inner-inner" :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox' : ''">
                 <div class="library-popup-RecordOptions-buttons" style="margin-left: 8px;">
                     <div>
                         <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
@@ -16,6 +15,10 @@
                     <div>
                         <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
                             style="background-color: #09A3DA;" @click="optionsToggle = 3">Update Notes</button>
+                    </div>
+                    <div>
+                        <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                            style="background-color: #09A3DA;" @click="optionsToggle = 4">Remove from Collection</button>
                     </div>
                     <div>
                         <button style="width: 150px;" @click="areYouSurePopup = true">Delete Record</button>
@@ -49,6 +52,16 @@
                                 style="align-items: left; margin: 12px; border-radius: 4px; color: white;">
                             <button style="margin: 12px; background-color: #17B39F;" @click="updateNotes">Update</button>
                         </div>
+                    </div>
+                    <div :class="optionsToggle == 4 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                        <p>Remove from Collection</p>
+                        <div class="scrollableBox" style="height: 100px; max-height: 110px">
+                            <button v-for="collection in collectionsYouCanRemoveFrom" :key="collection.name"
+                                style="background-color: #17B39F; width: 100%; margin: 10px;"
+                                @click="removeRecordFromCollection(collection.name)">Remove from: {{ collection.name
+                                }}</button>
+                        </div>
+
                     </div>
                     <p v-if="weAreOnIt">We're on it!</p>
                     <p v-if="actionSuccessful">Success! Refreshing the page...</p>
@@ -243,12 +256,16 @@ export default {
                 notes: "",
                 quantity: 0,
             },
-            eligibleCollections: []
+            eligibleCollections: [],
+            CollectionsWithRecord: []
         }
     },
     computed: {
         collectionsYouCanAddTo() {
             return this.eligibleCollections;
+        },
+        collectionsYouCanRemoveFrom() {
+            return this.CollectionsWithRecord;
         }
     },
     methods: {
@@ -281,6 +298,26 @@ export default {
                             return record.id == this.activeCard.record.id
                         })
                         if (collectionWithoutThisRecord.length == 0) {
+                            return collection
+                        }
+                    })
+                    this.isInLibrary = true;
+                    this.isLoading = true;
+                })
+                .catch(error => {
+                    this.isInLibrary = false;
+                    this.isLoading = true;
+                })
+        },
+        getCollectionsYouCanRemoveThisRecordFrom() {
+            CollectionService.GetAllCollections()
+                .then(response => {
+                    const collections = response.data;
+                    this.CollectionsWithRecord = collections.filter((collection) => {
+                        const collectionWithThisRecord = collection.records.filter((record) => {
+                            return record.id == this.activeCard.record.id
+                        })
+                        if (collectionWithThisRecord.length != 0) {
                             return collection
                         }
                     })
@@ -348,6 +385,26 @@ export default {
                     this.errorPopup = true;
                 })
         },
+        removeRecordFromCollection(collectionName) {
+            this.isLoading = false;
+            this.weAreOnIt = true;
+            CollectionService.DeleteRecordInCollection(collectionName, this.activeCard.record.id)
+                .then(response => {
+                    this.isInLibrary = true;
+                    this.isLoading = true;
+                    this.weAreOnIt = false;
+                    this.getCollectionsYouCanRemoveThisRecordFrom();
+                    this.displaySuccess();
+                })
+                .catch(error => {
+                    this.isInLibrary = false;
+                    this.weAreOnIt = false;
+                    this.optionsToggle = 0;
+                    this.errorMessage = `remove this record from ${collectionName}`;
+                    this.isLoading = true;
+                    this.errorPopup = true;
+                })
+        },
         deleteRecord() {
             this.areYouSurePopup = false;
             this.showRecordOptionsPopup = false;
@@ -366,8 +423,8 @@ export default {
     created() {
         this.getRecordInLibrary();
         this.getCollectionsYouCanAddThisRecordTo();
+        this.getCollectionsYouCanRemoveThisRecordFrom();
     }
-
 
 }
 

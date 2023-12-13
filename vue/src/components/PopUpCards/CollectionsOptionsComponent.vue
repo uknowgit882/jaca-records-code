@@ -13,23 +13,25 @@
                             @click="optionsToggle = 2">Change Collection Privacy</button>
                     </div> 
                     <div>
-                        <button style="width: 150px;" @click="areYouSurePopup = true">Delete Record</button>
+                        <button style="width: 150px;" @click="areYouSurePopup = true">Delete Collection</button>
                     </div>
                 </div>
                 <div style="flex-grow: 2; align-items: stretch; margin: 12px;">
                     <div :class="optionsToggle == 1 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                        <div style="display: flex; flex-direction: column; margin-top: 4px;">
                         <p>What's the new name for your collection?</p>
                         <input type="text" id="newCollectionName" name="newCollectionName" placeholder="New name" 
                                 v-model="updatedCollection.name"
-                                style="align-items: center; margin: 12px; border-radius: 4px; color: white;">
+                                style="align-items: center; margin: 12px; border-radius: 4px; width: 100%; color: white; background-color: black;">
                             <button style="background-color: #17B39F; width: 100%; margin: 10px;"
                                 @click="changeCollectionName">Submit</button>
+                            </div>
                     </div>
                     <div :class="optionsToggle == 2 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px;">
                         <div style="display: flex; flex-direction: column; margin-top: 4px;">
                             <p>Update Quantity</p>
                             <input type="checkbox" id="makePrivate" name="makePrivate" v-model="updatedCollection.is_private"
-                                style="align-items: left; margin: 12px; border-radius: 4px; color: white;">
+                                style="align-items: left; margin: 12px; border-radius: 4px; display: inline; color: white;">
                             <button style="margin: 12px; background-color: #17B39F;" @click="updatePrivacy">Update</button>
                         </div>
                     </div>
@@ -46,7 +48,7 @@
     <div v-if="errorPopup">
         <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
-    <div v-if="areYouSurePopup" class="CollectionOptions-AreYouSure-popup">
+    <!-- <div v-if="areYouSurePopup" class="CollectionOptions-AreYouSure-popup">
         <div class="CollectionOptions-AreYouSure-popup-inner">
             <button class="popup-exit-button" @click.prevent="areYouSurePopup = false">X</button>
             <div class="CollectionOptions-popup-inner-inner" style="background-color: ">
@@ -59,7 +61,7 @@
                     @click="areYouSurePopup = false">Cancel</button>
             </div>
         </div>
-    </div>
+    </div> -->
  
 </template>
 
@@ -74,7 +76,7 @@ export default {
             weAreOnIt: false,
             canSee: this.isVisible,
             optionsToggle: 0,
-            areYouSurePopup,
+            //areYouSurePopup,
             updatedCollection: {
                 name: '',
                 is_private: false
@@ -169,9 +171,27 @@ export default {
     border-radius: 5px;
     background: black;
     text-align: center;
-    height: 250px;
-    width: 300px;
+    height: 220px;
+    width: 180px;
+    display: flex;
+     align-items: top;
+     justify-content: stretch;
+     margin: 12px;
 }
+.CollectionOptions-bigBox {
+     height: 220px;
+     width: 530px;
+ }
+
+ .CollectionOptions-buttons {
+     display: flex;
+     flex-direction: column;
+     justify-content: stretch;
+ }
+ .CollectionOptions-popup-inner-inner-buttons {
+     background-color: #09A3DA;
+     width: 150px;
+ }
 
 .CollectionOptions-popup-inner button {
     border-radius: 5px;
@@ -189,10 +209,11 @@ export default {
 .CollectionOptions-popup-inner-inputs {
     border-radius: 5px;
     box-sizing: border-box;
+    width: 100%;
     background-color: black;
     color: white;
 }
-
+/* 
 .CollectionOptions-popup-button {
     grid-area: button;
     margin-top: 8px;
@@ -203,7 +224,7 @@ export default {
     text-align: center;
     border-radius: 4px;
     cursor: pointer;
-}
+} */
 
 .CollectionOptions-AreYouSure-popup {
      border-radius: 5px;

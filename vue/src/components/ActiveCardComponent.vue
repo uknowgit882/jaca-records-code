@@ -5,7 +5,7 @@
 <div v-if="cardType == 'library'">
     <library-result-popup  v-bind:activeCard="this.activeCard"></library-result-popup>
 </div>
-<div v-if="cardType == 'searchLibrary'">
+<div v-if="cardType == 'searchLibrary' || cardType == 'collection'">
     <library-search-result-popup  v-bind:activeCard="this.activeCard"></library-search-result-popup>
 </div>
 </template>
