@@ -153,7 +153,7 @@ export default {
 <style scoped>
 .input {
   flex-grow: 1;
-  margin-top: 11px;
+  margin-top: 11px; 
   width: 800px;
   background-color: black;
   color: white;
@@ -163,6 +163,8 @@ export default {
 .button {
   margin-top: 11px;
   right: 18px;
+  color: white;
+  background-color: black;
 }
 
 .dropdown.is-active {

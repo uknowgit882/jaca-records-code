@@ -197,5 +197,30 @@ Trying to add collection | For userTest, adding Free Collection | AddCollection 
 --- END OF ACTION ---
 
 Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:45:44 PM
+Trying to get add user to db, with pw hash | For awd | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (aada@ggmail.com). | 12/13/2023 6:56:29 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For aaas | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (wca@wcw.com). | 12/13/2023 6:57:16 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:08 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:19 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:21 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (new@dcnsi.com). | 12/13/2023 7:06:13 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 122686 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 7:57:48 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 122686 | AddRecordToDbById | Sql exception occured | 12/13/2023 7:57:48 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 122686 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:57:48 PM
 --- END OF ACTION ---
 
