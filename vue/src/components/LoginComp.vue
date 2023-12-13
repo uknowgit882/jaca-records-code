@@ -16,7 +16,7 @@
         <label for="password">Password &nbsp;</label>
         <input class="input-box" type="password" id="password" v-model="user.password" required />
       </div>
-      <button class="button" id="premiumButton" @click="login()">Sign In</button>
+      <button class="button3" id="premiumButton" @click="login()">Sign In</button>
 
       <!-- <p>
       <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
@@ -65,6 +65,7 @@ export default {
 </script>
 
 <style scoped>
+
 .sign-in {
   color: white;
   text-align: center;
@@ -109,7 +110,7 @@ h2 {
   color: black;
 }
 
-.button {
+.button3 {
   --color: white;
   font-family: inherit;
   display: inline-block;
@@ -129,7 +130,7 @@ h2 {
   background-color: black;
 }
 
-.button:before {
+.button3:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -139,24 +140,24 @@ h2 {
   border-radius: 50%;
 }
 
-.button:hover {
+.button3:hover {
   color: black;
 }
 
-.button:before {
+.button3:before {
   top: 100%;
   left: -100%;
   transition: all .7s;
 }
 
-.button:hover:before {
+.button3:hover:before {
   top: -30px;
   left: -30px;
   background-color: #EEE810;
 }
 
-.button:active:before {
-  background: #4D437F;
+.button3:active:before {
+  background: #B856AB;
   transition: background 0s;
 }
 </style>

@@ -8,15 +8,15 @@
             <div class="boxes">
                 <div class="form-input-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" v-model="user.firstName" required autofocus />
+                    <input type="text" id="firstName" v-model="user.first_Name" required autofocus />
                 </div>
                 <div class="form-input-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" v-model="user.lastName" required />
+                    <input type="text" id="lastName" v-model="user.last_Name" required />
                 </div>
                 <div class="form-input-group">
                     <label for="email">Email</label>
-                    <input type="text" id="email" v-model="user.email" required />
+                    <input type="text" id="email" v-model="user.email_Address" required />
                 </div>
                 <div class="form-input-group">
                     <label for="username">Username</label>
@@ -31,21 +31,13 @@
                     <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
                 </div>
             </div>
-            <div class="form-input-group2">
-                <label for="userRole">Account Type</label>
-                <select v-model="user.role">
-                    <option disabled value="">Please select one</option>
-                    <option>Free</option>
-                    <option>Premium</option>
-                </select>
-            </div>
             <main id="buy-grid">
                 <button class="box-premium">
                     <box class="box-pre">
-                        <div class="media-content">
+                        <div class="media-content" @click="premiumRegistration">
                             <div class="content">
                                 <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                                <h2><strong> <i class="fa-solid fa-peace"></i> PREMIUM</strong>
+                                <h2><strong> <i class="fa-solid fa-peace"></i> CLICK FOR PREMIUM</strong>
                                 </h2>
                                 <h4>
                                     <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save unlimited records to your
@@ -57,12 +49,12 @@
                         </div>
                     </box>
                 </button>
-                <button class="box-free">
+                <button class="box-free" >
                     <box class="box-pre">
-                        <div class="media-content">
+                        <div class="media-content" @click="freeRegistration">
                             <div class="content">
                                 <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                                <h2><strong> <i class="fa-solid fa-crown"></i> BASIC</strong>
+                                <h2><strong> <i class="fa-solid fa-crown"></i> CLICK FOR BASIC</strong>
                                 </h2>
                                 <h4>
                                     <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save records to your library</p>
@@ -75,7 +67,6 @@
                     </box>
                 </button>
             </main>
-            <button class="button2" type="submit" @click="LibraryPagePush()">Create Account</button>
         </form>
 
     </div>
@@ -89,9 +80,9 @@ export default {
     data() {
         return {
             user: {
-                firstName: '',
-                lastName: '',
-                email: '',
+                first_Name: '',
+                last_Name: '',
+                email_Address: '',
                 username: '',
                 password: '',
                 confirmPassword: '',
@@ -133,6 +124,14 @@ export default {
         LibraryPagePush() {
             this.$router.push({ name: "library" });
         },
+        freeRegistration() {
+            this.user.role = 'free';
+            this.register();
+        },
+        premiumRegistration() {
+            this.user.role = 'premium';
+            this.register();
+        }
     },
 };
 
@@ -202,7 +201,7 @@ label {
     row-gap: 20px;
     column-gap: 22px;
     align-items: center;
-    padding-left: 439px;
+    padding-left: 447px;
     padding-top: 20px;
     padding-bottom: 25px;
 }

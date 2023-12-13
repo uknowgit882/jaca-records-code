@@ -183,6 +183,10 @@ export default {
   padding-left: 0px;
 }
 
+.button {
+  color: white;
+  background-color: black;
+}
 .button2 {
   --color: white;
   font-family: inherit;
