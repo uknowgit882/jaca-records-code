@@ -77,12 +77,58 @@
                 <span style="text-align: right;">{{ activeCard.quantity }}</span>
             </div>
 
-            <div class="library-popup-notes" style="text-align: left; padding: 8px;">
-                <span style="color: white; font-weight: bold;">Notes: </span>
+            <div class="library-popup-notes scrollableBox" style="text-align: left; padding: 8px; max-height: 150px;">
+                <span style="color: white; font-weight: bold;">My Notes: </span>
                 <span>{{ activeCard.notes }}</span>
             </div>
 
             <div class="library-popup-table">
+                <!-- implementing this tab thing... -->
+                <div>
+                    <div class="tab" style="height: 40px; display: flex; align-items: center; border-radius: 4px;">
+                        <button class="tablinks" @click="tabToggle = 1" style="color: white;">Tracks</button>
+                        <button class="tablinks" @click="tabToggle = 2" style="color: white;">Formats</button>
+                        <button class="tablinks" @click="tabToggle = 3" style="color: white;">Labels</button>
+                        <button class="tablinks" @click="tabToggle = 4" style="color: white;">Identifiers</button>
+                        <button class="tablinks" @click="tabToggle = 5" style="color: white;">Record Notes</button>
+                    </div>
+
+                    <div class="scrollableBox" style="max-height: 110px">
+                    
+                    <div :class="tabToggle == 1 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                        style="border-radius: 4px;">
+                        <div>
+                            <div class="library-popup-tracks-table" >
+                                <span class="library-popup-tracks-table-title" style="text-align: left; color: white;">Track</span>
+                                <span class="library-popup-tracks-table-position" style="color: white; ">Pos.</span>
+                                <span class="library-popup-tracks-table-duration" style="color: white; ">Length</span>
+                                <table class="library-popup-tracks-table-row">
+                                    <tr >
+                                        <track-component v-for="track in activeCard.record.tracklist" :key="track.title"
+                                        :track="track"></track-component>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div :class="tabToggle == 2 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                        style="border-radius: 4px; ">
+                        <p class="smallFont" v-for="format in activeCard.record.formats" :key="format.name" style="color: #183E50">{{ format.name }}</p>
+                    </div>
+                    <div :class="tabToggle == 3 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                        style="border-radius: 4px; ">
+                        <p class="smallFont" v-for="label in activeCard.record.labels" :key="label.name" style="color: #183E50">{{ label.name }}</p>
+                    </div>
+                    <div :class="tabToggle == 4 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                        style="border-radius: 4px;">
+                        <p class="smallFont" v-for="identifier in activeCard.record.identifiers" :key="identifier.value" style="color: #183E50">{{ identifier.type }}, {{ identifier.value }}</p>
+                    </div>
+                    <div :class="tabToggle == 5 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                        style="border-radius: 4px;">
+                        <p class="smallFont scrollableBox" style="color: #183E50" >{{activeCard.record.notes}}</p>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -95,10 +141,13 @@
 </template>
 
 <script>
+
+
 import ErrorPopup from './ErrorPopup.vue'
 import LibraryService from '../../services/LibraryService'
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
+import TrackComponent from './TrackComponent.vue'
 
 export default {
     props: ['activeCard'],
@@ -107,6 +156,7 @@ export default {
         Carousel,
         Slide,
         Pagination,
+        TrackComponent
     },
     data() {
         return {
@@ -119,7 +169,8 @@ export default {
                 notes: "",
                 quantity: 1
             },
-            errorMessage: ""
+            errorMessage: "",
+            tabToggle: 1,
         }
     },
     methods: {
@@ -212,12 +263,48 @@ export default {
  .library-popup-notes {
      grid-area: notes;
      max-width: 200px;
+     font-weight: normal;
+     font-size: 12px;
  }
 
  .library-popup-table {
      grid-area: table;
  }
 
+ .library-popup-tracks-table {
+     display: grid;
+     grid-template-columns: 3fr 1fr 1fr;
+     grid-template-areas:
+         "trackTitle trackPosition trackDuration"
+         "trackRow trackRow trackRow";
+     gap: 2px;
+     font-weight: normal;
+     font-size: 10px;
+
+ }
+
+
+ .library-popup-tracks-table-title {
+     grid-area: trackTitle;
+     text-align: left;
+ }
+
+ .library-popup-tracks-table-position {
+     grid-area: trackPosition;
+ }
+
+ .library-popup-tracks-table-duration {
+     grid-area: trackDuration;
+ }
+
+ .library-popup-tracks-table-row {
+     grid-area: trackRow;
+ }
+
+ .smallFont{
+    font-weight: normal;
+     font-size: 10px;
+}
  .library-popup-button {
      grid-area: button;
      margin-top: 8px;
@@ -367,6 +454,86 @@ export default {
  }
 
 
+ /* tab styling */
+ .tab {
+     overflow: hidden;
+     border: 1px solid #F89590;
+     background-color: black;
+ }
+
+ /* Style the buttons that are used to open the tab content */
+ .tab button {
+     background-color: inherit;
+     float: left;
+     border: none;
+     outline: none;
+     cursor: pointer;
+     padding: 14px 16px;
+     transition: 0.3s;
+ }
+
+ /* Change background color of buttons on hover */
+ .tab button:hover {
+     background-color: #F89590;
+ }
+
+ /* Create an active/current tablink class */
+ .tab button.active {
+     background-color: white;
+     color: black;
+ }
+
+ /* Style the tab content */
+ .tabcontent {
+     display: none;
+     padding: 6px 12px;
+     border: 1px solid #F89590;
+     border-top: none;
+ }
+
+ .tabcontent {
+     animation: fadeEffect 1s;
+     /* Fading effect takes 1 second */
+ }
+
+ /* Go from zero to full opacity */
+ @keyframes fadeEffect {
+     from {
+         opacity: 0;
+     }
+
+     to {
+         opacity: 1;
+     }
+ }
+
+ .makeVisible {
+     display: block;
+ }
+
+ .notVisible {
+     display: none;
+ }
+
+ .scrollableBox {
+     overflow-y: scroll;
+ }
+
+ /* Works on Chrome, Edge, and Safari */
+ .scrollableBox::-webkit-scrollbar {
+     width: 8px;
+ }
+
+ .scrollableBox::-webkit-scrollbar-track {
+     background: white;
+ }
+
+ .scrollableBox::-webkit-scrollbar-thumb {
+     background-color: #F89590;
+     border-radius: 20px;
+     border: 3px solid white;
+ }
+
 
  input[type=number] {
      height: 30px;
@@ -396,5 +563,4 @@ export default {
      position: relative;
      right: 4px;
      border-radius: 28px;
- }
-</style>
+ }</style>
