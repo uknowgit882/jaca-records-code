@@ -139,3 +139,10 @@ Trying to get record from Discogs API and build into database | For 2736779 | Ad
 Trying to add to library | For aseelt, record: 2736779 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 5:18:18 PM
 --- END OF ACTION ---
 
+Trying to delete record from library | For aseelt, record: 31526 | DeleteRecord | The DELETE statement conflicted with the REFERENCE constraint "FK_records_collections_library". The conflict occurred in database "jaca_records", table "dbo.records_collections", column 'library_id'.
+The statement has been terminated. | 12/13/2023 8:15:29 PM
+--- END OF ACTION ---
+
+Trying to delete record from library | For aseelt, 31526 | DeleteRecordFromLibrary | Something went wrong deleting a record | 12/13/2023 8:15:29 PM
+--- END OF ACTION ---
+

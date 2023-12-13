@@ -26,16 +26,17 @@
             </div>
 
             <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection" @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
- 
             
-
+            <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions" v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i"></CollectionsOptionsComponent>
+            
             <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
                 <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
                     <h2
                         style="margin-left: 20px; display: inline; align-items: left; margin-top: auto; margin-bottom: auto ;">
                         {{ collection.name }}</h2>
                     <div style="align-items: right;">
-                        <button class="button2">Options</button>
+                        <!-- <button class="button2" @click="getVBindKey">Options</button> -->
+                        <button class="button2" @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
                     </div>
                 </div>
                 <div>
@@ -58,18 +59,24 @@
 import CollectionsService from '../services/CollectionsService';
 import CarouselComponent from '../components/CarouselComponent.vue';
 import AddCollectionComponent from '../components/PopUpCards/AddCollectionComponent.vue';
+import CollectionsOptionsComponent from '../components/PopUpCards/CollectionsOptionsComponent.vue';
+import {getCurrentInstance} from 'vue'
 
 export default {
     data() {
         return {
             isLoading: false,
             displayedCollection: [],
-            showAddCollection: false
+            showAddCollection: false,
+            showCollectionOptions: false,
+            currentKey: '',
+            activeCollection: null
         }
     },
     components: {
         CarouselComponent,
-        AddCollectionComponent
+        AddCollectionComponent,
+        CollectionsOptionsComponent
     },
     methods: {
         filterAll() {
@@ -92,7 +99,7 @@ export default {
                     this.displayedCollection = this.$store.state.collections;
                     this.isLoading = true;
                 })
-        }
+        },
     },
     created() {
         this.getCollections();

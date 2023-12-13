@@ -1,8 +1,5 @@
 <template>
-    <div v-if="errorPopup">
-        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
-    </div>
-    <div v-if="canSee" class="addCollection-popup">
+        <div v-if="canSee" class="addCollection-popup">
         <div class="addCollection-popup-inner">
             <button class="popup-exit-button" @click="showAddCollectionToParent">X</button>
             <div class="addCollection-popup-inner-inner">
@@ -28,6 +25,9 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div v-if="errorPopup">
+        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
 </template>
 
@@ -67,7 +67,12 @@ export default {
         },
         createCollection() {
             this.weAreOnIt = true;
-            CollectionsService.AddNewCollection(this.newCollectionToAdd)
+            if(this.newCollectionToAdd.name == ''){
+                this.errorMessage = 'do this action. You must provide a collection name'
+                this.weAreOnIt = false;
+                this.errorPopup = true;
+            }else{
+                CollectionsService.AddNewCollection(this.newCollectionToAdd)
                 .then(response => {
                     this.weAreOnIt = false;
                     this.displaySuccess();
@@ -77,6 +82,7 @@ export default {
                     this.errorMessage = `create ${this.newCollectionToAdd.name}`;
                     this.errorPopup = true;
                 })
+            }
         },
     }
 
