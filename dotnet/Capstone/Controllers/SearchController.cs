@@ -94,7 +94,7 @@ namespace Capstone.Controllers
 
                 if (recordIds.Count == 0)
                 {
-                    RecordClient dummyOut = new RecordClient();
+                    List<RecordClient> dummyOut = new List<RecordClient>();
                     return Ok(dummyOut);
                 }
 
