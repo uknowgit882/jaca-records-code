@@ -3,23 +3,32 @@
         <div class="search-popup-addRecord-popup-inner">
             <button class="popup-exit-button" @click.prevent="showAddRecordPopup = !showAddRecordPopup">X</button>
             <div class="search-popup-addRecord-popup-inner-inner">
-                
+
             </div>
         </div>
     </div>
 
-    <div v-if="errorPopup" >
-         <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
+    <div v-if="errorPopup">
+        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
-    
+
     <div class="home" v-if="!isLoading">
         <img src="../../img/Logogif.gif" alt="">
     </div>
-    <div v-else >
+    <div v-else>
         <div class="library-popup-container">
             <div class="library-popup-image">
-                <img class="library-popup-image" :src="activeCard.record.images[0].uri" alt="">
-                
+                <Carousel>
+                    <Slide v-for="image in activeCard.record.images" :key="image.uri">
+                        <div class="carousel__item">
+                            <img :src="image.uri" alt="">
+                        </div>
+                    </Slide>
+
+                    <template #addons>
+                        <Pagination />
+                    </template>
+                </Carousel>
             </div>
 
             <div class="library-popup-artist" style="text-align: left; padding: 8px;">
@@ -29,11 +38,11 @@
                 <h3>{{ activeCard.record.title }}</h3>
             </div>
 
-            
+
             <div class="library-popup-yearCountry" style="text-align: left; padding: 8px;">
                 <span style="color: white; font-weight: bold;">Year: </span>
                 <br>
-                <span>{{ activeCard.record.released.substring(0,4) }}</span>
+                <span>{{ activeCard.record.released.substring(0, 4) }}</span>
                 <br>
                 <span style="color: white; font-weight: bold;">Country: </span>
                 <br>
@@ -44,10 +53,12 @@
                 <span style="color: white; font-weight: bold;">Extra Artists: </span>
                 <div class="ticker-tape-container">
                     <div class="ticker-tape">
-                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{ extraArtist.name }}</span>
+                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{
+                            extraArtist.name }}</span>
                     </div>
                     <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{ extraArtist.name }}</span>
+                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{
+                            extraArtist.name }}</span>
                     </div>
                 </div>
                 <span style="font-weight: bold; color: white;">Genre:</span>
@@ -63,9 +74,9 @@
 
             <div class="library-popup-quantity">
                 <span style="color: white; font-weight: bold;">Quantity: </span>
-                <span>{{ activeCard.quantity }}</span>
+                <span style="text-align: right;">{{ activeCard.quantity }}</span>
             </div>
-            
+
             <div class="library-popup-notes" style="text-align: left; padding: 8px;">
                 <span style="color: white; font-weight: bold;">Notes: </span>
                 <span>{{ activeCard.notes }}</span>
@@ -78,17 +89,24 @@
         <div v-if="isInLibrary">
             <p class="library-popup-alreadyOwn">You already have this in your library</p>
         </div>
-        <button v-else class="library-popup-button" @click="showAddRecordPopup = !showAddRecordPopup">Add To Library</button>
+        <button v-else class="library-popup-button" @click="showAddRecordPopup = !showAddRecordPopup">Add To
+            Library</button>
     </div>
 </template>
 
 <script>
 import ErrorPopup from './ErrorPopup.vue'
 import LibraryService from '../../services/LibraryService'
+import { defineComponent } from 'vue'
+import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
+
 export default {
     props: ['activeCard'],
     components: {
-        ErrorPopup
+        ErrorPopup,
+        Carousel,
+        Slide,
+        Pagination,
     },
     data() {
         return {
@@ -165,7 +183,7 @@ export default {
  }
 
  .library-popup-artist {
-    margin-top: 12px;
+     margin-top: 12px;
      grid-area: artist;
      text-align: center;
  }
@@ -174,7 +192,7 @@ export default {
      grid-area: yearCountry;
      width: 100px;
  }
-  
+
  .library-popup-extra-artist {
      grid-area: extraArtist;
      max-width: 300px;
@@ -183,12 +201,12 @@ export default {
  .library-popup-genre {
      grid-area: genre;
      max-width: 300px;
- } 
+ }
 
  .library-popup-quantity {
      grid-area: quantity;
      max-width: 100px;
- } 
+ }
 
 
  .library-popup-notes {
@@ -326,6 +344,30 @@ export default {
      color: white;
  }
 
+ .carousel__item {
+     min-height: 200px;
+     width: 100%;
+     background-color: var(--vc-clr-primary);
+     color: var(--vc-clr-white);
+     font-size: 20px;
+     border-radius: 8px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+ }
+
+ .carousel__slide {
+     /* padding: 10px; */
+ }
+
+ .carousel__prev,
+ .carousel__next {
+     box-sizing: content-box;
+     border: 5px solid white;
+ }
+
+
+
  input[type=number] {
      height: 30px;
      line-height: 30px;
@@ -354,4 +396,5 @@ export default {
      position: relative;
      right: 4px;
      border-radius: 28px;
- }</style>
+ }
+</style>
