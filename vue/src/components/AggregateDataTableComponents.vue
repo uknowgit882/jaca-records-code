@@ -181,6 +181,7 @@
                 <td  v-if="$store.state.token != ''">
                     <div class="dropdown" :class="{ 'is-active': dropdownActive6 }">
                         <div class="dropdown-trigger">
+                            
                             <button class="button" @click="toggleDropdown6">
                                 <span>Records By Genre </span>
                                 <span class="icon is-small">
@@ -429,14 +430,15 @@ h2 {
 }
 
 .AggData {
-    background: black;
+    background: rgba(0, 0, 0, 0.75);
     display: flex;
+    padding-bottom: 32px;
 }
 
 table {
     width: 80%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-left: 250px;
     color: white
 }
@@ -450,7 +452,7 @@ td {
 }
 
 th {
-    background-color: rgb(72, 41, 82);
+    background-color: #b856abcb;
     color: white;
 }
 

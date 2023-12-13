@@ -88,7 +88,6 @@ export default {
 
 <style scoped>
 .dropdown-menu {
-
 }
 
 .dropdown-content {
@@ -96,7 +95,13 @@ export default {
     margin-top: 7px;
     padding-top: 1px;
     padding-bottom: 22px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    padding-right: 0.7%;
+    background-color: #B856AB;
 }
+
 
 .signup-text {
     color: white;

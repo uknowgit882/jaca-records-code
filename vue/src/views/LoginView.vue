@@ -16,7 +16,7 @@
         <label for="password">Password &nbsp;</label>
         <input class="input-box" type="password" id="password" v-model="user.password" required  />
       </div>
-      <button class="button" id="premiumButton">Sign In</button>
+      <button class="button" id="premiumButton" @click="LibraryPagePush()">Sign In</button>
       <!-- <p>
         <router-link v-bind:to="{ name: 'register' }">Need an account? Sign up.</router-link>
       </p> -->
@@ -57,7 +57,7 @@ export default {
             this.invalidCredentials = true;
           }
         });
-    }
+    },
   }
 };
 </script>

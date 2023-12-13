@@ -18,11 +18,11 @@
                         Home
                     </router-link>
 
-                    <a class="navbar-item" href="/library">
+                    <a class="navbar-item" href="/library" v-if="this.$store.state.token != ''">
                         Library
                     </a>
 
-                    <a class="navbar-item" href="/collections">
+                    <a class="navbar-item" href="/collections" v-if="this.$store.state.token != ''">
                         Collections
                     </a>
                     <a class="navbar-item" href="/data">
@@ -56,17 +56,34 @@ export default {
 
 
 <style scoped>
-
-.navbar {
+.dropdown-content {
+    background-color: black;
+    margin-top: 7px;
+    padding-top: 1px;
+    padding-bottom: 22px;
     position: fixed;
     top: 0px;
     width: 100%;
-    padding-right: 1%;
-    background-color: #4D437F;
+    padding-right: 0.7%;
+    background-color: #B856AB;
 }
 
-.search {
+.navbar {
+    display:flex;
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    padding-right: 0.7%;
+    background-color: #B856AB;
+}
 
+a {
+    padding-top: 7px;
+    align-items: center;
+}
+ 
+
+.search {
     width: 200%;
 }
 
@@ -119,6 +136,7 @@ h2 {
     color: black;
 }
 
+
 .button2:before {
     top: 100%;
     left: 100%;
@@ -128,11 +146,12 @@ h2 {
 .button2:hover:before {
     top: -30px;
     left: -30px;
-    background-color: #D1D301;
+    background-color: #EEE810;
 }
 
 .button2:active:before {
-    background: #4D437F;
+    background: #B856AB;
     transition: background 0s;
 }
+
 </style>
