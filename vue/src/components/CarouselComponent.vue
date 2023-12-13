@@ -3,13 +3,12 @@
     <div class="record-popup-inner">
       <button  @click="showCard = !showCard">X</button>
       <div class="record-popup-inner-inner">
-        <ActiveCardComponent class="record-popup-inner-inner" v-bind:activeCard="this.activeCard"
+        <ActiveCardComponent v-bind:activeCard="this.activeCard"
           :cardType="carouselChooser"></ActiveCardComponent>
-        <!-- <p>Current Slide: {{this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value]}}</p> -->
       </div>
     </div>
   </div>
-  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500">
+  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay && !showCard ? 3000 : false" :wrapAround="true" :transition="500">
     <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record" @click="showCard = !showCard">
       <div v-if="carouselChooser == 'library'" class="carousel__item">
         <img :src="record.record.images[0].uri" />
@@ -100,13 +99,6 @@ export default defineComponent({
     }
   },
   methods: {
-    chosenCarousel() {
-      if (this.carouselChooser == 'library') {
-
-        return true;
-      }
-      return false;
-    },
     getCarouselObject() {
       console.log(this.$refs.myCarousel)
       console.log(this.$props.carouselRecords)
@@ -311,8 +303,8 @@ p {
   z-index: 2;
   padding: 10px;
   text-align: center;
-  max-height: 500px;
-  width: 600px;
+  max-height: 800px;
+  width: 800px;
 }
 
 .record-popup-inner button {

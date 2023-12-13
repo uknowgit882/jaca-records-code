@@ -3,24 +3,7 @@
         <div class="search-popup-addRecord-popup-inner">
             <button class="popup-exit-button" @click.prevent="showAddRecordPopup = !showAddRecordPopup">X</button>
             <div class="search-popup-addRecord-popup-inner-inner">
-                <p
-                    style="color: white; font-weight: bold; text-align: center; text-decoration: underline; margin: 12px; margin-top: 10px;">
-                    Add to Your Library</p>
-                <form style="text-align: left; margin: 12px;">
-                    <div>
-                        <label for="notes" style="color: white; font-weight: bold; margin: 12px;">Notes:</label>
-                        <input class="search-popup-addRecord-popup-inner-inputs" id="notes" type="textarea" name="notes"
-                            rows="3" columns="40" placeholder="Any notes?" v-model="addRecord.notes" />
-                    </div>
-                    <div>
-                        <label for="quantity" style="color: white; font-weight: bold; margin: 12px;">Quantity:</label>
-                        <input class="search-popup-addRecord-popup-inner-inputs" id="quantity" type="number" name="quantity"
-                            placeholder="1" v-model="addRecord.quantity" min="1" />
-                    </div>
-                    <div>
-                        <button class="search-popup-button" @click.prevent="addRecordToLibrary">Add Record</button>
-                    </div>
-                </form>
+                
             </div>
         </div>
     </div>
@@ -28,64 +11,74 @@
     <div v-if="errorPopup" >
          <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
-
+    
     <div class="home" v-if="!isLoading">
         <img src="../../img/Logogif.gif" alt="">
     </div>
-    <div v-else>
-        <div class="search-popup-container">
-            <img class="search-popup-image" :src="activeCard.thumb" alt="">
-            <div class="search-popup-artist-title">
-                <h2>{{ activeCard.title }}</h2>
-            </div>
-            <div class="search-popup-year" style="text-align: left; padding: 8px;">
-                <span style="color: white; font-weight: bold;">Year: </span>
-                <h3>{{ activeCard.year }}</h3>
-            </div>
-            <div class="search-popup-country" style="text-align: left; padding: 8px;">
-                <span style="color: white; font-weight: bold;">Country: </span>
-                <h3>{{ activeCard.country }}</h3>
+    <div v-else >
+        <div class="library-popup-container">
+            <div class="library-popup-image">
+                <img class="library-popup-image" :src="activeCard.record.images[0].uri" alt="">
+                
             </div>
 
-            <div class="search-popup-genre">
-                <p style="font-weight: bold; color: white;">Genre:</p>
+            <div class="library-popup-artist" style="text-align: left; padding: 8px;">
+                <h2 v-for="artist in activeCard.record.artists" :key="artist.name">{{ artist.name }}</h2>
+                <br>
+                <span style="color: white; font-weight: bold;">Title: </span>
+                <h3>{{ activeCard.record.title }}</h3>
+            </div>
+
+            
+            <div class="library-popup-yearCountry" style="text-align: left; padding: 8px;">
+                <span style="color: white; font-weight: bold;">Year: </span>
+                <br>
+                <span>{{ activeCard.record.released.substring(0,4) }}</span>
+                <br>
+                <span style="color: white; font-weight: bold;">Country: </span>
+                <br>
+                <span>{{ activeCard.record.country }}</span>
+            </div>
+
+            <div class="library-popup-extra-artist" style="text-align: left; padding: 8px;">
+                <span style="color: white; font-weight: bold;">Extra Artists: </span>
                 <div class="ticker-tape-container">
                     <div class="ticker-tape">
-                        <span v-for="genre in activeCard.genre" :key="genre">{{ genre }}</span>
+                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{ extraArtist.name }}</span>
                     </div>
                     <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="genre in activeCard.genre" :key="genre">{{ genre }}</span>
+                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{ extraArtist.name }}</span>
+                    </div>
+                </div>
+                <span style="font-weight: bold; color: white;">Genre:</span>
+                <div class="ticker-tape-container">
+                    <div class="ticker-tape">
+                        <span v-for="genre in activeCard.record.genres" :key="genre">{{ genre }}</span>
+                    </div>
+                    <div class="ticker-tape" aria-hidden="true">
+                        <span v-for="genre in activeCard.record.genres" :key="genre">{{ genre }}</span>
                     </div>
                 </div>
             </div>
-            <div class="search-popup-label">
-                <p style="font-weight: bold; color: white;">Label(s): </p>
-                <div class="ticker-tape-container">
-                    <div class="ticker-tape">
-                        <span v-for="label in activeCard.label" :key="label">{{ label }}</span>
-                    </div>
-                    <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="label in activeCard.label" :key="label">{{ label }}</span>
-                    </div>
-                </div>
+
+            <div class="library-popup-quantity">
+                <span style="color: white; font-weight: bold;">Quantity: </span>
+                <span>{{ activeCard.quantity }}</span>
             </div>
-            <div class="search-popup-identifier">
-                <p style="font-weight: bold; color: white;">Identifier(s): </p>
-                <div class="ticker-tape-container ">
-                    <div class="ticker-tape">
-                        <span v-for="identifier in activeCard.identifier" :key="identifier">{{ identifier }}</span>
-                    </div>
-                    <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="identifier in activeCard.identifier" :key="identifier">{{ identifier }}</span>
-                    </div>
-                </div>
+            
+            <div class="library-popup-notes" style="text-align: left; padding: 8px;">
+                <span style="color: white; font-weight: bold;">Notes: </span>
+                <span>{{ activeCard.notes }}</span>
+            </div>
+
+            <div class="library-popup-table">
             </div>
 
         </div>
         <div v-if="isInLibrary">
-            <p class="search-popup-alreadyOwn">You already have this in your library</p>
+            <p class="library-popup-alreadyOwn">You already have this in your library</p>
         </div>
-        <button v-else class="search-popup-button" @click="showAddRecordPopup = !showAddRecordPopup">Add To Library</button>
+        <button v-else class="library-popup-button" @click="showAddRecordPopup = !showAddRecordPopup">Add To Library</button>
     </div>
 </template>
 
@@ -149,61 +142,65 @@ export default {
 
 </script>
 
-<style> .search-popup-container {
+<style> .library-popup-container {
      display: grid;
-     grid-template-columns: 1fr 1fr 1fr;
+     grid-template-columns: 16% 16% 16% 16% 16% 16%;
      grid-template-areas:
-         "img artist-title artist-title"
-         "img year country"
-         "genre label identifier";
+         "image image image artist artist artist"
+         "image image image artist artist artist"
+         "image image image extraArtist extraArtist yearCountry"
+         "quantity blank table table table table"
+         "notes notes table table table table"
+         "notes notes table table table table";
      /* "button button button"; */
      gap: 5px;
      font-weight: bold;
  }
 
- .search-popup-image {
-     grid-area: img;
+ .library-popup-image {
+     grid-area: image;
      margin: auto;
      padding: 5px;
      max-width: 200px;
  }
 
- .search-popup-artist-title {
-     grid-area: artist-title;
+ .library-popup-artist {
+    margin-top: 12px;
+     grid-area: artist;
      text-align: center;
-     max-width: 400px;
  }
 
- .search-popup-year {
-     grid-area: year;
-     max-width: 200px;
+ .library-popup-year-country {
+     grid-area: yearCountry;
+     width: 100px;
+ }
+  
+ .library-popup-extra-artist {
+     grid-area: extraArtist;
+     max-width: 300px;
  }
 
- .search-popup-country {
-     grid-area: country;
-     max-width: 200px;
- }
-
- .search-popup-genre {
+ .library-popup-genre {
      grid-area: genre;
-     max-width: 200px;
- }
+     max-width: 300px;
+ } 
 
- .search-popup-label {
-     grid-area: label;
-     max-width: 200px;
- }
+ .library-popup-quantity {
+     grid-area: quantity;
+     max-width: 100px;
+ } 
 
- .search-popup-identifier {
-     grid-area: identifier;
-     max-width: 200px;
- }
 
- .search-popup-notes {
+ .library-popup-notes {
      grid-area: notes;
+     max-width: 200px;
  }
 
- .search-popup-button {
+ .library-popup-table {
+     grid-area: table;
+ }
+
+ .library-popup-button {
      grid-area: button;
      margin-top: 8px;
      padding: 8px;
@@ -215,7 +212,7 @@ export default {
      cursor: pointer;
  }
 
- .search-popup-alreadyOwn {
+ .library-popup-alreadyOwn {
      grid-area: button;
      margin-top: 8px;
      padding: 8px;
@@ -260,7 +257,7 @@ export default {
      }
  }
 
- .search-popup-addRecord-popup {
+ .library-popup-addRecord-popup {
      border-radius: 5px;
      position: fixed;
      top: 0;
@@ -275,7 +272,7 @@ export default {
      word-wrap: break-word;
  }
 
- .search-popup-addRecord-popup-inner scoped {
+ .library-popup-addRecord-popup-inner scoped {
      border-radius: 5px;
      display: flex;
      flex-direction: column;
@@ -289,7 +286,7 @@ export default {
      width: 100%;
  }
 
- .search-popup-addRecord-popup-inner-inner {
+ .library-popup-addRecord-popup-inner-inner {
      border-radius: 5px;
      background: black;
      text-align: center;
@@ -297,7 +294,7 @@ export default {
      width: 300px;
  }
 
- .search-popup-addRecord-popup-inner button {
+ .library-popup-addRecord-popup-inner button {
      border-radius: 5px;
      margin-top: 16px;
      padding: 8px 12px;
@@ -310,7 +307,7 @@ export default {
      float: right;
  }
 
- .search-popup-addRecord-popup-inner-inputs {
+ .library-popup-addRecord-popup-inner-inputs {
      border-radius: 5px;
      box-sizing: border-box;
      width: 100%;
