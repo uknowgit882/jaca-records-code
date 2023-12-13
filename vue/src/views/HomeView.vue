@@ -4,7 +4,7 @@
   </div>
   <div v-else>
     <h1>Home</h1>
-    <button v-on:click="logout">Logout</button>
+    <!-- <button v-on:click="logout">Logout</button> -->
     <CarouselComponent v-bind:carouselRecords="filteredCollections" v-bind:carouselChooser="'searchCollections'" :autoplay="true">
       </CarouselComponent>
   </div>
@@ -34,9 +34,9 @@ export default {
         CarouselComponent
     },
   methods: {
-    logout() {
-      this.$store.commit('LOGOUT');
-    },
+    // logout() {
+    //   this.$store.commit('LOGOUT');
+    // },
     getPublicCollections() {
         CollectionsService.GetAllPublicCollections()
           .then(response => {
