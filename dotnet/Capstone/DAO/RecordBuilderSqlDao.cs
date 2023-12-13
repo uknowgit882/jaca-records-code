@@ -122,10 +122,10 @@ namespace Capstone.DAO
         {
             int output = 0;
 
-            string sql = "SELECT count(discogs_id) AS count " +
+            string sql = "SELECT count(records.discogs_id) AS count " +
                 "FROM records " +
-                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
-                "WHERE username = @username AND is_active = 1";
+                "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
+                "WHERE username = @username AND is_premium = @isPremium AND libraries.is_active = 1 ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -133,9 +133,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
@@ -205,10 +205,10 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT substring(released, 1, 4) AS year_released, count (discogs_id) AS record_count " +
+            string sql = "SELECT substring(released, 1, 4) AS year_released, count (records.discogs_id) AS record_count " +
                 "FROM records " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
+                "WHERE username = @username AND is_premium = @isPremium AND libraries.is_active = 1 " +
                 "GROUP BY released " +
                 "ORDER by year_released DESC";
             try
@@ -254,10 +254,10 @@ namespace Capstone.DAO
         {
             Dictionary<string, int> output = new Dictionary<string, int>();
 
-            string sql = "SELECT country, count (discogs_id) AS record_count " +
+            string sql = "SELECT country, count (records.discogs_id) AS record_count " +
                 "FROM records " +
                 "JOIN libraries ON records.discogs_id = libraries.discogs_id " +
-                "WHERE username = @username AND is_premium = @isPremium, AND is_active = 1 " +
+                "WHERE username = @username AND is_premium = @isPremium AND libraries.is_active = 1 " +
                 "GROUP BY country " +
                 "ORDER by country";
             try

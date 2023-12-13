@@ -48,6 +48,9 @@ export function createStore(currentToken, currentUser) {
       ADD_RECORDS_TO_LIBRARY(state, adding) {
         state.library = adding;
       },
+      PUSH_RECORDS_TO_LIBRARY(state, adding) {
+        state.library.unshift(adding);
+      },
       ADD_COLLECTIONS_TO_LIBRARY(state, collections){
         state.collections = collections;
       },

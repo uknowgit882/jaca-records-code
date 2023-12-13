@@ -25,7 +25,7 @@ namespace Capstone.Models
     }
     public class IncomingLibraryRequest
     {
-        public int DiscogsId { get; set; }
+        public int Discogs_Id { get; set; }
         public string Notes { get; set; } = "";
         public int Quantity { get; set; } = 1;
     }

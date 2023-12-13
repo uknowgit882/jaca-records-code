@@ -18,7 +18,7 @@
         <h2 class="signup-text">&nbsp;&nbsp;Need an account? Sign up.</h2>
         <button
           class="button2 is-warning"
-          id="premiumButton"
+          id="premiumButton2"
           @click="RegisterPagePush()"
         >
           Register
