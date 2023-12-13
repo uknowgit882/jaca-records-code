@@ -206,7 +206,7 @@ namespace Capstone.Controllers
                     }
                 }
 
-                int collectionId = _collectionsDao.AddCollection(username, newCollection.Name, (userRole == FreeAccountName ? NotPremium : IsPremium));
+                int collectionId = _collectionsDao.AddCollection(username, newCollection.Name, newCollection.Is_Private, (userRole == FreeAccountName ? NotPremium : IsPremium));
 
                 // get the full collection
                 Collection output = _collectionsDao.GetNamedCollection(username, newCollection.Name);
