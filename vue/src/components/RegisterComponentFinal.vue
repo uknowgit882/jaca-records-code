@@ -5,29 +5,31 @@
             <div role="alert" v-if="registrationErrors">
                 {{ registrationErrorMsg }}
             </div>
-            <div class="form-input-group">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" v-model="user.firstName" required autofocus />
-            </div>
-            <div class="form-input-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" v-model="user.lastName" required />
-            </div>
-            <div class="form-input-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" v-model="user.email" required />
-            </div>
-            <div class="form-input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" v-model="user.username" required />
-            </div>
-            <div class="form-input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" v-model="user.password" required />
-            </div>
-            <div class="form-input-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
+            <div class="boxes">
+                <div class="form-input-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" v-model="user.firstName" required autofocus />
+                </div>
+                <div class="form-input-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" v-model="user.lastName" required />
+                </div>
+                <div class="form-input-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" v-model="user.email" required />
+                </div>
+                <div class="form-input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" v-model="user.username" required />
+                </div>
+                <div class="form-input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" v-model="user.password" required />
+                </div>
+                <div class="form-input-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
+                </div>
             </div>
             <div class="form-input-group2">
                 <label for="userRole">Account Type</label>
@@ -37,14 +39,51 @@
                     <option>Premium</option>
                 </select>
             </div>
-            <button class="button2" type="submit">Create Account</button>
-            <!-- <p><router-link v-bind:to="{ name: 'login' }">Already have an account? Log in.</router-link></p> -->
+            <main id="buy-grid">
+                <button class="box-premium">
+                    <box class="box-pre">
+                        <div class="media-content">
+                            <div class="content">
+                                <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
+                                <h2><strong> <i class="fa-solid fa-peace"></i> PREMIUM</strong>
+                                </h2>
+                                <h4>
+                                    <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save unlimited records to your
+                                        library
+                                    </p>
+                                    <p><i class="fa-solid fa-infinity"></i>&nbsp;&nbsp;Create unlimited collections</p>
+                                </h4>
+                            </div>
+                        </div>
+                    </box>
+                </button>
+                <button class="box-free">
+                    <box class="box-pre">
+                        <div class="media-content">
+                            <div class="content">
+                                <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
+                                <h2><strong> <i class="fa-solid fa-crown"></i> BASIC</strong>
+                                </h2>
+                                <h4>
+                                    <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save records to your library</p>
+                                    <p><i class="fa-solid fa-box"></i>&nbsp;&nbsp;Create up to 25 collections</p>
+                                    <p><i class="fa-solid fa-record-vinyl"></i>&nbsp;&nbsp;Browse various records</p>
+                                    <p></p>
+                                </h4>
+                            </div>
+                        </div>
+                    </box>
+                </button>
+            </main>
+            <button class="button2" type="submit" @click="LibraryPagePush()">Create Account</button>
         </form>
+
     </div>
 </template>
 
 <script>
 import authService from '@/services/AuthService';
+import UserFunctionsService from '@/services/UserFunctionsService.js'
 
 export default {
     data() {
@@ -91,6 +130,9 @@ export default {
             this.registrationErrors = false;
             this.registrationErrorMsg = 'There were problems registering this user.';
         },
+        LibraryPagePush() {
+            this.$router.push({ name: "library" });
+        },
     },
 };
 
@@ -98,27 +140,123 @@ export default {
 
 <style scoped>
 .form-input-group {
-    margin-bottom: 1rem;
     color: white;
+    padding: 10px;
 }
+
 
 .form-input-group2 {
     color: white;
+
 }
 
 #email {
-    padding-left: 39px;
+    background-color: black;
+    color: white;
+
+}
+
+#firstName {
+    background-color: black;
+    color: white;
+
+}
+
+#lastName {
+    background-color: black;
+    color: white;
+}
+
+#confirmPassword {
+    background-color: black;
+    color: white;
 }
 
 #username {
-    padding-left: 5px;
+    background-color: black;
+    color: white;
+
 }
+
 #password {
     padding-right: 10px;
+    background-color: black;
+    color: white;
+
 }
+
 label {
     margin-right: 0.5rem;
 }
+
+.box-pre {
+    padding: 10px;
+}
+
+#buy-grid {
+    display: grid;
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "box-premium box-free";
+    row-gap: 20px;
+    column-gap: 22px;
+    align-items: center;
+    padding-left: 439px;
+    padding-top: 20px;
+    padding-bottom: 25px;
+}
+
+.box-premium {
+    display: grid;
+    grid-area: box-premium;
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    height: 255px;
+    border: 5px solid rgb(255, 255, 255);
+    background-image: linear-gradient(#EEE810, #f5f6c9);
+    border-radius: 10px;
+    justify-content: left;
+    transition: transform 0.3s ease;
+    text-align: left;
+
+}
+
+.box-premium:hover {
+    transition: transform 0.3s ease;
+    transform: translateY(-10px);
+}
+
+.box-free {
+    display: grid;
+    grid-area: box-free;
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    border: 5px solid rgb(255, 255, 255);
+    background-image: linear-gradient(#08A2D9, rgb(176, 221, 237));
+    border-radius: 10px;
+    justify-content: left;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.box-free:hover {
+    transition: transform 0.3s ease;
+    transform: translateY(-10px);
+}
+
+
+h4 {
+    color: white;
+}
+
+.fa-solid {
+    color: white;
+    padding-top: 15px;
+}
+
 .button2 {
     --color: white;
     font-family: inherit;
