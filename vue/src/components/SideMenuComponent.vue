@@ -30,7 +30,7 @@
         </span>
       </button>
     </div>
-    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <!-- <div class="dropdown-menu" id="dropdown-menu" role="menu">
       <div class="dropdown-content">
         <button class="button2 is-warning" id="premiumButton" @click="UpgradeUser()">
           Upgrade Account
@@ -41,9 +41,35 @@
         <button class="button2 is-warning" id="premiumButton" @click="DeactivateUser()">
           Deactivate Account
         </button>
+      </div> -->
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <button
+            class="button2 is-warning"
+            id="premiumButton"
+            @click="UpgradeUser()"
+          >
+            Upgrade Account
+          </button>
+          <button
+            class="button2 is-warning"
+            id="premiumButton"
+            @click="DowngradeUser()"
+          >
+            Downgrade Account
+          </button>
+          <button
+            class="button2 is-warning"
+            id="premiumButton"
+            @click="DeactivateUser()"
+          >
+            Deactivate Account
+          </button>
+           <button class="button2" v-on:click="logout">Logout</button>
+        </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
   
 <script>
@@ -60,55 +86,96 @@ export default {
       dropdownActive: false,
     };
   },
-  methods: {
-    RegisterPagePush() {
-      this.$router.push({ name: "register" });
+  // methods: {
+  //   RegisterPagePush() {
+  //     this.$router.push({ name: "register" });
+  //   },
+  //   UpgradeUser() {
+  //     UserFunctionsService.upgradeUser()
+  //       .then((response) => {
+  //         if (response.status == 200) {
+  //           this.$store.commit("CHANGE_USER", this.user);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "User Upgrade");
+  //       });
+  //   },
+    methods: {
+      RegisterPagePush() {
+        this.$router.push({ name: "register" });
+      },
+      UpgradeUser() {
+        UserFunctionsService.upgradeUser()
+          .then((response) => {
+            if (response.status == 200) {
+              this.$store.commit("CHANGE_USER", this.user);
+            }
+          })
+          .catch((error) => {
+            this.handleErrorResponse(error, "User Upgrade");
+          });
+      },
+      DowngradeUser() {
+        UserFunctionsService.downgradeUser()
+          .then((response) => {
+            if (response.status == 200) {
+              this.$store.commit("CHANGE_USER", this.user);
+            }
+          })
+          .catch((error) => {
+            this.handleErrorResponse(error, "User Downgrade");
+          });
+      },
+      DeactivateUser() {
+        UserFunctionsService.deactivateUser()
+          .then((response) => {
+            if (response.status == 200) {
+              this.$store.commit("CHANGE_USER", this.user);
+            }
+          })
+          .catch((error) => {
+            this.handleErrorResponse(error, "User Deactivate");
+          });
+      },
+      handleErrorResponse(error, verb) {
+        if (error.response) {
+          console.log(
+            `Error ${verb} topic. Response received was "${error.response.statusText}".`
+          );
+        } else if (error.request) {
+          console.log(`Error ${verb} topic. Server could not be reached.`);
+        } else {
+          console.log(`Error ${verb} topic. Request could not be created.`);
+        }
+      },
+      logout() {
+      this.$store.commit('LOGOUT');
     },
-    UpgradeUser() {
-      UserFunctionsService.upgradeUser()
-        .then((response) => {
-          if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "User Upgrade");
-        });
     },
-    DowngradeUser() {
-      UserFunctionsService.downgradeUser()
-        .then((response) => {
-          if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "User Downgrade");
-        });
-    },
-    DeactivateUser() {
-      UserFunctionsService.deactivateUser()
-        .then((response) => {
-          if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "User Deactivate");
-        });
-    },
-    handleErrorResponse(error, verb) {
-      if (error.response) {
-        console.log(
-          `Error ${verb} topic. Response received was "${error.response.statusText}".`
-        );
-      } else if (error.request) {
-        console.log(`Error ${verb} topic. Server could not be reached.`);
-      } else {
-        console.log(`Error ${verb} topic. Request could not be created.`);
-      }
-    },
-  },
+    // DeactivateUser() {
+    //   UserFunctionsService.deactivateUser()
+    //     .then((response) => {
+    //       if (response.status == 200) {
+    //         this.$store.commit("CHANGE_USER", this.user);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.handleErrorResponse(error, "User Deactivate");
+    //     });
+    // },
+    // handleErrorResponse(error, verb) {
+    //   if (error.response) {
+    //     console.log(
+    //       `Error ${verb} topic. Response received was "${error.response.statusText}".`
+    //     );
+    //   } else if (error.request) {
+    //     console.log(`Error ${verb} topic. Server could not be reached.`);
+    //   } else {
+    //     console.log(`Error ${verb} topic. Request could not be created.`);
+    //   }
+    // },
+  
 };
 </script>
   

@@ -5,11 +5,11 @@
     </div>
     <div v-else>
         <div v-for="collection in $store.state.collections" v-bind:key="collection.name">
-            <h2>{{ collection.name }}</h2>
+            <h2 style="margin-left: 20px">{{ collection.name }}</h2>
             <button>Change Collection Name</button>
             <button>Delete</button>
             <div v-if="collection.records.length == 0">
-                <p>You have no records in this collection</p>
+                <p style="margin-left: 20px">You have no records in this collection</p>
             </div>
             <div v-else>
                 <CarouselComponent v-bind:carouselRecords="collection.records" v-bind:carouselChooser="'collection'"
@@ -55,7 +55,6 @@ export default {
        font-weight: bolder;
        color: white;
        text-align: left;
-       padding-left: 20px;
    }
 
    p {
