@@ -2,7 +2,8 @@
     <div v-if="showRecordOptionsPopup" class="library-popup-RecordOptions-popup">
         <div class="library-popup-RecordOptions-popup-inner">
             <button class="popup-exit-button" @click.prevent="showRecordOptionsPopup = !showRecordOptionsPopup">X</button>
-            <div class="library-popup-RecordOptions-popup-inner-inner" :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox':''">
+            <div class="library-popup-RecordOptions-popup-inner-inner"
+                :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox' : ''">
                 <div class="library-popup-RecordOptions-buttons" style="margin-left: 8px;">
                     <div>
                         <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
@@ -21,24 +22,38 @@
                     </div>
                 </div>
                 <div style="flex-grow: 2; align-items: stretch; margin: 12px;">
-                <div :class="optionsToggle == 1 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
-                    <p>Add to Collection</p>
-                    <div class="scrollableBox" style="height: 100px; max-height: 110px">
-                        <button v-for="eligibleCollection in collectionsYouCanAddTo" :key="eligibleCollection.name" style="background-color: #17B39F; width: 100%; margin: 10px;" @click="addRecordToCollection(eligibleCollection.name)">Add to: {{ eligibleCollection.name }}</button>
+                    <div :class="optionsToggle == 1 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                        <p>Add to Collection</p>
+                        <div class="scrollableBox" style="height: 100px; max-height: 110px">
+                            <button v-for="eligibleCollection in collectionsYouCanAddTo" :key="eligibleCollection.name"
+                                style="background-color: #17B39F; width: 100%; margin: 10px;"
+                                @click="addRecordToCollection(eligibleCollection.name)">Add to: {{ eligibleCollection.name
+                                }}</button>
+                        </div>
+
+                    </div>
+                    <div :class="optionsToggle == 2 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px;">
+                        <div style="display: flex; flex-direction: column; margin-top: 4px;">
+                            <p>Update Quantity</p>
+                            <input type="number" id="updateQuantity" name="updateQuantity" placeholder="1" min="1"
+                                v-model="updateLibrary.quantity"
+                                style="align-items: left; margin: 12px; border-radius: 4px; color: white;">
+                            <button style="margin: 12px; background-color: #17B39F;" @click="updateQuantity">Update</button>
+                        </div>
+                    </div>
+                    <div :class="optionsToggle == 3 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                        <div style="display: flex; flex-direction: column; margin-top: 4px;">
+                        <p>Update Notes</p>
+                        <input type="textarea" id="updateNotes" name="updateNotes" placeholder="Updated note:" 
+                                v-model="updateLibrary.notes"
+                                style="align-items: left; margin: 12px; border-radius: 4px; color: white;">
+                            <button style="margin: 12px; background-color: #17B39F;" @click="updateNotes">Update</button>
+                        </div>
                     </div>
                     <p v-if="weAreOnIt">We're on it!</p>
                     <p v-if="actionSuccessful">Success!</p>
-                    <button @click="optionsToggle = 0">Close</button>
+                    <button v-if="optionsToggle != 0" @click="optionsToggle = 0">Close</button>
                 </div>
-                <div :class="optionsToggle == 2 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
-                    <p>Update Quantity</p>
-                    <button @click="optionsToggle = 0">Close</button>
-                </div>
-                <div :class="optionsToggle == 3 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
-                    <p>Update Notes</p>
-                    <button @click="optionsToggle = 0">Close</button>
-                </div>
-            </div>
             </div>
         </div>
     </div>
@@ -223,11 +238,16 @@ export default {
             recordToAddToCollection: {
                 discogs_Id: this.activeCard.record.id
             },
+            updateLibrary: {
+                discogs_Id: this.activeCard.record.id,
+                notes: "",
+                quantity: 0,
+            },
             eligibleCollections: []
         }
     },
     computed: {
-        collectionsYouCanAddTo(){
+        collectionsYouCanAddTo() {
             return this.eligibleCollections;
         }
     },
@@ -243,11 +263,11 @@ export default {
                     this.isLoading = true;
                 })
         },
-        successDisappearer(){
+        successDisappearer() {
             this.actionSuccessful = false;
             return this.actionSuccessful;
         },
-        displaySuccess(){
+        displaySuccess() {
             this.actionSuccessful = true;
             setTimeout(this.successDisappearer, 2000)
         },
@@ -271,6 +291,42 @@ export default {
                     this.isLoading = true;
                 })
         },
+        updateQuantity(){
+            this.isLoading = false;
+            this.weAreOnIt - true;
+            LibraryService.ChangeQuantityForRecordInLibrary(this.updateLibrary)
+            .then( response => {
+                this.isLoading = true;
+                this.weAreOnIt = false;
+                this.displaySuccess();
+            })
+            .catch(error => {
+                    this.isInLibrary = false;
+                    this.weAreOnIt = false;
+                    this.optionsToggle = 0;
+                    this.errorMessage = `update the quantity of this record`;
+                    this.isLoading = true;
+                    this.errorPopup = true;
+                })
+        },
+        updateNotes(){
+            this.isLoading = false;
+            this.weAreOnIt - true;
+            LibraryService.ChangeNoteForRecordInLibrary(this.updateLibrary)
+            .then( response => {
+                this.isLoading = true;
+                this.weAreOnIt = false;
+                this.displaySuccess();
+            })
+            .catch(error => {
+                    this.isInLibrary = false;
+                    this.weAreOnIt = false;
+                    this.optionsToggle = 0;
+                    this.errorMessage = `update the notes of this record`;
+                    this.isLoading = true;
+                    this.errorPopup = true;
+                })
+        },
         addRecordToCollection(collectionName) {
             this.isLoading = false;
             this.weAreOnIt = true;
@@ -280,7 +336,7 @@ export default {
                     this.isLoading = true;
                     this.weAreOnIt = false;
                     this.getCollectionsYouCanAddThisRecordTo();
-                    this.displaySuccess()
+                    this.displaySuccess();
                 })
                 .catch(error => {
                     this.isInLibrary = false;
@@ -497,20 +553,22 @@ export default {
      justify-content: stretch;
      margin: 12px;
  }
- .library-popup-RecordOptions-bigBox{
-    height: 220px;
-    width: 530px;
+
+ .library-popup-RecordOptions-bigBox {
+     height: 220px;
+     width: 530px;
  }
- .library-popup-RecordOptions-buttons{
-    display: flex; 
-    flex-direction: column;
-    justify-content: stretch;
+
+ .library-popup-RecordOptions-buttons {
+     display: flex;
+     flex-direction: column;
+     justify-content: stretch;
  }
 
  .library-popup-RecordOptions-popup-inner-inner-buttons {
      background-color: #09A3DA;
      width: 150px;
- } 
+ }
 
  .library-popup-RecordOptions-popup-inner button {
      border-radius: 5px;
@@ -732,5 +790,4 @@ export default {
      position: relative;
      right: 4px;
      border-radius: 28px;
- }
-</style>
+ }</style>

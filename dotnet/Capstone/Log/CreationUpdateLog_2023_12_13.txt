@@ -115,3 +115,9 @@ Trying to get record from Discogs API and build into database | For 5598 | AddRe
 Trying to add to library | For aseelt, record: 5598 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 5:04:41 AM
 --- END OF ACTION ---
 
+Trying to change record quantity library | For aseelt, record: 0 | ChangeQuantity | The wrong number of rows is impacted | 12/13/2023 1:38:53 PM
+--- END OF ACTION ---
+
+Trying to change quantity | For aseelt, 14488 | UpdateQuantityForRecordInLibrary | Exception occurred | 12/13/2023 1:38:53 PM
+--- END OF ACTION ---
+
