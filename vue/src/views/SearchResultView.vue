@@ -128,6 +128,14 @@ export default {
 </script>
 
 <style scoped>
+.carousel__item {
+  background-color: black;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  align-items: center;
+}
 .searchResultsGrid {
     display: grid;
     grid-template-areas:
@@ -155,7 +163,7 @@ h2 {
     font-weight: bolder;
     color: white;
     text-align: left;
-    padding-left: 20px;
+    padding: 20px;
 }
 
 p {

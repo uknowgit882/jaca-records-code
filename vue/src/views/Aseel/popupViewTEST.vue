@@ -18,7 +18,7 @@
   </template>
   
   <script>
-  import PopUpComponent from '../../components/PopUpComponent.vue';
+  //import PopUpComponent from '../../components/PopUpComponent.vue';
   export default {
     components: {
       //PopUpComponent

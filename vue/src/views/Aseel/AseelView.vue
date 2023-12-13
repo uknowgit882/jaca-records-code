@@ -1,54 +1,45 @@
 <template>
- 
+  <div>
+    <div>
+      <div class="tab">
+        <button class="tablinks" @click="tabToggle = 1">London</button>
+        <button class="tablinks" @click="tabToggle = 2">Paris</button>
+        <button class="tablinks" @click="tabToggle = 3">Tokyo</button>
+      </div>
+
+    </div>
+    <div :class="tabToggle == 1 ? 'makeVisible' : 'notVisible' "  class="tabcontent">
+      <h3>London</h3>
+      <p>London is the capital city of England.</p>
+    </div>
+
+    <div :class="tabToggle == 2 ? 'makeVisible' : 'notVisible' "  class="tabcontent">
+      <h3>Paris</h3>
+      <p>Paris is the capital of France.</p>
+    </div>
+
+    <div :class="tabToggle == 3 ? 'makeVisible' : 'notVisible' " class="tabcontent">
+      <h3>Tokyo</h3>
+      <p>Tokyo is the capital of Japan.</p>
+    </div>
+  </div>
 </template>
 
 <script>
-import LibraryService from '../../services/LibraryService';
-import CarouselComponent from '../../components/CarouselComponent.vue';
-
 export default {
-    computed: {
-    },
-    components: {
-        CarouselComponent
-    },
-    methods: {
-        getLibrary() {
-            LibraryService.GetLibrary()
-                .then(response => {
-                    this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
-                })
-        }
-    },
-    created() {
-        this.getLibrary();
+  data(){
+    return{
+      tabToggle: 1
     }
+  }
 }
 </script>
 
-<style scoped>
-.Library-container {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    /* background-color: black; */
-
+<style>
+.makeVisible{
+  display: block;
 }
-
-.carouselSearchCard_container{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: 
-  "image year"
-  "title title";
-}
-.carouselSearchCard_image{
-  grid-area: image;
-}
-.carouselSearchCard_year{
-  grid-area: year;
-}
-.carouselSearchCard_title{
-  grid-area: title;
+.notVisible{
+  display: none;
 }
 </style>

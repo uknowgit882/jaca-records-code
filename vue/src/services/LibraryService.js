@@ -14,9 +14,9 @@ export default{
         return axios.delete(`Library/${id}`);
     },
     ChangeNoteForRecordInLibrary(record){
-        return axios.put(`Library/${record.discogsId}`, record);
+        return axios.put(`Library/${record.discogs_Id}/notes`, record);
     },
     ChangeQuantityForRecordInLibrary(record){
-        return axios.put(`Library/${record.discogsId}`, record);
+        return axios.put(`Library/${record.discogs_Id}/quantity`, record);
     }
 }
