@@ -2,18 +2,14 @@
     <div>
       <button @click="returnCollection">Toggle Popup</button>
       
-      <!-- <img src="https://i.ebayimg.com/images/g/CFwAAOSwTW1dgjwJ/s-l640.jpg" alt="Click me"/> -->
       <div v-if="showPopup" class="popup">
         <button @click="showPopup =! showPopup">Exit</button>
-      <!-- <pop-up-component @click="showPopup = !showPopup" v-for="record in collection.records" v-bind:record="record" v-bind:key="record.id"></pop-up-component> -->
     </div>
       <div v-if="showPopup" class="popup">
         <div class="popup-inner">
           <h2>More information:</h2>
-          <!-- <h2>{{ collection[0].name }}</h2> -->
           <button @click="showPopup = !showPopup">Close Information</button>
         </div>
-        <!-- <record-in-collection v-for="record in $store.state.Collections.records" v-bind:record="record" v-bind:key="record.id"/> -->
       </div>
     </div>
 
@@ -22,7 +18,7 @@
   </template>
   
   <script>
-  import PopUpComponent from '../../components/PopUpComponent.vue';
+  //import PopUpComponent from '../../components/PopUpComponent.vue';
   export default {
     components: {
       //PopUpComponent

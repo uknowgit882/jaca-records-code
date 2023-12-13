@@ -86,7 +86,7 @@ namespace Capstone.Controllers
         public ActionResult<RecordClient> AddRecordToLibrary(IncomingLibraryRequest request)
         {
             string username = User.Identity.Name;
-            if(request.DiscogsId == 0)
+            if(request.Discogs_Id == 0)
             {
                 return BadRequest("Please provide the record ID you want to add to your library");
             }
@@ -95,7 +95,7 @@ namespace Capstone.Controllers
             {
                 // get the record from the api and put it in our db
                 string errorMessage = "";
-                RecordClient dbLoadedRecord = AddRecordToDbById(request.DiscogsId, out errorMessage);
+                RecordClient dbLoadedRecord = AddRecordToDbById(request.Discogs_Id, out errorMessage);
 
                 // get user's role
                 string userRole = _userDao.GetUserRole(username);
@@ -113,10 +113,10 @@ namespace Capstone.Controllers
                 }
 
                 // if all good, add
-                bool addRecordSuccess = _librariesDao.AddRecord(request.DiscogsId, username, request.Quantity, (userRole == FreeAccountName ? NotPremium : IsPremium), request.Notes);
+                bool addRecordSuccess = _librariesDao.AddRecord(request.Discogs_Id, username, request.Quantity, (userRole == FreeAccountName ? NotPremium : IsPremium), request.Notes);
                 if (addRecordSuccess)
                 {
-                    return Created(CreationPathReRoute, BuildFullRecord(request.DiscogsId));
+                    return Created(CreationPathReRoute, BuildFullRecord(request.Discogs_Id));
 
                 }
                 else
@@ -251,7 +251,7 @@ namespace Capstone.Controllers
                     return NotFound("You don't have this record in your library");
                 }
 
-                int output = _librariesDao.ChangeQuantity(username, request.DiscogsId, request.Quantity);
+                int output = _librariesDao.ChangeQuantity(username, request.Discogs_Id, request.Quantity);
                 if (output > 0)
                 {
                     return Ok($"You now have {request.Quantity} of this record");

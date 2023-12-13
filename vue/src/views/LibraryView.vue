@@ -3,7 +3,7 @@
       <img src="../../img/Logogif.gif" alt="">
     </div>
     <div v-else>
-      <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'" :autoplay="true">
+      <CarouselComponent v-bind:carouselRecords="$store.state.library" v-bind:carouselChooser="'library'" :autoplay="true" >
       </CarouselComponent>
     </div>
   </template>
@@ -37,4 +37,8 @@
     }
   };
   </script>
+
+  <style>
+
+</style>
   
