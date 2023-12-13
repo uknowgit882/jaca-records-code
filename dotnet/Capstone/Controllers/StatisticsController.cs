@@ -65,6 +65,28 @@ namespace Capstone.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("totalrecords")]
+        [Authorize]
+        public ActionResult<int> GetUserTotalRecords()
+        {
+            string username = User.Identity.Name;
+            string usersRole = _userDao.GetUserRole(username);
+
+            bool isPremium = usersRole == FreeAccountName ? NotPremium : IsPremium;
+
+            try
+            {
+                int output = _recordBuilderDao.GetRecordCountByUsername(username, isPremium); 
+
+                return Ok(output);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteLog("Trying to do stuff", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("aggregate")]
         public ActionResult<StatisticsAggregate> GetAggregateUserStats()

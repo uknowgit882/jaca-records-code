@@ -6,5 +6,8 @@ export default {
     },
     getUserStats(){
         return axios.get(`Statistics/user`);
+    },
+    getTotalRecords(){
+        return axios.get(`Statistics/totalrecords`);
     }
 }
