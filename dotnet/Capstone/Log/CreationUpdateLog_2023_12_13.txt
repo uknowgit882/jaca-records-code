@@ -169,3 +169,33 @@ Trying to get record from Discogs API and build into database | For 5991043 | Ad
 Trying to add to library | For caleba, record: 5991043 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:28:07 PM
 --- END OF ACTION ---
 
+Trying to add to library | For jakel, record: 231219 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:55:10 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 22220506 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Europ'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 22220506 | AddRecordToDbById | Sql exception occured | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 22220506 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Getting SearchResult from external API | Discogs Input: user search paramaters | SearchForRecordsDiscogs | Couldn't reach the Discogs API | 12/13/2023 7:21:14 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:34:43 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:36:57 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:39:34 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:42:46 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:45:44 PM
+--- END OF ACTION ---
+

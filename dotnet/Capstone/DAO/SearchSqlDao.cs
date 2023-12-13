@@ -111,13 +111,13 @@ namespace Capstone.DAO
                         "JOIN libraries ON libraries.discogs_id = records.discogs_id " +
                         "JOIN users on libraries.username = users.username " +
                         "WHERE users.username = @username " +
-                        $"AND records.title LIKE @querySearch{i} " +
+                        $"AND (records.title LIKE @querySearch{i} " +
                         $"OR artists.name LIKE @querySearch{i} " +
                         $"OR genres.name LIKE @querySearch{i} " +
                         $"OR records.released LIKE @querySearch{i} " +
                         $"OR records.country LIKE @querySearch{i} " +
                         $"OR labels.name LIKE @querySearch{i} " +
-                        $"OR barcodes.value LIKE @querySearch{i}";
+                        $"OR barcodes.value LIKE @querySearch{i})";
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
