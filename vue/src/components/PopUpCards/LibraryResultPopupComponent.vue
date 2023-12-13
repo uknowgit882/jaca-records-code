@@ -415,7 +415,7 @@ export default {
                 })
                 .catch(error => {
                     this.isLoading = true;
-                    this.errorMessage = "deleting this record in your library";
+                    this.errorMessage = "deleting this collection";
                     this.errorPopup = true;
                 })
         }

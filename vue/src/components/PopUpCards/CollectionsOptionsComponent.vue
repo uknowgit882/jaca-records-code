@@ -48,20 +48,21 @@
     <div v-if="errorPopup">
         <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
-    <!-- <div v-if="areYouSurePopup" class="CollectionOptions-AreYouSure-popup">
+
+    <div v-if="areYouSurePopup" class="CollectionOptions-AreYouSure-popup">
         <div class="CollectionOptions-AreYouSure-popup-inner">
             <button class="popup-exit-button" @click.prevent="areYouSurePopup = false">X</button>
-            <div class="CollectionOptions-popup-inner-inner" style="background-color: ">
-                <p style="margin-top: 20px; font-weight: bold; padding-left: 0;">Are you sure?</p>
-                <button class="CollectionOptions-popup-inner-inner-buttons"
-                    style="background-color: black; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-top: 20px; border-color: white;"
-                    @click="deleteRecord">Yes</button>
-                <button class="CollectionOptions-popup-inner-inner-buttons"
-                    style="background-color: #09A3DA; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-bottom: 20px; border-color: white;"
+            <div class="CollectionOptions-AreYouSure-popup-inner-inner" style="background-color: ">
+                <p style="margin: 20px; font-weight: bold; padding-left: 0;">Are you sure? This will delete the entire colleciton. Your records will still be in your library</p>
+                <button class="CollectionOptions-AreYouSure-popup-inner-inner-buttons"
+                    style="background-color: black; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-top: 20px; border-color: white; width: 150px;"
+                    @click="deleteCollection">Yes</button>
+                <button class="CollectionOptions-AreYouSure-popup-inner-inner-buttons"
+                    style="background-color: #09A3DA; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-bottom: 20px; border-color: white; width: 150px;"
                     @click="areYouSurePopup = false">Cancel</button>
             </div>
         </div>
-    </div> -->
+    </div>
  
 </template>
 
@@ -76,7 +77,7 @@ export default {
             weAreOnIt: false,
             canSee: this.isVisible,
             optionsToggle: 0,
-            //areYouSurePopup,
+            areYouSurePopup: false,
             updatedCollection: {
                 name: '',
                 is_private: this.collection.is_Private
@@ -154,6 +155,20 @@ export default {
                 .catch(error => {
                     this.weAreOnIt = false;
                     this.errorMessage = `change ${this.collection.name}'s privacy settings'`;
+                    this.errorPopup = true;
+                })
+        }, 
+        deleteCollection(){
+            this.areYouSurePopup = false;
+            this.canSee = false;
+            CollectionsService.DeleteNamedCollection(this.collection.name)
+                .then(response => {
+                    this.isLoading = true;
+                    this.$router.go()
+                })
+                .catch(error => {
+                    this.isLoading = true;
+                    this.errorMessage = "deleting this record in your library";
                     this.errorPopup = true;
                 })
         }
