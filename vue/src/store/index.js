@@ -14,7 +14,8 @@ export function createStore(currentToken, currentUser) {
       searchCollectionsResults: [],
       StatsAggregate: [],
       StatsUser: [],
-      searchRequest: []
+      searchRequest: [],
+      StatsRecords: [],
     },
     mutations: {
       SET_AUTH_TOKEN(state, token) {
@@ -75,6 +76,9 @@ export function createStore(currentToken, currentUser) {
       SET_SEARCH_REQUEST(state, search){
         state.searchRequest = search;
       },
+      GET_TOTAL_RECORDS(state,result){
+        state.StatsRecords = result;
+      }
     },
   });
   return store;
