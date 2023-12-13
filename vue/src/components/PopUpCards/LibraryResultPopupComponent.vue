@@ -1,9 +1,23 @@
 <template>
-    <div v-if="showAddRecordPopup" class="search-popup-addRecord-popup">
-        <div class="search-popup-addRecord-popup-inner">
-            <button class="popup-exit-button" @click.prevent="showAddRecordPopup = !showAddRecordPopup">X</button>
-            <div class="search-popup-addRecord-popup-inner-inner">
-
+    <div v-if="showRecordOptionsPopup" class="library-popup-RecordOptions-popup">
+        <div class="library-popup-RecordOptions-popup-inner">
+            <button class="popup-exit-button" @click.prevent="showRecordOptionsPopup = !showRecordOptionsPopup">X</button>
+            <div class="library-popup-RecordOptions-popup-inner-inner" style="">
+                <div>
+                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                        style="background-color: #09A3DA;">Add to Collection</button>
+                </div>
+                <div>
+                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                        style="background-color: #09A3DA;">Update Quantity</button>
+                </div>
+                <div>
+                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                        style="background-color: #09A3DA;">Update Notes</button>
+                </div>
+                <div>
+                    <button style="width: 150px;" @click="areYouSurePopup = true">Delete Record</button>
+                </div>
             </div>
         </div>
     </div>
@@ -12,8 +26,20 @@
         <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
     </div>
 
+    <div v-if="areYouSurePopup" class="library-popup-AreYouSure-popup">
+        <div class="library-popup-AreYouSure-popup-inner">
+            <button class="popup-exit-button" @click.prevent="areYouSurePopup = false" >X</button>
+            <div class="library-popup-AreYouSure-popup-inner-inner" style="background-color: ">
+                <p style="margin-top: 20px; font-weight: bold; padding-left: 0;">Are you sure?</p>
+                <button class="library-popup-RecordOptions-popup-inner-inner-buttons" style="background-color: black; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-top: 20px; border-color: white;" @click="deleteRecord">Yes</button>
+                <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                        style="background-color: #09A3DA; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-bottom: 20px; border-color: white;" @click="areYouSurePopup = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="home" v-if="!isLoading">
-        <img src="../../img/Logogif.gif" alt="">
+        <img src="../../../img/Logogif.gif" alt="">
     </div>
     <div v-else>
         <div class="library-popup-container">
@@ -94,49 +120,49 @@
                     </div>
 
                     <div class="scrollableBox" style="max-height: 110px">
-                    
-                    <div :class="tabToggle == 1 ? 'makeVisible' : 'notVisible'" class="tabcontent"
-                        style="border-radius: 4px;">
-                        <div>
-                            <div class="library-popup-tracks-table" >
-                                <span class="library-popup-tracks-table-title" style="text-align: left; color: white;">Track</span>
-                                <span class="library-popup-tracks-table-position" style="color: white; ">Pos.</span>
-                                <span class="library-popup-tracks-table-duration" style="color: white; ">Length</span>
-                                <table class="library-popup-tracks-table-row">
-                                    <tr >
-                                        <track-component v-for="track in activeCard.record.tracklist" :key="track.title"
-                                        :track="track"></track-component>
-                                    </tr>
-                                </table>
+
+                        <div :class="tabToggle == 1 ? 'makeVisible' : 'notVisible'" class="tabcontent"
+                            style="border-radius: 4px;">
+                            <div>
+                                <div class="library-popup-tracks-table">
+                                    <span class="library-popup-tracks-table-title"
+                                        style="text-align: left; color: white;">Track</span>
+                                    <span class="library-popup-tracks-table-position" style="color: white; ">Pos.</span>
+                                    <span class="library-popup-tracks-table-duration" style="color: white; ">Length</span>
+                                    <table class="library-popup-tracks-table-row">
+                                        <tr>
+                                            <track-component v-for="track in activeCard.record.tracklist" :key="track.title"
+                                                :track="track"></track-component>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                     <div :class="tabToggle == 2 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px; ">
-                        <p class="smallFont" v-for="format in activeCard.record.formats" :key="format.name" style="color: #183E50">{{ format.name }}</p>
+                        <p class="smallFont" v-for="format in activeCard.record.formats" :key="format.name"
+                            style="color: #183E50">{{ format.name }}</p>
                     </div>
                     <div :class="tabToggle == 3 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px; ">
-                        <p class="smallFont" v-for="label in activeCard.record.labels" :key="label.name" style="color: #183E50">{{ label.name }}</p>
+                        <p class="smallFont" v-for="label in activeCard.record.labels" :key="label.name"
+                            style="color: #183E50">{{ label.name }}</p>
                     </div>
                     <div :class="tabToggle == 4 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px;">
-                        <p class="smallFont" v-for="identifier in activeCard.record.identifiers" :key="identifier.value" style="color: #183E50">{{ identifier.type }}, {{ identifier.value }}</p>
+                        <p class="smallFont" v-for="identifier in activeCard.record.identifiers" :key="identifier.value"
+                            style="color: #183E50">{{ identifier.type }}, {{ identifier.value }}</p>
                     </div>
                     <div :class="tabToggle == 5 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px;">
-                        <p class="smallFont scrollableBox" style="color: #183E50" >{{activeCard.record.notes}}</p>
+                        <p class="smallFont scrollableBox" style="color: #183E50">{{ activeCard.record.notes }}</p>
                     </div>
                 </div>
             </div>
 
         </div>
-        <div v-if="isInLibrary">
-            <p class="library-popup-alreadyOwn">You already have this in your library</p>
-        </div>
-        <button v-else class="library-popup-button" @click="showAddRecordPopup = !showAddRecordPopup">Add To
-            Library</button>
+        <button class="library-popup-button" @click="showRecordOptionsPopup = !showRecordOptionsPopup">Show Options</button>
     </div>
 </template>
 
@@ -160,22 +186,17 @@ export default {
     },
     data() {
         return {
-            isInLibrary: false,
             isLoading: false,
-            showAddRecordPopup: false,
+            showRecordOptionsPopup: false,
             errorPopup: false,
-            addRecord: {
-                discogsId: this.activeCard.id,
-                notes: "",
-                quantity: 1
-            },
             errorMessage: "",
+            areYouSurePopup: false,
             tabToggle: 1,
         }
     },
     methods: {
         getRecordInLibrary() {
-            LibraryService.GetRecordInLibrary(this.activeCard.id)
+            LibraryService.GetRecordInLibrary(this.activeCard.record.id)
                 .then(response => {
                     this.isInLibrary = true;
                     this.isLoading = true;
@@ -185,21 +206,19 @@ export default {
                     this.isLoading = true;
                 })
         },
-        addRecordToLibrary() {
-            this.isLoading = false;
-            this.showAddRecordPopup = false;
-
-            LibraryService.AddToLibrary(this.addRecord)
-                .then(response => {
-                    this.$store.commit('PUSH_RECORDS_TO_LIBRARY', response.data)
-                    this.isInLibrary = true;
-                    this.isLoading = true;
-                })
-                .catch(error => {
-                    this.isLoading = true;
-                    this.errorMessage = "add this record to the library";
+        deleteRecord(){
+            this.areYouSurePopup = false;
+            this.showRecordOptionsPopup = false;
+            LibraryService.DeleteRecordInLibrary(this.activeCard.record.id)
+            .then( response => {
+                this.isLoading = true;
+                this.$router.go()
+            })
+            .catch(error => {
+                this.isLoading = true;
+                this.errorMessage = "add this record to the library";
                     this.errorPopup = true;
-                })
+            })
         }
     },
     created() {
@@ -301,15 +320,16 @@ export default {
      grid-area: trackRow;
  }
 
- .smallFont{
-    font-weight: normal;
+ .smallFont {
+     font-weight: normal;
      font-size: 10px;
-}
+ }
+
  .library-popup-button {
      grid-area: button;
      margin-top: 8px;
      padding: 8px;
-     background-color: #EA5143;
+     background-color: #09A3DA;
      min-width: 100%;
      color: #fff;
      text-align: center;
@@ -317,17 +337,6 @@ export default {
      cursor: pointer;
  }
 
- .library-popup-alreadyOwn {
-     grid-area: button;
-     margin-top: 8px;
-     padding: 8px;
-     background-color: #03B8A0;
-     min-width: 100%;
-     color: #fff;
-     text-align: center;
-     border-radius: 4px;
-     cursor: pointer;
- }
 
  .ticker-tape-container {
      overflow-x: hidden;
@@ -362,7 +371,7 @@ export default {
      }
  }
 
- .library-popup-addRecord-popup {
+ .library-popup-RecordOptions-popup {
      border-radius: 5px;
      position: fixed;
      top: 0;
@@ -377,7 +386,7 @@ export default {
      word-wrap: break-word;
  }
 
- .library-popup-addRecord-popup-inner scoped {
+ .library-popup-RecordOptions-popup-inner scoped {
      border-radius: 5px;
      display: flex;
      flex-direction: column;
@@ -391,15 +400,24 @@ export default {
      width: 100%;
  }
 
- .library-popup-addRecord-popup-inner-inner {
+ .library-popup-RecordOptions-popup-inner-inner {
      border-radius: 5px;
      background: black;
      text-align: center;
      height: 250px;
      width: 300px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin: 12px;
  }
 
- .library-popup-addRecord-popup-inner button {
+ .library-popup-RecordOptions-popup-inner-inner-buttons {
+     background-color: #09A3DA;
+     width: 150px;
+ }
+
+ .library-popup-RecordOptions-popup-inner button {
      border-radius: 5px;
      margin-top: 16px;
      padding: 8px 12px;
@@ -412,13 +430,67 @@ export default {
      float: right;
  }
 
- .library-popup-addRecord-popup-inner-inputs {
+ .library-popup-RecordOptions-popup-inner-inputs {
      border-radius: 5px;
      box-sizing: border-box;
      width: 100%;
      background-color: black;
      color: white;
  }
+
+ .library-popup-AreYouSure-popup {
+     border-radius: 5px;
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     z-index: 99;
+     background-color: rgba(0, 0, 0, 0.75);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     word-wrap: break-word;
+ }
+
+ .library-popup-AreYouSure-popup-inner scoped {
+     border-radius: 5px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     background: black;
+     opacity: 1.00;
+     padding: 10px;
+     text-align: center;
+     height: 100%;
+     width: 100%;
+ }
+ .library-popup-AreYouSure-popup-inner button {
+     border-radius: 5px;
+     margin-top: 16px;
+     padding: 8px 12px;
+     background-color: #EA5143;
+     color: #fff;
+     border: none;
+     text-align: center;
+     border-radius: 4px;
+     cursor: pointer;
+     float: right;
+ }
+
+ .library-popup-AreYouSure-popup-inner-inner {
+     border-radius: 5px;
+     background: #EA5143;;
+     text-align: center;
+     height: 200;
+     width: 200px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin: 12px;
+ }
+
 
  input[type=textarea] {
      height: 50px;
