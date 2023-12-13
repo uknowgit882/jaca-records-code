@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="foundResults">
+    <div v-if="!isLoadingDiscogs">
       <img class="spinningLogo" src="../../img/Logogif.gif" alt="" />
     </div>
     <div v-else>
@@ -81,18 +81,57 @@ export default {
       //collectionCarouselToggle: false,
       //libraryCarouselToggle: false,
       searchResults: [],
+      isLoadingDiscogs: false,
+      //isLoadingLibrary: false,
+      //isLoadingCollections: false
     };
   },
-//   methods: {
-//     searchRecord() {
-//       SearchService.search(this.Search)
-//         .then((response) => {
-//           this.$store.commit("ADD_SEARCH_RESULT", response);
-//           //this.isVisible = true;
-//         })
-//         .catch((error) => {});
-//     },
-//   },
+  methods: {
+    searchRecord(request) {
+      SearchService.searchDiscogs(request)
+        .then((response1) => {
+          if (response1.status == 200) {
+            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+            this.isLoadingDiscogs = true;
+            //this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+      SearchService.searchLibrary(request)
+        .then((response2) => {
+          if (response2.status == 200) {
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
+            //this.isLoadingLibrary = true;
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+        SearchService.searchCollections(request)
+        .then((response3) => {
+          if(response3.status == 200) {
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
+            //this.isLoadingCollections = true;
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+    },
+    handleErrorResponse(error, verb) {
+      if (error.response) {
+        console.log(
+          `Error ${verb} topic. Response received was "${error.response.statusText}".`
+        );
+      } else if (error.request) {
+        console.log(`Error ${verb} topic. Server could not be reached.`);
+      } else {
+        console.log(`Error ${verb} topic. Request could not be created.`);
+      }
+    },
+  },
   computed: {
     emptySearch() {
       if (this.Search != undefined) {
@@ -130,6 +169,12 @@ export default {
       }
     },
   },
+  created() {
+    this.searchRecord(this.$store.state.searchRequest);
+  },
+  beforeCreate() {
+    
+  }
 };
 </script>
 
