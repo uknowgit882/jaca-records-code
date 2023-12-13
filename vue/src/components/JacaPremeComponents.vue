@@ -90,6 +90,9 @@ export default {
           }
 
         })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Reactivate User")
+        })
     },
     upgradeUser() {
       JacapremeService.upgradeUserToAdmin(this.User.username)
@@ -97,6 +100,9 @@ export default {
           if (response.status == 200) {
             this.message2 = `You have successfully upgraded ${this.User.username}`;
           }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Upgrade User")
         })
     },
     downgradeUser() {
@@ -107,13 +113,21 @@ export default {
 
           }
         })
-    },
-    alert() {
-      this.alert('Your message')
-        .then(() => {
-          console.log('Alert');
+        .catch((error) => {
+          this.handleErrorResponse(error, "Downgrade User")
         })
-    }
+    },
+    handleErrorResponse(error, verb) {
+        if (error.response) {
+          console.log(
+            `Error ${verb} topic. Response received was "${error.response.statusText}".`
+          );
+        } else if (error.request) {
+          console.log(`Error ${verb} topic. Server could not be reached.`);
+        } else {
+          console.log(`Error ${verb} topic. Request could not be created.`);
+        }
+      },
 
 
   }
