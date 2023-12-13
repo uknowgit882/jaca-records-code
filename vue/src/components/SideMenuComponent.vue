@@ -61,6 +61,7 @@
           >
             Deactivate Account
           </button>
+           <button class="button2" v-on:click="logout">Logout</button>
         </div>
       </div>
     </div>
@@ -128,6 +129,9 @@
           console.log(`Error ${verb} topic. Request could not be created.`);
         }
       },
+      logout() {
+      this.$store.commit('LOGOUT');
+    },
     },
   };
   </script>
