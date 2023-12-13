@@ -130,3 +130,27 @@ Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT s
 Trying to add to library | For aseelt, record: 122684 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:28 PM
 --- END OF ACTION ---
 
+Adding record to database - just record table | 5593549 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'South Kore'. | 12/13/2023 3:14:08 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 5593549 | AddRecordToDbById | Sql exception occured | 12/13/2023 3:14:08 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 5593549 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:14:08 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 747172 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:15:14 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 747172 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:15:20 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 65863 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:22 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 271681 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:35 PM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 271681 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:43 PM
+--- END OF ACTION ---
+

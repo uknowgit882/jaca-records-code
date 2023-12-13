@@ -1,6 +1,6 @@
 <template>
 
-  <div class="box container is-fullheight is-flex is-align-items-center">
+  <div v-if="role" class="box container is-fullheight is-flex is-align-items-center">
     <img src="img/logo2.png"/>
     <box class="box-jaca">
       <input class="input-users" type="text" placeholder="Enter Username" v-model="User.username">
@@ -62,6 +62,7 @@ export default {
     return {
       User: {
         username: "",
+        role: "jacapreme"
       },
       showPopup: false,
       showPopup2: false,
@@ -98,6 +99,7 @@ export default {
       JacapremeService.upgradeUserToAdmin(this.User.username)
         .then(response => {
           if (response.status == 200) {
+            this.showPopup2 = false;
             this.message2 = `You have successfully upgraded ${this.User.username}`;
           }
         })
