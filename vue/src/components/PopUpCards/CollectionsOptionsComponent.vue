@@ -29,7 +29,7 @@
                     </div>
                     <div :class="optionsToggle == 2 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px;">
                         <div style="display: flex; flex-direction: column; margin-top: 4px;">
-                            <p>Update Quantity</p>
+                            <p>Change this collection's privacy setting</p>
                             <input type="checkbox" id="makePrivate" name="makePrivate" v-model="updatedCollection.is_private"
                                 style="align-items: left; margin: 12px; border-radius: 4px; display: inline; color: white;">
                             <button style="margin: 12px; background-color: #17B39F;" @click="updatePrivacy">Update</button>
@@ -37,7 +37,7 @@
                     </div>
                     
                     <p v-if="weAreOnIt">We're on it!</p>
-                    <p v-if="actionSuccessful">Success! You can close this window</p>
+                    <p v-if="actionSuccessful">Success! Refreshing the page...</p>
                     <button v-if="optionsToggle != 0" @click="optionsToggle = 0">Close</button>
                 </div>
             </div>
@@ -79,11 +79,16 @@ export default {
             //areYouSurePopup,
             updatedCollection: {
                 name: '',
-                is_private: false
+                is_private: this.collection.is_Private
             },
             
         }
     },
+    // computed:{ 
+    //     collectionCurrentPrivacyStatus(){
+    //         if(this.collection.is_Private)
+    //     }
+    // },
     components: {
         ErrorPopup
     },
@@ -126,10 +131,31 @@ export default {
                 })
         },
         changeCollectionName(){
-
+            this.weAreOnIt = true;
+            CollectionsService.ChangeNameForNamedCollection(this.collection.name, this.updatedCollection)
+                .then(response => {
+                    this.weAreOnIt = false;
+                    this.displaySuccess();
+                })
+                .catch(error => {
+                    this.weAreOnIt = false;
+                    this.errorMessage = `update ${this.collection.name}`;
+                    this.errorPopup = true;
+                })
         },
         updatePrivacy(){
-
+            this.weAreOnIt = true;
+            this.updatedCollection.name = this.collection.name;
+            CollectionsService.ChangePrivacyForNamedCollection(this.collection.name, this.updatedCollection)
+                .then(response => {
+                    this.weAreOnIt = false;
+                    this.displaySuccess();
+                })
+                .catch(error => {
+                    this.weAreOnIt = false;
+                    this.errorMessage = `change ${this.collection.name}'s privacy settings'`;
+                    this.errorPopup = true;
+                })
         }
     }
 
