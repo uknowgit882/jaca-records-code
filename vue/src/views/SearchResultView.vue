@@ -57,7 +57,7 @@
 
 <script>
 import SearchService from "../services/SearchService";
-import SearchResultComponent from "@/components/SearchResultComponent.vue";
+//import SearchResultComponent from "@/components/SearchResultComponent.vue";
 import CarouselComponent from "@/components/CarouselComponent.vue";
 
 export default {
@@ -172,9 +172,6 @@ export default {
   created() {
     this.searchRecord(this.$store.state.searchRequest);
   },
-  beforeCreate() {
-    
-  }
 };
 </script>
 

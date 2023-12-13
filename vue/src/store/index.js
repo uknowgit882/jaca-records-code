@@ -72,9 +72,6 @@ export function createStore(currentToken, currentUser) {
       SET_SEARCH_REQUEST(state, search){
         state.searchRequest = search;
       },
-      RESET_SEARCH_RESULTS(state, results){
-        state.searchResults = results;
-      }
     },
   });
   return store;
