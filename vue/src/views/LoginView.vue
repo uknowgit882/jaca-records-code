@@ -83,6 +83,13 @@ label {
   
 }
 
+#login {
+  display: flex;
+  position: absolute;
+  padding-top: 50px;
+  left: 820px;
+}
+
 .img {
   width: 550px;
   height: 500px;
@@ -95,10 +102,11 @@ label {
   color: white;
 }
 .divClass{
-  padding-top: 30px;
-  width: 300px;
+  display: flex;
+  width: 280px;
   height: 180px;
   color: white;
+  position: relative;
 }
 h2{
   padding-top: 30px;
@@ -152,7 +160,7 @@ h2{
 }
 
 .button:active:before {
- background: #4D437F;
+ background: #B856AB;
  transition: background 0s;
 }
 

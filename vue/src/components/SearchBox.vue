@@ -93,42 +93,42 @@ export default {
     };
   },
   methods: {
-    sendSearch(){
-      this.$store.commit("SET_SEARCH_REQUEST", this.Search);
-      this.$router.push({ name: "SearchResult" });
-    },
-    // sendSearch() {
-    //   SearchService.searchDiscogs(this.Search)
-    //     .then((response1) => {
-    //       if (response1.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_RESULT", response1.data);
-    //         this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
-    //   SearchService.searchLibrary(this.Search)
-    //     .then((response2) => {
-    //       if (response2.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
-    //         //this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
-    //   SearchService.searchCollections(this.Search)
-    //     .then((response3) => {
-    //       if (response3.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
-    //         //this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
+    // sendSearch(){
+    //   this.$store.commit("SET_SEARCH_REQUEST", this.Search);
+    //   this.$router.push({ name: "SearchResult"});
     // },
+    sendSearch() {
+      SearchService.searchDiscogs(this.Search)
+        .then((response1) => {
+          if (response1.status == 200) {
+            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+            this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+      SearchService.searchLibrary(this.Search)
+        .then((response2) => {
+          if (response2.status == 200) {
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
+            //this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+      SearchService.searchCollections(this.Search)
+        .then((response3) => {
+          if (response3.status == 200) {
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
+            //this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+    },
     handleErrorResponse(error, verb) {
       if (error.response) {
         console.log(
@@ -141,6 +141,7 @@ export default {
       }
     },
   },
+
   // created() {
   //     this.searchDiscogs();
   //     this.searchLibrary();
@@ -152,7 +153,7 @@ export default {
 <style scoped>
 .input {
   flex-grow: 1;
-  margin-top: 11px;
+  margin-top: 11px; 
   width: 800px;
   background-color: black;
   color: white;
@@ -162,6 +163,8 @@ export default {
 .button {
   margin-top: 11px;
   right: 18px;
+  color: white;
+  background-color: black;
 }
 
 .dropdown.is-active {

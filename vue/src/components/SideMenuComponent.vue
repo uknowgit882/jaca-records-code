@@ -280,7 +280,11 @@ export default {
   padding-left: 0px;
 }
 
-.button2, .ExitButton {
+.button {
+  color: white;
+  background-color: black;
+}
+.button2,.ExitButton {
   --color: white;
   font-family: inherit;
   display: inline-block;

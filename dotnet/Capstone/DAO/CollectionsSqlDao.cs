@@ -588,18 +588,19 @@ namespace Capstone.DAO
         /// </summary>
         /// <param name="username"></param>
         /// <param name="name">The collection's name</param>
-        /// <param name="role">The collection's name</param>
+        /// <param name="isPrivate"></param>
+        /// <param name="isPremium"></param>
         /// <returns>Returns newly created collection's id</returns>
         /// <exception cref="DaoException"></exception>
-        public int AddCollection(string username, string name, bool isPremium)
+        public int AddCollection(string username, string name, bool isPrivate, bool isPremium)
         {
             int collectionId = 0;
 
             Collection output = new Collection();
 
-            string sql = "INSERT INTO collections (username, name, is_premium) " +
+            string sql = "INSERT INTO collections (username, name, is_premium, is_private) " +
                 "OUTPUT INSERTED.collection_id " +
-                "VALUES (@username, @name, @isPremium);";
+                "VALUES (@username, @name, @isPremium, @isPrivate);";
 
             try
             {
@@ -611,6 +612,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@name", name);
                     cmd.Parameters.AddWithValue("@isPremium", isPremium);
+                    cmd.Parameters.AddWithValue("@isPrivate", isPrivate);
 
                     collectionId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
