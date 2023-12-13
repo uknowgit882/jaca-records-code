@@ -76,14 +76,29 @@ namespace Capstone.Controllers
                 return BadRequest("You must be logged in to search a library");
             }
 
-            SearchRequest searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+            SearchRequest searchRequest = null;
+            if (string.IsNullOrEmpty(q) && string.IsNullOrEmpty(artist) && string.IsNullOrEmpty(title) && string.IsNullOrEmpty(genre) && string.IsNullOrEmpty(year) && string.IsNullOrEmpty(country) && string.IsNullOrEmpty(label) && string.IsNullOrEmpty(barcode))
+            {
+                searchRequest = null;
+            }else
+            {
+                searchRequest = _recordService.GenerateRequestObject(q, artist, title, genre, year, country, label, barcode);
+
+            }
+
 
             List<RecordClient> output = new List<RecordClient>();
+            List<RecordClient> dummyOut = new List<RecordClient>();
+
 
             try
             {
                 List<int> recordIds = new List<int>();
-                if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
+                if (searchRequest == null)
+                {
+                    return Ok(dummyOut);
+                }
+                else if (string.IsNullOrEmpty(searchRequest.Artist) && string.IsNullOrEmpty(searchRequest.Title) && string.IsNullOrEmpty(searchRequest.Genre) && string.IsNullOrEmpty(searchRequest.Year) && string.IsNullOrEmpty(searchRequest.Country) && string.IsNullOrEmpty(searchRequest.Label) && string.IsNullOrEmpty(searchRequest.Barcode))
                 {
                     recordIds = _searchDao.WildcardSearchDatabaseForRecords(searchRequest.Query, username);
                 }
@@ -94,7 +109,6 @@ namespace Capstone.Controllers
 
                 if (recordIds.Count == 0)
                 {
-                    List<RecordClient> dummyOut = new List<RecordClient>();
                     return Ok(dummyOut);
                 }
 

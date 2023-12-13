@@ -130,19 +130,97 @@ Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT s
 Trying to add to library | For aseelt, record: 122684 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:28 PM
 --- END OF ACTION ---
 
-Getting RecordClient from external API | Discogs Input: 2736779 | GetRecord | Unsuccessful request to Discogs API | 12/13/2023 5:18:18 PM
+Adding record to database - just record table | 28867201 - New record object from API | AddRecord | The parameterized query '(@discogsId int,@country nvarchar(4000),@notes nvarchar(184),@re' expects the parameter '@country', which was not supplied. | 12/13/2023 2:56:41 PM
 --- END OF ACTION ---
 
-Trying to get record from Discogs API and build into database | For 2736779 | AddRecordToDbById | Error occured - received non-success response. | 12/13/2023 5:18:18 PM
+Trying to get record from Discogs API and build into database | For 28867201 | AddRecordToDbById | Sql exception occured | 12/13/2023 2:56:41 PM
 --- END OF ACTION ---
 
-Trying to add to library | For aseelt, record: 2736779 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 5:18:18 PM
+Trying to add to library | For caleba, record: 28867201 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 2:56:41 PM
 --- END OF ACTION ---
 
-Trying to delete record from library | For aseelt, record: 31526 | DeleteRecord | The DELETE statement conflicted with the REFERENCE constraint "FK_records_collections_library". The conflict occurred in database "jaca_records", table "dbo.records_collections", column 'library_id'.
-The statement has been terminated. | 12/13/2023 8:15:29 PM
+Adding record to database - just record table | 29081215 - New record object from API | AddRecord | The parameterized query '(@discogsId int,@country nvarchar(4000),@notes nvarchar(73),@rel' expects the parameter '@country', which was not supplied. | 12/13/2023 2:56:51 PM
 --- END OF ACTION ---
 
-Trying to delete record from library | For aseelt, 31526 | DeleteRecordFromLibrary | Something went wrong deleting a record | 12/13/2023 8:15:29 PM
+Trying to get record from Discogs API and build into database | For 29081215 | AddRecordToDbById | Sql exception occured | 12/13/2023 2:56:51 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 29081215 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 2:56:51 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 110950 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:01:53 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 5174308 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 6:27:32 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 5174308 | AddRecordToDbById | Sql exception occured | 12/13/2023 6:27:32 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 5174308 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:27:32 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 5991043 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 6:28:07 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 5991043 | AddRecordToDbById | Sql exception occured | 12/13/2023 6:28:07 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 5991043 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:28:07 PM
+--- END OF ACTION ---
+
+Trying to add to library | For jakel, record: 231219 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:55:10 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 22220506 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Europ'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 22220506 | AddRecordToDbById | Sql exception occured | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 22220506 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Getting SearchResult from external API | Discogs Input: user search paramaters | SearchForRecordsDiscogs | Couldn't reach the Discogs API | 12/13/2023 7:21:14 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:34:43 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:36:57 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:39:34 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:42:46 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:45:44 PM
+Trying to get add user to db, with pw hash | For awd | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (aada@ggmail.com). | 12/13/2023 6:56:29 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For aaas | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (wca@wcw.com). | 12/13/2023 6:57:16 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:08 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:19 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | The INSERT statement conflicted with the CHECK constraint "CK_role". The conflict occurred in database "jaca_records", table "dbo.users", column 'user_role'. | 12/13/2023 7:05:21 PM
+--- END OF ACTION ---
+
+Trying to get add user to db, with pw hash | For assa | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (new@dcnsi.com). | 12/13/2023 7:06:13 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 122686 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 7:57:48 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 122686 | AddRecordToDbById | Sql exception occured | 12/13/2023 7:57:48 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 122686 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:57:48 PM
 --- END OF ACTION ---
 
