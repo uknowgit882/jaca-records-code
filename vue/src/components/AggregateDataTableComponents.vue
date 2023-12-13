@@ -456,6 +456,11 @@ th {
     color: white;
 }
 
+.button {
+    color: white;
+    background-color: black;
+}
+
 /* .button {
     --color: white;
     font-family: inherit;
