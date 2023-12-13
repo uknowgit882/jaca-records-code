@@ -2,22 +2,43 @@
     <div v-if="showRecordOptionsPopup" class="library-popup-RecordOptions-popup">
         <div class="library-popup-RecordOptions-popup-inner">
             <button class="popup-exit-button" @click.prevent="showRecordOptionsPopup = !showRecordOptionsPopup">X</button>
-            <div class="library-popup-RecordOptions-popup-inner-inner" style="">
-                <div>
-                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
-                        style="background-color: #09A3DA;">Add to Collection</button>
+            <div class="library-popup-RecordOptions-popup-inner-inner" :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox':''">
+                <div class="library-popup-RecordOptions-buttons" style="margin-left: 8px;">
+                    <div>
+                        <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                            style="background-color: #09A3DA;" @click="optionsToggle = 1">Add to Collection</button>
+                    </div>
+                    <div>
+                        <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                            style="background-color: #09A3DA;" @click="optionsToggle = 2">Update Quantity</button>
+                    </div>
+                    <div>
+                        <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                            style="background-color: #09A3DA;" @click="optionsToggle = 3">Update Notes</button>
+                    </div>
+                    <div>
+                        <button style="width: 150px;" @click="areYouSurePopup = true">Delete Record</button>
+                    </div>
                 </div>
-                <div>
-                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
-                        style="background-color: #09A3DA;">Update Quantity</button>
+                <div style="flex-grow: 2; align-items: stretch; margin: 12px;">
+                <div :class="optionsToggle == 1 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                    <p>Add to Collection</p>
+                    <div class="scrollableBox" style="height: 100px; max-height: 110px">
+                        <button v-for="eligibleCollection in collectionsYouCanAddTo" :key="eligibleCollection.name" style="background-color: #17B39F; width: 100%; margin: 10px;" @click="addRecordToCollection(eligibleCollection.name)">Add to: {{ eligibleCollection.name }}</button>
+                    </div>
+                    <p v-if="weAreOnIt">We're on it!</p>
+                    <p v-if="actionSuccessful">Success!</p>
+                    <button @click="optionsToggle = 0">Close</button>
                 </div>
-                <div>
-                    <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
-                        style="background-color: #09A3DA;">Update Notes</button>
+                <div :class="optionsToggle == 2 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                    <p>Update Quantity</p>
+                    <button @click="optionsToggle = 0">Close</button>
                 </div>
-                <div>
-                    <button style="width: 150px;" @click="areYouSurePopup = true">Delete Record</button>
+                <div :class="optionsToggle == 3 ? 'makeVisible' : 'notVisible'" style="border-radius: 4px; ">
+                    <p>Update Notes</p>
+                    <button @click="optionsToggle = 0">Close</button>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -28,12 +49,15 @@
 
     <div v-if="areYouSurePopup" class="library-popup-AreYouSure-popup">
         <div class="library-popup-AreYouSure-popup-inner">
-            <button class="popup-exit-button" @click.prevent="areYouSurePopup = false" >X</button>
+            <button class="popup-exit-button" @click.prevent="areYouSurePopup = false">X</button>
             <div class="library-popup-AreYouSure-popup-inner-inner" style="background-color: ">
                 <p style="margin-top: 20px; font-weight: bold; padding-left: 0;">Are you sure?</p>
-                <button class="library-popup-RecordOptions-popup-inner-inner-buttons" style="background-color: black; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-top: 20px; border-color: white;" @click="deleteRecord">Yes</button>
                 <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
-                        style="background-color: #09A3DA; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-bottom: 20px; border-color: white;" @click="areYouSurePopup = false">Cancel</button>
+                    style="background-color: black; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-top: 20px; border-color: white;"
+                    @click="deleteRecord">Yes</button>
+                <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
+                    style="background-color: #09A3DA; color: white; font-size: 14px; height: 30px; border-radius: 4px; margin: 12px; margin-bottom: 20px; border-color: white;"
+                    @click="areYouSurePopup = false">Cancel</button>
             </div>
         </div>
     </div>
@@ -171,6 +195,7 @@
 
 import ErrorPopup from './ErrorPopup.vue'
 import LibraryService from '../../services/LibraryService'
+import CollectionService from '../../services/CollectionsService'
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 import TrackComponent from './TrackComponent.vue'
@@ -191,7 +216,19 @@ export default {
             errorPopup: false,
             errorMessage: "",
             areYouSurePopup: false,
+            weAreOnIt: false,
+            actionSuccessful: false,
             tabToggle: 1,
+            optionsToggle: 0,
+            recordToAddToCollection: {
+                discogs_Id: this.activeCard.record.id
+            },
+            eligibleCollections: []
+        }
+    },
+    computed: {
+        collectionsYouCanAddTo(){
+            return this.eligibleCollections;
         }
     },
     methods: {
@@ -206,23 +243,72 @@ export default {
                     this.isLoading = true;
                 })
         },
-        deleteRecord(){
+        successDisappearer(){
+            this.actionSuccessful = false;
+            return this.actionSuccessful;
+        },
+        displaySuccess(){
+            this.actionSuccessful = true;
+            setTimeout(this.successDisappearer, 2000)
+        },
+        getCollectionsYouCanAddThisRecordTo() {
+            CollectionService.GetAllCollections()
+                .then(response => {
+                    const collections = response.data;
+                    this.eligibleCollections = collections.filter((collection) => {
+                        const collectionWithoutThisRecord = collection.records.filter((record) => {
+                            return record.id == this.activeCard.record.id
+                        })
+                        if (collectionWithoutThisRecord.length == 0) {
+                            return collection
+                        }
+                    })
+                    this.isInLibrary = true;
+                    this.isLoading = true;
+                })
+                .catch(error => {
+                    this.isInLibrary = false;
+                    this.isLoading = true;
+                })
+        },
+        addRecordToCollection(collectionName) {
+            this.isLoading = false;
+            this.weAreOnIt = true;
+            CollectionService.AddRecordToCollection(collectionName, this.recordToAddToCollection)
+                .then(response => {
+                    this.isInLibrary = true;
+                    this.isLoading = true;
+                    this.weAreOnIt = false;
+                    this.getCollectionsYouCanAddThisRecordTo();
+                    this.displaySuccess()
+                })
+                .catch(error => {
+                    this.isInLibrary = false;
+                    this.weAreOnIt = false;
+                    this.optionsToggle = 0;
+                    this.errorMessage = `add this record to ${collectionName}`;
+                    this.isLoading = true;
+                    this.errorPopup = true;
+                })
+        },
+        deleteRecord() {
             this.areYouSurePopup = false;
             this.showRecordOptionsPopup = false;
             LibraryService.DeleteRecordInLibrary(this.activeCard.record.id)
-            .then( response => {
-                this.isLoading = true;
-                this.$router.go()
-            })
-            .catch(error => {
-                this.isLoading = true;
-                this.errorMessage = "add this record to the library";
+                .then(response => {
+                    this.isLoading = true;
+                    this.$router.go()
+                })
+                .catch(error => {
+                    this.isLoading = true;
+                    this.errorMessage = "deleting this record in your library";
                     this.errorPopup = true;
-            })
+                })
         }
     },
     created() {
         this.getRecordInLibrary();
+        this.getCollectionsYouCanAddThisRecordTo();
     }
 
 
@@ -404,18 +490,27 @@ export default {
      border-radius: 5px;
      background: black;
      text-align: center;
-     height: 250px;
-     width: 300px;
+     height: 220px;
+     width: 180px;
      display: flex;
-     flex-direction: column;
-     align-items: center;
+     align-items: top;
+     justify-content: stretch;
      margin: 12px;
+ }
+ .library-popup-RecordOptions-bigBox{
+    height: 220px;
+    width: 530px;
+ }
+ .library-popup-RecordOptions-buttons{
+    display: flex; 
+    flex-direction: column;
+    justify-content: stretch;
  }
 
  .library-popup-RecordOptions-popup-inner-inner-buttons {
      background-color: #09A3DA;
      width: 150px;
- }
+ } 
 
  .library-popup-RecordOptions-popup-inner button {
      border-radius: 5px;
@@ -466,6 +561,7 @@ export default {
      height: 100%;
      width: 100%;
  }
+
  .library-popup-AreYouSure-popup-inner button {
      border-radius: 5px;
      margin-top: 16px;
@@ -481,7 +577,8 @@ export default {
 
  .library-popup-AreYouSure-popup-inner-inner {
      border-radius: 5px;
-     background: #EA5143;;
+     background: #EA5143;
+     ;
      text-align: center;
      height: 200;
      width: 200px;
@@ -635,4 +732,5 @@ export default {
      position: relative;
      right: 4px;
      border-radius: 28px;
- }</style>
+ }
+</style>
