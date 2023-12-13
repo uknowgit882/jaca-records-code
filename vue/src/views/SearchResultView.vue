@@ -155,7 +155,7 @@ h2 {
     font-weight: bolder;
     color: white;
     text-align: left;
-    padding-left: 20px;
+    padding: 20px;
 }
 
 p {

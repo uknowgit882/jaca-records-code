@@ -1,29 +1,23 @@
 <template>
-  <button @click="getCarouselObject">Print to log</button>
-  <button @click="displayCard2">Print card to log</button>
-  <div v-if="showCard" class="popup">
-        <div class="popup-inner">
-          <div class="popup-inner-inner">
-            <button @click="showCard = !showCard">x</button>
-          <h3 >MyCardPopup</h3>
-          <ActiveCardComponent class="popup-inner-inner" v-bind:activeCard="this.activeCard" :cardType="carouselChooser"></ActiveCardComponent>
-          <!-- <p>Current Slide: {{this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value]}}</p> -->
-          <p >Current Slide: {{this.$props.carouselRecords[0].id}}</p>
-          <p >Current Slide: {{this.$refs.myCarousel.data.currentSlide}}</p>
-          <p >Active Record: {{ this.activeCard }}</p>
-        </div>
-        </div>
+  <div v-if="showCard" class="record-popup">
+    <div class="record-popup-inner">
+      <button  @click="showCard = !showCard">X</button>
+      <div class="record-popup-inner-inner">
+        <ActiveCardComponent class="record-popup-inner-inner" v-bind:activeCard="this.activeCard"
+          :cardType="carouselChooser"></ActiveCardComponent>
+        <!-- <p>Current Slide: {{this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value]}}</p> -->
       </div>
-  <!-- <Carousel :ref="carousel => {myCarousel}" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500" > -->
-  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500" >
+    </div>
+  </div>
+  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay ? 3000 : false" :wrapAround="true" :transition="500">
     <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record" @click="showCard = !showCard">
       <div v-if="carouselChooser == 'library'" class="carousel__item">
         <img :src="record.record.images[0].uri" />
       </div>
       <div v-else-if="carouselChooser == 'collection'" class="carousel__item">
-        <div class="stackOne" >
-        <img :src="record.images[0].uri" style="height: 150px; width: 150px" />
-      </div>
+        <div class="stackOne">
+          <img :src="record.images[0].uri" style="height: 150px; width: 150px" />
+        </div>
       </div>
       <div v-else-if="carouselChooser == 'searchAPI'" class="carousel__item">
         <h3 class="carouselSearchCard_title">{{ record.title }}</h3>
@@ -39,11 +33,11 @@
       <div v-else-if="carouselChooser == 'searchCollections'" class="carousel__item">
         <h3>{{ record.name }}</h3>
         <div class="stackOne">
-            <img :src="record.records[0].images[0].uri" style="height: 150px; width: 150px" />
+          <img :src="record.records[0].images[0].uri" style="height: 150px; width: 150px" />
         </div>
         <p></p>
       </div>
-      
+
     </Slide>
     <template #addons>
       <Pagination />
@@ -61,7 +55,7 @@ import ActiveCardComponent from './ActiveCardComponent.vue';
 
 import 'vue3-carousel/dist/carousel.css'
 
-const myCarousel = ref(null); 
+const myCarousel = ref(null);
 
 export default defineComponent({
   name: 'Autoplay',
@@ -93,15 +87,15 @@ export default defineComponent({
       myCarousel: []
     }
   },
-  computed:{
-    displayCard(){
+  computed: {
+    displayCard() {
       let cardNumber = this.$refs.myCarousel.data.value;
       let records = this.$props.carouselRecords;
       let cardToDisplay = records[cardNumber];
       console.log(cardToDisplay);
       return cardToDisplay;
     },
-    activeCard(){
+    activeCard() {
       return this.$props.carouselRecords[this.$refs.myCarousel.data.currentSlide.value];
     }
   },
@@ -113,11 +107,11 @@ export default defineComponent({
       }
       return false;
     },
-    getCarouselObject(){
+    getCarouselObject() {
       console.log(this.$refs.myCarousel)
       console.log(this.$props.carouselRecords)
     },
-    displayCard2(){
+    displayCard2() {
       let cardNumber = this.$refs.myCarousel.data.currentSlide.value;
       let records = this.$props.carouselRecords;
       let cardToDisplay = records[cardNumber];
@@ -150,8 +144,13 @@ export default defineComponent({
   grid-area: title;
 }
 
+h2 {
+  color: white;
+}
+
 h3 {
   color: white;
+  font-weight: bold;
 }
 
 p {
@@ -277,50 +276,56 @@ p {
   transform: rotate(4deg);
 }
 
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .popup-inner scoped {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: black;
-    opacity: 0.75;
-    padding: 10px;
-    text-align: center;
-    height: 100%;
-    width: 100%; 
-  }
-  
-  .popup-inner-inner {
-    background: white;
-    opacity: 200;
-    z-index: 2;
-    padding: 10px;
-    text-align: center;
-    height: 500px;
-    width: 800px; 
-  }
-  
-  .popup-inner button {
-    margin-top: 16px;
-    padding: 8px 16px;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.record-popup {
+  border-radius: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+}
 
+.record-popup-inner scoped {
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  opacity: 1.00;
+  padding: 10px;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+.record-popup-inner-inner {
+  border-radius: 5px;
+  background: black;
+  z-index: 2;
+  padding: 10px;
+  text-align: center;
+  max-height: 500px;
+  width: 600px;
+}
+
+.record-popup-inner button {
+  border-radius: 5px;
+  margin-top: 16px;
+  padding: 8px 12px;
+  background-color: #EA5143;
+  color: #fff;
+  border: none;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right; 
+}
+ 
 </style>
