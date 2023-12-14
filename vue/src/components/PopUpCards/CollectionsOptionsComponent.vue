@@ -84,12 +84,7 @@ export default {
             },
             
         }
-    },
-    // computed:{ 
-    //     collectionCurrentPrivacyStatus(){
-    //         if(this.collection.is_Private)
-    //     }
-    // },
+    }, 
     components: {
         ErrorPopup
     },

@@ -270,6 +270,10 @@ export default {
         }
     },
     methods: {
+        showCollectionOptionsToParent(response) {
+            this.canSee = false;
+            this.$emit('showCollectionOptionsToParent', false)
+        },
         getRecordInLibrary() {
             LibraryService.GetRecordInLibrary(this.activeCard.id)
                 .then(response => {
