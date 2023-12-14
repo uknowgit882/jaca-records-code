@@ -5,7 +5,7 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-bolt" style="color: #363636"></i> ABOUT JACA</strong>
+                        <h2><strong> <i class="fa-solid fa-bolt"></i> ABOUT JACA</strong>
                         </h2>
                         <h4>
                             <p ><i class="fa-solid fa-info"></i>&nbsp;&nbsp;JACA RECORDS began in the classroom by four .NET
@@ -27,11 +27,11 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-peace" style="color: #363636"></i> PREMIUM</strong>
+                        <h2><strong> <i class="fa-solid fa-peace"></i> PREMIUM</strong>
                         </h2>
-                        <h4 style="color: #363636">
-                            <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save unlimited records to your library</p>
-                            <p style="color: #363636"><i class="fa-solid fa-infinity" style="color: #363636"></i>&nbsp;&nbsp;Create unlimited collections</p>
+                        <h4>
+                            <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save unlimited records to your library</p>
+                            <p><i class="fa-solid fa-infinity"></i>&nbsp;&nbsp;Create unlimited collections</p>
                         </h4>
                     </div>
                 </div>
@@ -44,12 +44,12 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-crown" style="color: #363636"></i> BASIC</strong>
+                        <h2><strong> <i class="fa-solid fa-crown"></i> BASIC</strong>
                         </h2>
-                        <h4 style="color: #363636">
-                            <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save records to your library</p>
-                            <p style="color: #363636"><i class="fa-solid fa-box" style="color: #363636"></i>&nbsp;&nbsp;Create up to 25 collections</p>
-                            <p style="color: #363636"><i class="fa-solid fa-record-vinyl" style="color: #363636"></i>&nbsp;&nbsp;Browse various records</p>
+                        <h4>
+                            <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save records to your library</p>
+                            <p><i class="fa-solid fa-box"></i>&nbsp;&nbsp;Create up to 25 collections</p>
+                            <p><i class="fa-solid fa-record-vinyl"></i>&nbsp;&nbsp;Browse various records</p>
                             <p></p>
                         </h4>
                     </div>

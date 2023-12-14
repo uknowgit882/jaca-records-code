@@ -17,8 +17,6 @@
                         </div>
                     </div>
                 </div>
-                <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
-                    @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
             </div>
         </div>
         <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
@@ -42,15 +40,15 @@
                         <button class="button2"
                             @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
                     </div>
-                    <div>
+                </div>
+                <div>
 
-                        <div v-if="collection.records.length == 0">
-                            <p style="margin-left: 20px">You have no records in this collection</p>
-                        </div>
-                        <div v-else>
-                            <CarouselComponent v-bind:carouselRecords="collection.records"
-                                v-bind:carouselChooser="'collection'" :autoplay="false"></CarouselComponent>
-                        </div>
+                    <div v-if="collection.records.length == 0">
+                        <p style="margin-left: 20px">You have no records in this collection</p>
+                    </div>
+                    <div v-else>
+                        <CarouselComponent v-bind:carouselRecords="collection.records" v-bind:carouselChooser="'collection'"
+                            :autoplay="false"></CarouselComponent>
                     </div>
                 </div>
             </div>
