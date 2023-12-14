@@ -1,46 +1,46 @@
 <template>
     <div>
         <div>
-            <div>
-                <div class="collectionPage ">
-                    <div style="display: flex; justify-content: center; ">
-                        <div style="display: flex; flex-direction: column; ">
-                            <div style="display flex; flex-direction: row; align-items: center; flex-grow: 1 ;">
-                                <button class="button2" style="margin: 6px" @click="filterAll">All Collections</button>
-                                <button class="button2" style="margin: 6px" @click="filterPrivate">Private
-                                    Collections</button>
-                                <button class="button2" style="margin: 6px" @click="filterPublic">Public
-                                    Collections</button>
-                            </div>
-                            <div style="display: flex; flex-direction: row; justify-content: center;">
-                                <button class="button2" @click="showAddCollection = !showAddCollection">Add
-                                    Collection</button>
-                            </div>
+            <div class="collectionPage ">
+                <div style="display: flex; justify-content: center; ">
+                    <div style="display: flex; flex-direction: column; ">
+                        <div style="display flex; flex-direction: row; align-items: center; flex-grow: 1 ;">
+                            <button class="button2" style="margin: 6px" @click="filterAll">All Collections</button>
+                            <button class="button2" style="margin: 6px" @click="filterPrivate">Private
+                                Collections</button>
+                            <button class="button2" style="margin: 6px" @click="filterPublic">Public
+                                Collections</button>
+                        </div>
+                        <div style="display: flex; flex-direction: row; justify-content: center;">
+                            <button class="button2" @click="showAddCollection = !showAddCollection">Add
+                                Collection</button>
                         </div>
                     </div>
                 </div>
                 <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
                     @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
             </div>
-            <div class="home" v-if="!isLoading" style="display: flex; justify-content: center;">
-                <img src="../../img/Logogif.gif" alt="">
-            </div>
-            <div v-elses>
+        </div>
+        <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
+            @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
 
-                <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions"
-                    v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i">
-                </CollectionsOptionsComponent>
+        <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions"
+            v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i">
+        </CollectionsOptionsComponent>
+        <div class="home" v-if="!isLoading">
+            <img src="../../img/Logogif.gif" alt="">
+        </div>
 
-                <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
-                    <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
-                        <h2
-                            style="margin-left: 20px; display: inline; align-items: left; margin-top: auto; margin-bottom: auto ;">
-                            {{ collection.name }}</h2>
-                        <div style="align-items: right;">
-                            <!-- <button class="button2" @click="getVBindKey">Options</button> -->
-                            <button class="button2"
-                                @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
-                        </div>
+        <div v-else>
+            <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
+                <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
+                    <h2
+                        style="margin-left: 20px; display: inline; align-items: left; margin-top: auto; margin-bottom: auto ;">
+                        {{ collection.name }}</h2>
+                    <div style="align-items: right;">
+                        <!-- <button class="button2" @click="getVBindKey">Options</button> -->
+                        <button class="button2"
+                            @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
                     </div>
                     <div>
 

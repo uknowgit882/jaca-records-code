@@ -8,7 +8,7 @@
                         <h2 style="color: #363636"><strong> <i class="fa-solid fa-bolt" style="color: #363636"></i> ABOUT JACA</strong>
                         </h2>
                         <h4>
-                            <p style="color: #363636"><i class="fa-solid fa-info" style="color: #363636"></i>&nbsp;&nbsp;JACA RECORDS began in the classroom by four .NET
+                            <p ><i class="fa-solid fa-info"></i>&nbsp;&nbsp;JACA RECORDS began in the classroom by four .NET
                                 bootcamp students. This final capstone
                                 assignment turned into a passion project which dives into an unparalleled audio adventure as
                                 that seamlessly connects music enthusiasts with their favorite artists across genres. We

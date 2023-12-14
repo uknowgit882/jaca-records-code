@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == ''" ref="dropdown">
+  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == '' " ref="dropdown">
     <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>Log in</span>

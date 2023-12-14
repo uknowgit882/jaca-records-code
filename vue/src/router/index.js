@@ -53,14 +53,14 @@ const routes = [
       requiresAuth: false
     }
   },
-  // {
-  //   path: "/search",
-  //   name: "search",
-  //   component: SearchBox,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
+  {
+    path: "/search",
+    name: "search",
+    component: SearchBox,
+    meta: {
+      requiresAuth: true
+    }
+  },
   {
     path: "/Library",
     name: "Library",
@@ -94,14 +94,55 @@ const routes = [
     }
 
   },
-  // {
-  //   path: "/Profile",
-  //   name: "Profile",
-  //   component: ProfilePageView,
-  //   meta: {
-  //     requiresAuth: false,
-  //   }
-  // },
+  {
+    path: "/Profile",
+    name: "Profile",
+    component: ProfilePageView,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+
+  {
+    path: '/homeA',
+    name: 'homeA',
+    component: HomeA,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/popup",
+    name: "popup",
+    component: popupViewTest,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/JakeView",
+    name: "JakeView",
+    component: JakeView,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/data",
+    name: "data",
+    component: AggregateDataTestView,
+    meta: {
+      requiresAuth: false,
+    }
+  },
+  {
+    path: "/aseel",
+    name: "aseel",
+    component: AseelView,
+    meta: {
+      requiresAuth: true,
+    } 
+  },
   {
     path: "/jacapreme",
     name: "jacapreme",
