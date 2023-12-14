@@ -224,3 +224,15 @@ Trying to get record from Discogs API and build into database | For 122686 | Add
 Trying to add to library | For caleba, record: 122686 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:57:48 PM
 --- END OF ACTION ---
 
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 8:56:05 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:47:40 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:52:09 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:55:11 PM
+--- END OF ACTION ---
+
