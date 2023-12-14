@@ -1,6 +1,6 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == ''">
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
+  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == ''" ref="dropdown">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>Log in</span>
         <span class="icon is-small">
@@ -12,15 +12,17 @@
       <div class="dropdown-content">
         <login-comp></login-comp>
         <h2 class="signup-text">&nbsp;&nbsp;Need an account? Sign up.</h2>
-        <a class="button2" href="/register" id="premiumButton">
+        <button class="button2" @click="RegisterPagePush()">
+                Register</button>
+        <!-- <a class="button2" href="/register" id="premiumButton" style="margin-left: auto; margin-right: auto; text-align: center">
           Register
-        </a>
+        </a> -->
       </div>
     </div>
   </div>
 
-  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-else>
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
+  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-else ref="dropdown">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>
           <strong><i class="fa-solid fa-circle-user"></i></strong>
@@ -57,7 +59,7 @@
             <div v-if="message == ''">
               <h2>You are about to upgrade your account.
                 Click upgrade button if you want to proceed, else click exit button.</h2>
-              <button class="button2"  @click="UpgradeUser()">
+              <button class="button2" @click="UpgradeUser()">
                 Upgrade Account</button>
               <button class="ExitButton" @click="openup">Exit</button>
             </div>
@@ -66,10 +68,10 @@
               <button class="ExitButton" @click="openup">Exit</button>
             </div>
           </div>
-          </div>
+        </div>
 
 
-          <button class="button2" @click="openup2">Downgrade Account</button>
+        <button class="button2" @click="openup2">Downgrade Account</button>
         <div v-if="showPopup2" class="popup">
           <div class="popup-inner">
           </div>
@@ -88,10 +90,10 @@
               <button class="ExitButton" @click="openup2">Exit</button>
             </div>
           </div>
-          </div>
+        </div>
 
 
-          <button class="button2" @click="openup3">Deactivate Account</button>
+        <button class="button2" @click="openup3">Deactivate Account</button>
         <div v-if="showPopup3" class="popup">
           <div class="popup-inner">
           </div>
@@ -106,15 +108,15 @@
               <button class="ExitButton" @click="openup3">Exit</button>
             </div>
             <div v-else>
-              <h2  v-show="this.message3"> {{ message3 }}</h2>
+              <h2 v-show="this.message3"> {{ message3 }}</h2>
               <button class="ExitButton" @click="openup3">Exit</button>
             </div>
           </div>
-          </div>
+        </div>
 
 
 
-          <button class="button2" @click="openup4">Logout</button>
+        <button class="button2" @click="openup4">Logout</button>
         <div v-if="showPopup4" class="popup">
           <div class="popup-inner">
           </div>
@@ -129,21 +131,21 @@
               <button class="ExitButton" @click="openup4">Exit</button>
             </div>
             <div v-else>
-              <h2  v-show="this.message4"> {{ message4 }}</h2>
+              <h2 v-show="this.message4"> {{ message4 }}</h2>
               <button class="ExitButton" @click="openup4">Exit</button>
             </div>
           </div>
-          </div>
-          <!-- <button class="button2 is-warning" id="premiumButton" @click="DeactivateUser()">
+        </div>
+        <!-- <button class="button2 is-warning" id="premiumButton" @click="DeactivateUser()">
             Deactivate Account
           </button> -->
 
-          <!-- <button class="button2" v-on:click="logout()">Logout</button> -->
-          <div class="latestLogin">Last Login: {{ this.$store.state.user.last_Login.substring(0, 19) }}</div>
-        </div>
+        <!-- <button class="button2" v-on:click="logout()">Logout</button> -->
+        <div class="latestLogin">Last Login: {{ this.$store.state.user.last_Login.substring(0, 19) }}</div>
       </div>
     </div>
-    <!-- </div> -->
+  </div>
+  <!-- </div> -->
 </template>
   
 <script>
@@ -169,9 +171,10 @@ export default {
       message4: "",
       totalRecords: []
     };
-  }, 
+  },
   methods: {
     RegisterPagePush() {
+      this.dropdownActive = false;
       this.$router.push({ name: "register" });
     },
     UpgradeUser() {
@@ -211,13 +214,13 @@ export default {
           this.handleErrorResponse(error, "User Deactivate");
         });
     },
-    TotalRecords(){
+    TotalRecords() {
       StatisticsService.getTotalRecords()
-      .then((response) => {
-        if (response.status == 200){
-          this.$store.commit("GET_TOTAL_RECORDS",response.data)
-        }
-      })
+        .then((response) => {
+          if (response.status == 200) {
+            this.$store.commit("GET_TOTAL_RECORDS", response.data)
+          }
+        })
     },
     handleErrorResponse(error, verb) {
       if (error.response) {
@@ -244,7 +247,7 @@ export default {
       this.showPopup3 = !this.showPopup3
     },
     closeDropdown($event) {
-      if (!this.$refs.dropdown.contains($event.target)){
+      if (!this.$refs.dropdown.contains($event.target)) {
         this.dropdownActive = false;
         this.showPopup = false;
         this.showPopup2 = false;
@@ -256,19 +259,18 @@ export default {
       this.showPopup4 = !this.showPopup4
     },
   },
-  created (){
+  created() {
     this.TotalRecords();
     window.addEventListener('click', this.closeDropdown)
   },
-  beforeUnmount(){
+  beforeUnmount() {
     window.removeEventListener('click', this.closeDropdown)
   }
-  
+
 };
 </script>
   
 <style scoped>
-
 .dropdown-content {
   background-color: rgba(0, 0, 0, 0.75);
   margin-top: 8px;
@@ -286,7 +288,9 @@ export default {
   color: white;
   background-color: black;
 }
-.button2,.ExitButton {
+
+.button2,
+.ExitButton {
   --color: white;
   font-family: inherit;
   display: inline-block;
@@ -306,7 +310,8 @@ export default {
   background-color: black;
 }
 
-.button2:before , .ExitButton:before {
+.button2:before,
+.ExitButton:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -316,23 +321,27 @@ export default {
   border-radius: 50%;
 }
 
-.button2:hover , .ExitButton:hover {
+.button2:hover,
+.ExitButton:hover {
   color: black;
 }
 
-.button2:before, .ExitButton:before {
+.button2:before,
+.ExitButton:before {
   top: 100%;
   left: 100%;
   transition: all 0.7s;
 }
 
-.button2:hover:before, .ExitButton:hover:before {
+.button2:hover:before,
+.ExitButton:hover:before {
   top: -30px;
   left: -30px;
   background-color: #EEE810;
 }
 
-.button2:active:before, .ExitButton:active:before {
+.button2:active:before,
+.ExitButton:active:before {
   background: #B856AB;
   transition: background 0s;
 }
@@ -388,14 +397,16 @@ export default {
   transition: background 0s;
 }
 
-h2{
-  color:black
+h2 {
+  color: black
 }
 
-.button2, .ExitButton{
+.button2,
+.ExitButton {
   justify-content: center;
   align-content: center;
 }
+
 .popup {
   position: fixed;
   top: 0;
@@ -415,7 +426,7 @@ h2{
   text-align: center;
 }
 
-.popup-inner button{
+.popup-inner button {
   margin-top: 16px;
   padding: 2px 16px;
   background-color: #000000;
@@ -424,5 +435,4 @@ h2{
   border-radius: 4px;
   cursor: pointer;
 }
-
 </style>

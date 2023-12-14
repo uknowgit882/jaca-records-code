@@ -5,10 +5,17 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2><strong> <i class="fa-solid fa-bolt"></i> ABOUT JACA</strong>
+                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-bolt" style="color: #363636"></i> ABOUT JACA</strong>
                         </h2>
                         <h4>
-                            <p><i class="fa-solid fa-info"></i>&nbsp;&nbsp;blablaJaca</p>
+                            <p style="color: #363636"><i class="fa-solid fa-info" style="color: #363636"></i>&nbsp;&nbsp;JACA RECORDS began in the classroom by four .NET
+                                bootcamp students. This final capstone
+                                assignment turned into a passion project which dives into an unparalleled audio adventure as
+                                that seamlessly connects music enthusiasts with their favorite artists across genres. We
+                                go beyond mainstream hits, ensuring a unique and tailored music journey for every user and
+                                strive to create a friendly user atmosphere for our users and music lovers alike.
+                                Welcome, to JACA RECORDS. (WE ARE VINYL ONLY - hipsters only)
+                            </p>
                         </h4>
                     </div>
                 </div>
@@ -20,11 +27,11 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2><strong> <i class="fa-solid fa-peace"></i> PREMIUM</strong>
+                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-peace" style="color: #363636"></i> PREMIUM</strong>
                         </h2>
-                        <h4>
-                            <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save unlimited records to your library</p>
-                            <p><i class="fa-solid fa-infinity"></i>&nbsp;&nbsp;Create unlimited collections</p>
+                        <h4 style="color: #363636">
+                            <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save unlimited records to your library</p>
+                            <p style="color: #363636"><i class="fa-solid fa-infinity" style="color: #363636"></i>&nbsp;&nbsp;Create unlimited collections</p>
                         </h4>
                     </div>
                 </div>
@@ -37,12 +44,12 @@
                 <div class="media-content">
                     <div class="content">
                         <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                        <h2><strong> <i class="fa-solid fa-crown"></i> BASIC</strong>
+                        <h2 style="color: #363636"><strong> <i class="fa-solid fa-crown" style="color: #363636"></i> BASIC</strong>
                         </h2>
-                        <h4>
-                            <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save records to your library</p>
-                            <p><i class="fa-solid fa-box"></i>&nbsp;&nbsp;Create up to 25 collections</p>
-                            <p><i class="fa-solid fa-record-vinyl"></i>&nbsp;&nbsp;Browse various records</p>
+                        <h4 style="color: #363636">
+                            <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save records to your library</p>
+                            <p style="color: #363636"><i class="fa-solid fa-box" style="color: #363636"></i>&nbsp;&nbsp;Create up to 25 collections</p>
+                            <p style="color: #363636"><i class="fa-solid fa-record-vinyl" style="color: #363636"></i>&nbsp;&nbsp;Browse various records</p>
                             <p></p>
                         </h4>
                     </div>
@@ -61,6 +68,7 @@
     height: 45%;
     padding: 20px;
 }
+
 .box-info {
     display: flex;
     width: 950px;
@@ -69,7 +77,6 @@
     border-radius: 10px;
     justify-content: center;
     align-items: start;
-    padding-right: 36%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
     transition: transform 0.3s ease;
 }

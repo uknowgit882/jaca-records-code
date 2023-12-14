@@ -1,6 +1,6 @@
 <template>
-  <div class="home" v-if="!isLoading">
-    <img src="../../img/Logogif.gif" alt="">
+  <div class="home" v-if="!isLoading" style="display: flex; justify-content: center;">
+    <img src="../../img/Logogif.gif" alt="" >
   </div>
   <div v-else>
     <h1>Home</h1>
