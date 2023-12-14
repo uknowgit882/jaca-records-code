@@ -292,6 +292,7 @@ export default {
 </script>
   
 <style scoped>
+
 .dropdown-content {
   background-color: rgba(0, 0, 0, 0.75);
   margin-top: 8px;
