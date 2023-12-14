@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == ''">
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>Log in</span>
         <span class="icon is-small">
@@ -20,7 +20,7 @@
   </div>
 
   <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-else>
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>
           <strong><i class="fa-solid fa-circle-user"></i></strong>
@@ -147,22 +147,7 @@ export default {
       message3: "",
       totalRecords: []
     };
-  },
-  // methods: {
-  //   RegisterPagePush() {
-  //     this.$router.push({ name: "register" });
-  //   },
-  //   UpgradeUser() {
-  //     UserFunctionsService.upgradeUser()
-  //       .then((response) => {
-  //         if (response.status == 200) {
-  //           this.$store.commit("CHANGE_USER", this.user);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         this.handleErrorResponse(error, "User Upgrade");
-  //       });
-  //   },
+  }, 
   methods: {
     RegisterPagePush() {
       this.$router.push({ name: "register" });
@@ -236,33 +221,23 @@ export default {
     openup3() {
       this.showPopup3 = !this.showPopup3
     },
+    closeDropdown($event) {
+      if (!this.$refs.dropdown.contains($event.target)){
+        this.dropdownActive = false;
+        this.showPopup = false;
+        this.showPopup2 = false;
+        this.showPopup3 = false;
+      }
+    }
   },
   created (){
     this.TotalRecords();
+    window.addEventListener('click', this.closeDropdown)
+  },
+  beforeUnmount(){
+    window.removeEventListener('click', this.closeDropdown)
   }
-  // DeactivateUser() {
-  //   UserFunctionsService.deactivateUser()
-  //     .then((response) => {
-  //       if (response.status == 200) {
-  //         this.$store.commit("CHANGE_USER", this.user);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       this.handleErrorResponse(error, "User Deactivate");
-  //     });
-  // },
-  // handleErrorResponse(error, verb) {
-  //   if (error.response) {
-  //     console.log(
-  //       `Error ${verb} topic. Response received was "${error.response.statusText}".`
-  //     );
-  //   } else if (error.request) {
-  //     console.log(`Error ${verb} topic. Server could not be reached.`);
-  //   } else {
-  //     console.log(`Error ${verb} topic. Request could not be created.`);
-  //   }
-  // },
-
+  
 };
 </script>
   
