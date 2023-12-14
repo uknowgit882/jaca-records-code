@@ -16,7 +16,6 @@
                                 strive to create a friendly user atmosphere for our users and music lovers alike.
                                 Welcome, to JACA RECORDS. (WE ARE VINYL ONLY - hipsters only)
                             </p>
-
                         </h4>
                     </div>
                 </div>
@@ -69,6 +68,7 @@
     height: 45%;
     padding: 20px;
 }
+
 .box-info {
     display: flex;
     width: 950px;
