@@ -437,7 +437,7 @@ export default {
          "image image image artist artist artist"
          "image image image artist artist artist"
          "image image image extraArtist extraArtist yearCountry"
-         "quantity blank table table table table"
+         "quantity quantity table table table table"
          "notes notes table table table table"
          "notes notes table table table table";
      /* "button button button"; */

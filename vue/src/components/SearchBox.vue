@@ -103,6 +103,10 @@ export default {
           if (response1.status == 200) {
             this.$store.commit("ADD_SEARCH_RESULT", response1.data);
             this.$router.push({ name: "SearchResult" });
+            this.$store.commit('SET_GOT_RESULTS_TRUE', true)
+            if(this.$router.currentRoute.value.name == 'SearchResult'){
+              this.$router.go();
+            }
           }
         })
         .catch((error) => {
@@ -173,7 +177,7 @@ export default {
 
 .button {
   margin-top: 11px;
-  right: 18px;
+  right: 16px;
   color: white;
   background-color: black;
 }
