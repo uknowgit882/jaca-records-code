@@ -143,7 +143,7 @@ namespace Capstone.Controllers
                 if (existingFreeCollection == null)
                 {
                     // add a collection "free" from collections
-                    _collectionsDao.AddCollection(username, "Free Collection", NotPremium);
+                    _collectionsDao.AddCollection(username, "Free Collection",NotPrivate, NotPremium);
                 } else
                 {
                     _collectionsDao.ChangeCollectionIsPremium(existingFreeCollection.Name, username, NotPremium);
