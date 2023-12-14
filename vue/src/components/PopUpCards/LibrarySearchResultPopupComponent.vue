@@ -153,12 +153,12 @@
 
             <div class="library-popup-quantity">
                 <span style="color: white; font-weight: bold;">Quantity: </span>
-                <span style="text-align: right;">{{ activeCard.quantity }}</span>
+                <span style="text-align: right; font-size: 8px">Please navigate to your library to see this</span>
             </div>
 
             <div class="library-popup-notes scrollableBox" style="text-align: left; padding: 8px; max-height: 150px;">
                 <span style="color: white; font-weight: bold;">My Notes: </span>
-                <span>{{ activeCard.notes }}</span>
+                <span>Please navigate to your library to see this</span>
             </div>
 
             <div class="library-popup-table">
@@ -442,7 +442,7 @@ export default {
          "image image image artist artist artist"
          "image image image artist artist artist"
          "image image image extraArtist extraArtist yearCountry"
-         "quantity blank table table table table"
+         "quantity quantity table table table table"
          "notes notes table table table table"
          "notes notes table table table table";
      /* "button button button"; */

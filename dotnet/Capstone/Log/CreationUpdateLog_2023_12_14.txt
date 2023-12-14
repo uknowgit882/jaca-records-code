@@ -119,3 +119,15 @@ Trying to get record from Discogs API and build into database | For 27861 | AddR
 Trying to add to library | For userTest, record: 27861 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:23:46 PM
 --- END OF ACTION ---
 
+Adding record to database - just record table | 68615 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/14/2023 4:28:01 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 68615 | AddRecordToDbById | Sql exception occured | 12/14/2023 4:28:01 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 68615 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 4:28:01 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 68464 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 4:28:28 PM
+--- END OF ACTION ---
+
