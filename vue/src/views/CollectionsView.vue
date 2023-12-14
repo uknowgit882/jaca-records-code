@@ -22,7 +22,7 @@
                 <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
                     @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
             </div>
-            <div class="home" v-if="!isLoading">
+            <div class="home" v-if="!isLoading" style="display: flex; justify-content: center;">
                 <img src="../../img/Logogif.gif" alt="">
             </div>
             <div v-elses>

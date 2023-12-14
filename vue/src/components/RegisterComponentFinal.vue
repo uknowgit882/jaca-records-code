@@ -6,18 +6,18 @@
                 {{ registrationErrorMsg }}
             </div>
             <div id="buy-grid">
-                <button class="box-premium">
+                <button class="box-premium" >
                     <box class="box-pre">
                         <div class="media-content" @click="premiumRegistration">
                             <div class="content">
                                 <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                                <h2><strong> <i class="fa-solid fa-peace"></i> CLICK FOR PREMIUM</strong>
+                                <h2><strong> <i class="fa-solid fa-peace" style="color: #363636"></i> CLICK FOR PREMIUM</strong>
                                 </h2>
                                 <h4>
-                                    <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save unlimited records to your
+                                    <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save unlimited records to your
                                         library
                                     </p>
-                                    <p><i class="fa-solid fa-infinity"></i>&nbsp;&nbsp;Create unlimited collections</p>
+                                    <p style="color: #363636"><i class="fa-solid fa-infinity" style="color: #363636"></i>&nbsp;&nbsp;Create unlimited collections</p>
                                 </h4>
                             </div>
                         </div>
@@ -54,12 +54,12 @@
                         <div class="media-content" @click="freeRegistration">
                             <div class="content">
                                 <div class="myClass animate__animated animate__hoveranimate__bounce"></div>
-                                <h2><strong> <i class="fa-solid fa-crown"></i> CLICK FOR BASIC</strong>
+                                <h2><strong> <i class="fa-solid fa-crown" style="color: #363636"></i> CLICK FOR BASIC</strong>
                                 </h2>
                                 <h4>
-                                    <p><i class="fa-solid fa-floppy-disk"></i>&nbsp;&nbsp;Save records to your library</p>
-                                    <p><i class="fa-solid fa-box"></i>&nbsp;&nbsp;Create up to 25 collections</p>
-                                    <p><i class="fa-solid fa-record-vinyl"></i>&nbsp;&nbsp;Browse various records</p>
+                                    <p style="color: #363636"><i class="fa-solid fa-floppy-disk" style="color: #363636"></i>&nbsp;&nbsp;Save records to your library</p>
+                                    <p style="color: #363636"><i class="fa-solid fa-box" style="color: #363636"></i>&nbsp;&nbsp;Create up to 25 collections</p>
+                                    <p style="color: #363636"><i class="fa-solid fa-record-vinyl" style="color: #363636"></i>&nbsp;&nbsp;Browse various records</p>
                                     <p></p>
                                 </h4>
                             </div>
@@ -103,7 +103,7 @@ export default {
                     .then((response) => {
                         if (response.status == 201) {
                             this.$router.push({
-                                path: '/login',
+                                path: '/home',
                                 query: { registration: 'success' },
                             });
                         }

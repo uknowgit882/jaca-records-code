@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import JacaPremeComponents from '../../components/JacaPremeComponents.vue'
+import JacaPremeComponents from '../components/JacaPremeComponents.vue'
 
 export default {
     components: {

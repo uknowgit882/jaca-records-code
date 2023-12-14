@@ -1,5 +1,5 @@
 <template>
-    <div class="home" v-if="!isLoading">
+    <div class="home" v-if="!isLoading" style="display: flex; justify-content: center;">
       <img src="../../img/Logogif.gif" alt="">
     </div>
     <div v-else>
@@ -27,7 +27,12 @@
         LibraryService.GetLibrary()
           .then(response => {
             this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
-            this.isLoading = true;
+            if(this.$store.state.library){
+              this.isLoading = false;
+            }
+            else{
+              this.isLoading = true;
+            }
             
           })
       } 
