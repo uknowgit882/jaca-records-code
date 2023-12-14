@@ -36,12 +36,15 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_SEARCH_RESULT(state, result) {
         state.searchResults = result;
+        localStorage.setItem('discogsResults', result);
       },
       ADD_SEARCH_LIBRARY_RESULT(state, result) {
         state.searchLibraryResults = result;
+        localStorage.setItem('libraryResults', result);
       },
       ADD_SEARCH_COLLECTIONS_RESULT(state, result) {
         state.searchCollectionsResults = result;
+        localStorage.setItem('collectionsResults', result);
       },
       // ADD_RECORDS_TO_DB(state, bibub) {
       //   state.recordsInDB = bibub;

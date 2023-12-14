@@ -104,3 +104,18 @@ Trying to get record from Discogs API and build into database | For 5598 | AddRe
 Trying to add to library | For aseelt, record: 5598 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:50:30 AM
 --- END OF ACTION ---
 
+Trying to add to library | For userTest, record: 29426 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:14:57 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 27819 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:23:25 PM
+--- END OF ACTION ---
+
+Getting RecordClient from external API | Discogs Input: 27861 | GetRecord | Unsuccessful request to Discogs API | 12/14/2023 2:23:46 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 27861 | AddRecordToDbById | Error occured - received non-success response. | 12/14/2023 2:23:46 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 27861 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:23:46 PM
+--- END OF ACTION ---
+

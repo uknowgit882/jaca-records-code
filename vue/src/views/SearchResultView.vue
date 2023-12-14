@@ -1,9 +1,9 @@
 <template>
   <div>
-    <!-- <div v-if="!hasResults">
+    <div v-if="hasResults">
       <img class="spinningLogo" src="../../img/Logogif.gif" alt="" />
-    </div> -->
-    <div>
+    </div>
+    <div v-else>
       <div class="searchResultsGrid">
         <div class="apiSearchResults">
           <h2>Search Results:</h2>
@@ -77,15 +77,10 @@ export default {
         Country: "",
         Label: "",
       },
-      hasResults: false,
-      //collectionCarouselToggle: false,
-      //libraryCarouselToggle: false,
+      hasResults: this.foundResults,
       searchResults: [],
       searchLibraryResults: [],
       searchCollectionsResults: [],
-      isLoadingDiscogs: false,
-      //isLoadingLibrary: false,
-      //isLoadingCollections: false
     };
   },
   // methods: {
@@ -172,12 +167,13 @@ export default {
     },
   },
   created() {
-    // this.Search = this.$store.state.searchRequest;
-    // this.searchRecord(this.Search);
-    this.searchResults = this.$store.state.searchResults;
-    this.searchLibraryResults = this.$store.state.searchLibraryResults;
-    this.searchCollectionsResults = this.$store.state.searchCollectionsResults;
-    //this.hasResults = this.foundResults();
+    // this.searchResults = this.$store.state.searchResults;
+    // this.searchLibraryResults = this.$store.state.searchLibraryResults;
+    // this.searchCollectionsResults = this.$store.state.searchCollectionsResults;
+
+    this.searchResults = localStorage.discogsResults;
+    this.searchLibraryResults = localStorage.libraryResults;
+    this.searchCollectionsResults = localStorage.collectionsResults;
   },
 };
 </script>
