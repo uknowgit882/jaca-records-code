@@ -147,3 +147,15 @@ Trying to get add user to db, with pw hash | For whoCares | CreateUser | Violati
 Trying to get add user to db, with pw hash | For echo | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (echo@echo.com). | 12/14/2023 7:31:08 PM
 --- END OF ACTION ---
 
+Adding record to database - just record table | 68615 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/14/2023 7:52:09 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 68615 | AddRecordToDbById | Sql exception occured | 12/14/2023 7:52:09 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aseelt, record: 68615 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 7:52:09 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aseelt, record: 68464 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 7:52:17 PM
+--- END OF ACTION ---
+
