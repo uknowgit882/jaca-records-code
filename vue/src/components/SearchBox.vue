@@ -8,8 +8,8 @@
         <p class="control">
           <button class="button" v-on:click="sendSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
         </p>
-        <p class="control-adv">
-          <button class="button" v-on:click="showForm = !showForm">
+        <p class="control-adv" ref="dropdown">
+          <button class="button" v-on:click="showForm = !showForm" ref="dropdown">
             <strong>. . .</strong>
           </button>
         </p>
@@ -144,7 +144,18 @@ export default {
         console.log(`Error ${verb} topic. Request could not be created.`);
       }
     },
+    closeDropdown($event) {
+      if (!this.$refs.dropdown.contains($event.target)){
+        this.showForm = false;
+      }
+    }
   },
+  created() {
+    window.addEventListener('click', this.closeDropdown)
+  },
+  beforeUnmount(){
+    window.removeEventListener('click', this.closeDropdown)
+  }
 
   // created() {
   //     this.searchDiscogs();
