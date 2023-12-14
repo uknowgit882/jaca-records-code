@@ -1,9 +1,5 @@
 <template>
-    <div class="home" v-if="!isLoading">
-        <img src="../../img/Logogif.gif" alt="">
-    </div>
-
-    <div v-else>
+    <div>
         <div>
             <div>
                 <div class="collectionPage ">
@@ -23,30 +19,38 @@
                         </div>
                     </div>
                 </div>
+                <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
+                    @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
             </div>
+            <div class="home" v-if="!isLoading">
+                <img src="../../img/Logogif.gif" alt="">
+            </div>
+            <div v-elses>
 
-            <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection" @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
-            
-            <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions" v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i"></CollectionsOptionsComponent>
-            
-            <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
-                <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
-                    <h2
-                        style="margin-left: 20px; display: inline; align-items: left; margin-top: auto; margin-bottom: auto ;">
-                        {{ collection.name }}</h2>
-                    <div style="align-items: right;">
-                        <!-- <button class="button2" @click="getVBindKey">Options</button> -->
-                        <button class="button2" @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
-                    </div>
-                </div>
-                <div>
+                <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions"
+                    v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i">
+                </CollectionsOptionsComponent>
 
-                    <div v-if="collection.records.length == 0">
-                        <p style="margin-left: 20px">You have no records in this collection</p>
+                <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
+                    <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
+                        <h2
+                            style="margin-left: 20px; display: inline; align-items: left; margin-top: auto; margin-bottom: auto ;">
+                            {{ collection.name }}</h2>
+                        <div style="align-items: right;">
+                            <!-- <button class="button2" @click="getVBindKey">Options</button> -->
+                            <button class="button2"
+                                @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
+                        </div>
                     </div>
-                    <div v-else>
-                        <CarouselComponent v-bind:carouselRecords="collection.records" v-bind:carouselChooser="'collection'"
-                            :autoplay="false"></CarouselComponent>
+                    <div>
+
+                        <div v-if="collection.records.length == 0">
+                            <p style="margin-left: 20px">You have no records in this collection</p>
+                        </div>
+                        <div v-else>
+                            <CarouselComponent v-bind:carouselRecords="collection.records"
+                                v-bind:carouselChooser="'collection'" :autoplay="false"></CarouselComponent>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,7 +64,7 @@ import CollectionsService from '../services/CollectionsService';
 import CarouselComponent from '../components/CarouselComponent.vue';
 import AddCollectionComponent from '../components/PopUpCards/AddCollectionComponent.vue';
 import CollectionsOptionsComponent from '../components/PopUpCards/CollectionsOptionsComponent.vue';
-import {getCurrentInstance} from 'vue'
+import { getCurrentInstance } from 'vue'
 
 export default {
     data() {
@@ -183,4 +187,5 @@ export default {
  .button2:active:before {
      background: #4d437f;
      transition: background 0s;
- }</style>
+ }
+</style>
