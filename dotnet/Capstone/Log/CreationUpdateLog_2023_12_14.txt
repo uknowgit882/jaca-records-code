@@ -1,0 +1,54 @@
+Trying to add to library | For userTest, record: 68464 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:38:25 AM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 68464 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:41:51 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 11064759 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'USA & Euro'. | 12/14/2023 12:43:48 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 11064759 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:43:48 AM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 11064759 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:43:48 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 11064759 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'USA & Euro'. | 12/14/2023 12:44:04 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 11064759 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:44:04 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 11064759 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'USA & Euro'. | 12/14/2023 12:46:07 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 11064759 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:46:17 AM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 11064759 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:46:17 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 2442084 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'New Zealan'. | 12/14/2023 12:52:45 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 2442084 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:52:45 AM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 2442084 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:52:45 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 3256786 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Europ'. | 12/14/2023 12:55:13 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 3256786 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:55:13 AM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 3256786 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Europ'. | 12/14/2023 12:56:57 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 3256786 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:56:57 AM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 3256786 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:56:57 AM
+--- END OF ACTION ---
+
