@@ -22,3 +22,8 @@ export default {
   },
 }
 </script>
+
+<style>
+html{
+    background-color: unset;
+}</style>

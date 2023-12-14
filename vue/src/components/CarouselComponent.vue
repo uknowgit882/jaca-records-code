@@ -1,20 +1,20 @@
 <template>
   <div v-if="showCard" class="record-popup">
     <div class="record-popup-inner">
-      <button  @click="showCard = !showCard">X</button>
+      <button @click="showCard = !showCard">X</button>
       <div class="record-popup-inner-inner">
-        <ActiveCardComponent v-bind:activeCard="this.activeCard"
-          :cardType="carouselChooser"></ActiveCardComponent>
+        <ActiveCardComponent v-bind:activeCard="this.activeCard" :cardType="carouselChooser"></ActiveCardComponent>
       </div>
     </div>
   </div>
-  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay && !showCard ? 3000 : false" :wrapAround="true" :transition="500">
+  <Carousel ref="myCarousel" :itemsToShow="3.95" :autoplay="autoplay && !showCard ? 3000 : false" :wrapAround="true"
+    :transition="500">
     <Slide v-for="record in carouselRecords" :key="record.id" :carouselSearchCard="record" @click="showCard = !showCard">
       <div v-if="carouselChooser == 'library'" class="carousel__item">
         <img :src="record.record.images[0].uri" />
       </div>
       <div v-else-if="carouselChooser == 'collection'" class="carousel__item">
-        <div class="stackOne">
+        <div>
           <img :src="record.images[0].uri" style="height: 150px; width: 150px" />
         </div>
       </div>
@@ -26,9 +26,7 @@
         <!-- <carousel-search-card :carouselSearchCard="record"></carousel-search-card > -->
       </div>
       <div v-else-if="carouselChooser == 'searchLibrary'" class="carousel__item">
-        <p></p>
         <img :src="record.images[0].uri" style="height: 150px; width: 150px" />
-        <p></p>
       </div>
       <div v-else-if="carouselChooser == 'searchCollections'" class="carousel__item">
         <h3>{{ record.name }}</h3>
@@ -185,7 +183,7 @@ p {
 
 .carousel__item {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
@@ -327,7 +325,6 @@ p {
   text-align: center;
   border-radius: 4px;
   cursor: pointer;
-  float: right; 
+  float: right;
 }
- 
 </style>

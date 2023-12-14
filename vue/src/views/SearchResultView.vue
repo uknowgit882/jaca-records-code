@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isLoadingDiscogs">
+    <div v-if="!isLoading">
       <img class="spinningLogo" src="../../img/Logogif.gif" alt="" />
     </div>
     <div v-else>
@@ -8,7 +8,7 @@
         <div class="apiSearchResults">
           <h2>Search Results:</h2>
           <CarouselComponent
-            v-bind:carouselRecords="$store.state.searchResults.results"
+            v-bind:carouselRecords="searchResults.results"
             v-bind:carouselChooser="'searchAPI'"
             :autoplay="false"
           ></CarouselComponent>
@@ -20,7 +20,7 @@
             <h2>Library Results:</h2>
             <p>Records you own</p>
             <CarouselComponent
-              v-bind:carouselRecords="$store.state.searchLibraryResults"
+              v-bind:carouselRecords="searchLibraryResults"
               v-bind:carouselChooser="'searchLibrary'"
               :autoplay="false"
             ></CarouselComponent>
@@ -38,7 +38,7 @@
             <h2>Collection Results:</h2>
             <p>Collections where you have saved this record</p>
             <CarouselComponent
-              v-bind:carouselRecords="$store.state.searchCollectionsResults"
+              v-bind:carouselRecords="searchCollectionsResults"
               v-bind:carouselChooser="'searchCollections'"
               :autoplay="false"
             ></CarouselComponent>
@@ -78,60 +78,66 @@ export default {
         Label: "",
       },
       hasResults: false,
-      //collectionCarouselToggle: false,
-      //libraryCarouselToggle: false,
       searchResults: [],
-      isLoadingDiscogs: false,
-      //isLoadingLibrary: false,
-      //isLoadingCollections: false
+      searchLibraryResults: [],
+      searchCollectionsResults: [],
+      isLoading: false
     };
   },
   methods: {
-    searchRecord(request) {
-      SearchService.searchDiscogs(request)
-        .then((response1) => {
-          if (response1.status == 200) {
-            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
-            this.isLoadingDiscogs = true;
-            //this.$router.push({ name: "SearchResult" });
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-      SearchService.searchLibrary(request)
-        .then((response2) => {
-          if (response2.status == 200) {
-            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
-            //this.isLoadingLibrary = true;
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-        SearchService.searchCollections(request)
-        .then((response3) => {
-          if(response3.status == 200) {
-            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
-            //this.isLoadingCollections = true;
-          }
-        })
-        .catch((error) => {
-          this.handleErrorResponse(error, "Search Query");
-        });
-    },
-    handleErrorResponse(error, verb) {
-      if (error.response) {
-        console.log(
-          `Error ${verb} topic. Response received was "${error.response.statusText}".`
-        );
-      } else if (error.request) {
-        console.log(`Error ${verb} topic. Server could not be reached.`);
-      } else {
-        console.log(`Error ${verb} topic. Request could not be created.`);
-      }
+    getResults() {
+      this.searchResults = JSON.parse(localStorage.getItem('discogsResults'));
+      this.searchLibraryResults = JSON.parse(localStorage.getItem('libraryResults'));
+      this.searchCollectionsResults = JSON.parse(localStorage.getItem('collectionsResults'));
+      //this.isLoading = true;
     },
   },
+  // methods: {
+  //   searchRecord(request) {
+  //     SearchService.searchDiscogs(request)
+  //       .then((response1) => {
+  //         if (response1.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+  //           this.isLoadingDiscogs = true;
+  //           //this.$router.push({ name: "SearchResult" });
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //     SearchService.searchLibrary(request)
+  //       .then((response2) => {
+  //         if (response2.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
+  //           //this.isLoadingLibrary = true;
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //       SearchService.searchCollections(request)
+  //       .then((response3) => {
+  //         if(response3.status == 200) {
+  //           this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
+  //           //this.isLoadingCollections = true;
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.handleErrorResponse(error, "Search Query");
+  //       });
+  //   },
+  //   handleErrorResponse(error, verb) {
+  //     if (error.response) {
+  //       console.log(
+  //         `Error ${verb} topic. Response received was "${error.response.statusText}".`
+  //       );
+  //     } else if (error.request) {
+  //       console.log(`Error ${verb} topic. Server could not be reached.`);
+  //     } else {
+  //       console.log(`Error ${verb} topic. Request could not be created.`);
+  //     }
+  //   },
+  // },
   computed: {
     emptySearch() {
       if (this.Search != undefined) {
@@ -151,7 +157,7 @@ export default {
       }
     },
     hasLibraryResults() {
-      if (this.$store.state.searchLibraryResults.length > 0) {
+      if (this.searchLibraryResults.length > 0) {
         //this.libraryCarouselToggle = true;
         return true;
       } else {
@@ -160,7 +166,7 @@ export default {
       }
     },
     hasCollectionResults() {
-      if (this.$store.state.searchCollectionsResults.length > 0) {
+      if (this.searchCollectionsResults.length > 0) {
         //this.collectionCarouselToggle = true;
         return true;
       } else {
@@ -170,7 +176,23 @@ export default {
     },
   },
   created() {
-    this.searchRecord(this.$store.state.searchRequest);
+    // this.searchResults = this.$store.state.searchResults;
+    // this.searchLibraryResults = this.$store.state.searchLibraryResults;
+    // this.searchCollectionsResults = this.$store.state.searchCollectionsResults;
+    this.getResults();
+    this.isLoading = true;
+    // console.log('got the results')
+    // let storeResults = this.$store.state.gotResults;
+    // console.log('the store says ' + storeResults)
+    // if(this.$store.state.gotResults){
+    //   console.log('got the store gotResults')
+    //   this.isLoading = true;
+    //   console.log('set the loading to false')
+    //   this.$store.commit('SET_GOT_RESULTS_FALSE', false)
+    // }
+    // this.searchResults = localStorage.discogsResults;
+    // this.searchLibraryResults = localStorage.libraryResults;
+    // this.searchCollectionsResults = localStorage.collectionsResults;
   },
 };
 </script>
@@ -207,11 +229,11 @@ export default {
 }
 
 h2 {
-    font-size: 1.5rem;
-    font-weight: bolder;
-    color: white;
-    text-align: left;
-    padding: 20px;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  color: white;
+  text-align: left;
+  padding: 20px;
 }
 
 p {

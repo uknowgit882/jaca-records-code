@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Capstone.Exceptions;
-using Capstone.Models;
-using Capstone.Security;
+﻿using Capstone.DAO;
 using Capstone.DAO.Interfaces;
-using System;
-using Capstone.DAO;
+using Capstone.Models;
 using Capstone.Service;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Capstone.Controllers
 {
@@ -140,8 +138,16 @@ namespace Capstone.Controllers
                     _recordsCollectionsDao.ChangeSingleRecordCollectionIsPremium(record.Discog_Id, username, NotPremium);
                 }
 
-                // add a collection "free" from collections
-                _collectionsDao.AddCollection(username, "Free Collection", NotPremium);
+                // check if user has a free collection
+                Collection existingFreeCollection = _collectionsDao.GetNamedCollection(username, "Free Collection");
+                if (existingFreeCollection == null)
+                {
+                    // add a collection "free" from collections
+                    _collectionsDao.AddCollection(username, "Free Collection", NotPrivate, NotPremium);
+                } else
+                {
+                    _collectionsDao.ChangeCollectionIsPremium(existingFreeCollection.Name, username, NotPremium);
+                }
 
                 // set it to is premium false
                 //_collectionsDao.ChangeCollectionIsPremium("Free Collection", username, NotPremium);

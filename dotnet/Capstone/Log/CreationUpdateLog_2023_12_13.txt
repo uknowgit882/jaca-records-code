@@ -130,45 +130,73 @@ Trying to add to library | For aseelt, record: 122695 | AddRecord | The INSERT s
 Trying to add to library | For aseelt, record: 122684 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 1:59:28 PM
 --- END OF ACTION ---
 
-Adding record to database - just record table | 28867201 - New record object from API | AddRecord | The parameterized query '(@discogsId int,@country nvarchar(4000),@notes nvarchar(184),@re' expects the parameter '@country', which was not supplied. | 12/13/2023 2:56:41 PM
+Adding record to database - just record table | 5593549 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'South Kore'. | 12/13/2023 3:14:08 PM
 --- END OF ACTION ---
 
-Trying to get record from Discogs API and build into database | For 28867201 | AddRecordToDbById | Sql exception occured | 12/13/2023 2:56:41 PM
+Trying to get record from Discogs API and build into database | For 5593549 | AddRecordToDbById | Sql exception occured | 12/13/2023 3:14:08 PM
 --- END OF ACTION ---
 
-Trying to add to library | For caleba, record: 28867201 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 2:56:41 PM
+Trying to add to library | For alizg, record: 5593549 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:14:08 PM
 --- END OF ACTION ---
 
-Adding record to database - just record table | 29081215 - New record object from API | AddRecord | The parameterized query '(@discogsId int,@country nvarchar(4000),@notes nvarchar(73),@rel' expects the parameter '@country', which was not supplied. | 12/13/2023 2:56:51 PM
+Trying to add to library | For alizg, record: 747172 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:15:14 PM
 --- END OF ACTION ---
 
-Trying to get record from Discogs API and build into database | For 29081215 | AddRecordToDbById | Sql exception occured | 12/13/2023 2:56:51 PM
+Trying to add to library | For alizg, record: 747172 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:15:20 PM
 --- END OF ACTION ---
 
-Trying to add to library | For caleba, record: 29081215 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 2:56:51 PM
+Trying to add to library | For alizg, record: 65863 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:22 PM
 --- END OF ACTION ---
 
-Trying to add to library | For caleba, record: 110950 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:01:53 PM
+Trying to add to library | For alizg, record: 271681 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:35 PM
 --- END OF ACTION ---
 
-Adding record to database - just record table | 5174308 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 6:27:32 PM
+Trying to add to library | For alizg, record: 271681 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 3:16:43 PM
 --- END OF ACTION ---
 
-Trying to get record from Discogs API and build into database | For 5174308 | AddRecordToDbById | Sql exception occured | 12/13/2023 6:27:32 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 7:32:13 PM
 --- END OF ACTION ---
 
-Trying to add to library | For caleba, record: 5174308 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:27:32 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 7:32:28 PM
 --- END OF ACTION ---
 
-Adding record to database - just record table | 5991043 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'Netherland'. | 12/13/2023 6:28:07 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 7:36:18 PM
 --- END OF ACTION ---
 
-Trying to get record from Discogs API and build into database | For 5991043 | AddRecordToDbById | Sql exception occured | 12/13/2023 6:28:07 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 7:36:56 PM
 --- END OF ACTION ---
 
-Trying to add to library | For caleba, record: 5991043 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:28:07 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 7:40:41 PM
 --- END OF ACTION ---
 
+Trying to add to library | For jakel, record: 231219 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 6:55:10 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 22220506 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'UK & Europ'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 22220506 | AddRecordToDbById | Sql exception occured | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Trying to add to library | For userTest, record: 22220506 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:11:29 PM
+--- END OF ACTION ---
+
+Getting SearchResult from external API | Discogs Input: user search paramaters | SearchForRecordsDiscogs | Couldn't reach the Discogs API | 12/13/2023 7:21:14 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:34:43 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:36:57 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:39:34 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:42:46 PM
+--- END OF ACTION ---
+
+Trying to add collection | For userTest, adding Free Collection | AddCollection | Violation of UNIQUE KEY constraint 'UQ_collections_libary_record'. Cannot insert duplicate key in object 'dbo.collections'. The duplicate key value is (userTest, Free Collection). | 12/13/2023 7:45:44 PM
 Trying to get add user to db, with pw hash | For awd | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (aada@ggmail.com). | 12/13/2023 6:56:29 PM
 --- END OF ACTION ---
 
@@ -196,9 +224,15 @@ Trying to get record from Discogs API and build into database | For 122686 | Add
 Trying to add to library | For caleba, record: 122686 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:57:48 PM
 --- END OF ACTION ---
 
-Trying to get add user to db, with pw hash | For aass | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (emay@gmail.com). | 12/13/2023 9:10:46 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 8:56:05 PM
 --- END OF ACTION ---
 
-Trying to add to library | For aass, record: 90318 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 9:12:00 PM
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:47:40 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:52:09 PM
+--- END OF ACTION ---
+
+Trying to change record in library to free/premium | For mario | ChangeAllRecordIsPremium | The wrong number of rows were affected | 12/13/2023 11:55:11 PM
 --- END OF ACTION ---
 

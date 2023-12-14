@@ -8,8 +8,8 @@
         <p class="control">
           <button class="button" v-on:click="sendSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
         </p>
-        <p class="control-adv">
-          <button class="button" v-on:click="showForm = !showForm">
+        <p class="control-adv" ref="dropdown">
+          <button class="button" v-on:click="showForm = !showForm" ref="dropdown">
             <strong>. . .</strong>
           </button>
         </p>
@@ -93,42 +93,46 @@ export default {
     };
   },
   methods: {
-    sendSearch(){
-      this.$store.commit("SET_SEARCH_REQUEST", this.Search);
-      this.$router.push({ name: "SearchResult" });
-    },
-    // sendSearch() {
-    //   SearchService.searchDiscogs(this.Search)
-    //     .then((response1) => {
-    //       if (response1.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_RESULT", response1.data);
-    //         this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
-    //   SearchService.searchLibrary(this.Search)
-    //     .then((response2) => {
-    //       if (response2.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
-    //         //this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
-    //   SearchService.searchCollections(this.Search)
-    //     .then((response3) => {
-    //       if (response3.status == 200) {
-    //         this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
-    //         //this.$router.push({ name: "SearchResult" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.handleErrorResponse(error, "Search Query");
-    //     });
+    // sendSearch(){
+    //   this.$store.commit("SET_SEARCH_REQUEST", this.Search);
+    //   this.$router.push({ name: "SearchResult"});
     // },
+    sendSearch() {
+      SearchService.searchDiscogs(this.Search)
+        .then((response1) => {
+          if (response1.status == 200) {
+            this.$store.commit("ADD_SEARCH_RESULT", response1.data);
+            this.$router.push({ name: "SearchResult" });
+            this.$store.commit('SET_GOT_RESULTS_TRUE', true)
+            if(this.$router.currentRoute.value.name == 'SearchResult'){
+              this.$router.go();
+            }
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+      SearchService.searchLibrary(this.Search)
+        .then((response2) => {
+          if (response2.status == 200) {
+            this.$store.commit("ADD_SEARCH_LIBRARY_RESULT", response2.data);
+            //this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+      SearchService.searchCollections(this.Search)
+        .then((response3) => {
+          if (response3.status == 200) {
+            this.$store.commit("ADD_SEARCH_COLLECTIONS_RESULT", response3.data);
+            //this.$router.push({ name: "SearchResult" });
+          }
+        })
+        .catch((error) => {
+          this.handleErrorResponse(error, "Search Query");
+        });
+    },
     handleErrorResponse(error, verb) {
       if (error.response) {
         console.log(
@@ -140,7 +144,19 @@ export default {
         console.log(`Error ${verb} topic. Request could not be created.`);
       }
     },
+    closeDropdown($event) {
+      if (!this.$refs.dropdown.contains($event.target)){
+        this.showForm = false;
+      }
+    }
   },
+  created() {
+    window.addEventListener('click', this.closeDropdown)
+  },
+  beforeUnmount(){
+    window.removeEventListener('click', this.closeDropdown)
+  }
+
   // created() {
   //     this.searchDiscogs();
   //     this.searchLibrary();

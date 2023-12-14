@@ -2,7 +2,8 @@
     <div v-if="showRecordOptionsPopup" class="library-popup-RecordOptions-popup">
         <div class="library-popup-RecordOptions-popup-inner">
             <button class="popup-exit-button" @click.prevent="showRecordOptionsPopup = !showRecordOptionsPopup">X</button>
-            <div class="library-popup-RecordOptions-popup-inner-inner" :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox' : ''">
+            <div class="library-popup-RecordOptions-popup-inner-inner"
+                :class="optionsToggle != 0 ? 'library-popup-RecordOptions-bigBox' : ''">
                 <div class="library-popup-RecordOptions-buttons" style="margin-left: 8px;">
                     <div>
                         <button class="library-popup-RecordOptions-popup-inner-inner-buttons"
@@ -64,7 +65,7 @@
 
                     </div>
                     <p v-if="weAreOnIt">We're on it!</p>
-                    <p v-if="actionSuccessful">Success! Refreshing the page...</p>
+                    <p v-if="actionSuccessful">Success! You can close this window. You may need to refresh</p>
                     <button v-if="optionsToggle != 0" @click="optionsToggle = 0">Close</button>
                 </div>
             </div>
@@ -72,7 +73,7 @@
     </div>
 
     <div v-if="errorPopup">
-        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
+        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup;"></errorPopup>
     </div>
 
     <div v-if="areYouSurePopup" class="library-popup-AreYouSure-popup">
@@ -97,7 +98,7 @@
         <div class="library-popup-container">
             <div class="library-popup-image">
                 <Carousel>
-                    <Slide v-for="image in activeCard.record.images" :key="image.uri">
+                    <Slide v-for="image in activeCard.images" :key="image.uri">
                         <div class="carousel__item">
                             <img :src="image.uri" alt="">
                         </div>
@@ -110,54 +111,54 @@
             </div>
 
             <div class="library-popup-artist" style="text-align: left; padding: 8px;">
-                <h2 v-for="artist in activeCard.record.artists" :key="artist.name">{{ artist.name }}</h2>
+                <h2 v-for="artist in activeCard.artists" :key="artist.name">{{ artist.name }}</h2>
                 <br>
                 <span style="color: white; font-weight: bold;">Title: </span>
-                <h3>{{ activeCard.record.title }}</h3>
+                <h3>{{ activeCard.title }}</h3>
             </div>
 
 
             <div class="library-popup-yearCountry" style="text-align: left; padding: 8px;">
                 <span style="color: white; font-weight: bold;">Year: </span>
                 <br>
-                <span>{{ activeCard.record.released.substring(0, 4) }}</span>
+                <span>{{ activeCard.released.substring(0, 4) }}</span>
                 <br>
                 <span style="color: white; font-weight: bold;">Country: </span>
                 <br>
-                <span>{{ activeCard.record.country }}</span>
+                <span>{{ activeCard.country }}</span>
             </div>
 
             <div class="library-popup-extra-artist" style="text-align: left; padding: 8px;">
                 <span style="color: white; font-weight: bold;">Extra Artists: </span>
                 <div class="ticker-tape-container">
                     <div class="ticker-tape">
-                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{
+                        <span v-for="extraArtist in activeCard.extraArtists" :key="extraArtist.name">{{
                             extraArtist.name }}</span>
                     </div>
                     <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="extraArtist in activeCard.record.extraArtists" :key="extraArtist.name">{{
+                        <span v-for="extraArtist in activeCard.extraArtists" :key="extraArtist.name">{{
                             extraArtist.name }}</span>
                     </div>
                 </div>
                 <span style="font-weight: bold; color: white;">Genre:</span>
                 <div class="ticker-tape-container">
                     <div class="ticker-tape">
-                        <span v-for="genre in activeCard.record.genres" :key="genre">{{ genre }}</span>
+                        <span v-for="genre in activeCard.genres" :key="genre">{{ genre }}</span>
                     </div>
                     <div class="ticker-tape" aria-hidden="true">
-                        <span v-for="genre in activeCard.record.genres" :key="genre">{{ genre }}</span>
+                        <span v-for="genre in activeCard.genres" :key="genre">{{ genre }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="library-popup-quantity">
                 <span style="color: white; font-weight: bold;">Quantity: </span>
-                <span style="text-align: right;">{{ activeCard.quantity }}</span>
+                <span style="text-align: right; font-size: 8px">Please navigate to your library to see this</span>
             </div>
 
             <div class="library-popup-notes scrollableBox" style="text-align: left; padding: 8px; max-height: 150px;">
                 <span style="color: white; font-weight: bold;">My Notes: </span>
-                <span>{{ activeCard.notes }}</span>
+                <span>Please navigate to your library to see this</span>
             </div>
 
             <div class="library-popup-table">
@@ -183,7 +184,7 @@
                                     <span class="library-popup-tracks-table-duration" style="color: white; ">Length</span>
                                     <table class="library-popup-tracks-table-row">
                                         <tr>
-                                            <track-component v-for="track in activeCard.record.tracklist" :key="track.title"
+                                            <track-component v-for="track in activeCard.tracklist" :key="track.title"
                                                 :track="track"></track-component>
                                         </tr>
                                     </table>
@@ -193,22 +194,22 @@
                     </div>
                     <div :class="tabToggle == 2 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px; ">
-                        <p class="smallFont" v-for="format in activeCard.record.formats" :key="format.name"
+                        <p class="smallFont" v-for="format in activeCard.formats" :key="format.name"
                             style="color: #183E50">{{ format.name }}</p>
                     </div>
                     <div :class="tabToggle == 3 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px; ">
-                        <p class="smallFont" v-for="label in activeCard.record.labels" :key="label.name"
+                        <p class="smallFont" v-for="label in activeCard.labels" :key="label.name"
                             style="color: #183E50">{{ label.name }}</p>
                     </div>
                     <div :class="tabToggle == 4 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px;">
-                        <p class="smallFont" v-for="identifier in activeCard.record.identifiers" :key="identifier.value"
+                        <p class="smallFont" v-for="identifier in activeCard.identifiers" :key="identifier.value"
                             style="color: #183E50">{{ identifier.type }}, {{ identifier.value }}</p>
                     </div>
                     <div :class="tabToggle == 5 ? 'makeVisible' : 'notVisible'" class="tabcontent"
                         style="border-radius: 4px;">
-                        <p class="smallFont scrollableBox" style="color: #183E50">{{ activeCard.record.notes }}</p>
+                        <p class="smallFont scrollableBox" style="color: #183E50">{{ activeCard.notes }}</p>
                     </div>
                 </div>
             </div>
@@ -249,10 +250,10 @@ export default {
             tabToggle: 1,
             optionsToggle: 0,
             recordToAddToCollection: {
-                discogs_Id: this.activeCard.record.id
+                discogs_Id: this.activeCard.id
             },
             updateLibrary: {
-                discogs_Id: this.activeCard.record.id,
+                discogs_Id: this.activeCard.id,
                 notes: "",
                 quantity: 0,
             },
@@ -269,8 +270,12 @@ export default {
         }
     },
     methods: {
+        showCollectionOptionsToParent(response) {
+            this.canSee = false;
+            this.$emit('showCollectionOptionsToParent', false)
+        },
         getRecordInLibrary() {
-            LibraryService.GetRecordInLibrary(this.activeCard.record.id)
+            LibraryService.GetRecordInLibrary(this.activeCard.id)
                 .then(response => {
                     this.isInLibrary = true;
                     this.isLoading = true;
@@ -282,7 +287,6 @@ export default {
         },
         successDisappearer() {
             this.actionSuccessful = false;
-            setTimeout(this.$router.go(), 2000)
             return this.actionSuccessful;
         },
         displaySuccess() {
@@ -295,7 +299,7 @@ export default {
                     const collections = response.data;
                     this.eligibleCollections = collections.filter((collection) => {
                         const collectionWithoutThisRecord = collection.records.filter((record) => {
-                            return record.id == this.activeCard.record.id
+                            return record.id == this.activeCard.id
                         })
                         if (collectionWithoutThisRecord.length == 0) {
                             return collection
@@ -315,7 +319,7 @@ export default {
                     const collections = response.data;
                     this.CollectionsWithRecord = collections.filter((collection) => {
                         const collectionWithThisRecord = collection.records.filter((record) => {
-                            return record.id == this.activeCard.record.id
+                            return record.id == this.activeCard.id
                         })
                         if (collectionWithThisRecord.length != 0) {
                             return collection
@@ -388,7 +392,7 @@ export default {
         removeRecordFromCollection(collectionName) {
             this.isLoading = false;
             this.weAreOnIt = true;
-            CollectionService.DeleteRecordInCollection(collectionName, this.activeCard.record.id)
+            CollectionService.DeleteRecordInCollection(collectionName, this.activeCard.id)
                 .then(response => {
                     this.isInLibrary = true;
                     this.isLoading = true;
@@ -408,14 +412,14 @@ export default {
         deleteRecord() {
             this.areYouSurePopup = false;
             this.showRecordOptionsPopup = false;
-            LibraryService.DeleteRecordInLibrary(this.activeCard.record.id)
+            LibraryService.DeleteRecordInLibrary(this.activeCard.id)
                 .then(response => {
                     this.isLoading = true;
                     this.$router.go()
                 })
                 .catch(error => {
                     this.isLoading = true;
-                    this.errorMessage = "deleting this collection";
+                    this.errorMessage = "deleting this record in your library";
                     this.errorPopup = true;
                 })
         }
@@ -425,6 +429,7 @@ export default {
         this.getCollectionsYouCanAddThisRecordTo();
         this.getCollectionsYouCanRemoveThisRecordFrom();
     }
+
 
 }
 
@@ -604,7 +609,7 @@ export default {
      border-radius: 5px;
      background: black;
      text-align: center;
-     height: 220px;
+     height: 270px;
      width: 180px;
      display: flex;
      align-items: top;

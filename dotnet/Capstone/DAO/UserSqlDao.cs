@@ -90,7 +90,7 @@ namespace Capstone.DAO
             User user = null;
 
             string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
-                "FROM users WHERE username = @username";
+                "FROM users WHERE username = @username AND is_active = 1";
 
             try
             {
@@ -116,6 +116,40 @@ namespace Capstone.DAO
 
             return user;
         }
+
+        public User GetInactiveUserByUsername(string username)
+        {
+            User user = null;
+
+            string sql = "SELECT user_id, username, first_name, last_name, email_address, password_hash, salt, user_role, is_active, created_date, updated_date, last_login " +
+                "FROM users WHERE username = @username AND is_active = 0";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        user = MapRowToUser(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.WriteLog("Trying to get user by username", $"For {username}", MethodBase.GetCurrentMethod().Name, ex.Message);
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return user;
+        }
+
+
 
         public string GetUserRole(string username)
         {
@@ -304,7 +338,7 @@ namespace Capstone.DAO
         {
             int numberOfRows = 0;
 
-            User userReactive = GetUserByUsername(username);
+            User userReactive = GetInactiveUserByUsername(username);
 
             if (userReactive == null)
             {

@@ -59,6 +59,11 @@
             <tr>
                 <td>Number of Records By Artists</td>
                 <td>
+                    <div class="ticker-tape-container">
+                    <div class="ticker-tape">
+                        <p v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist" :key="artist"> {{ numRecords }} : {{ artist }}</p>
+                    </div>
+                    </div>
                     <div class="dropdown" :class="{ 'is-active': dropdownActive }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown">
@@ -69,7 +74,7 @@
                             </button>
                         </div>
                         <div class="dropdown-menu" role="menu">
-                            <div class="dropdown-content">
+                            <div class="dropdown-content ">
                                 <div class="dropdown-item"
                                     v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist"
                                     :key="artist">
@@ -460,6 +465,39 @@ th {
     color: white;
     background-color: black;
 }
+
+.tickerData-tape-container {
+     overflow-x: hidden;
+     width: 100%;
+     display: flex;
+ }
+
+ .tickerData-tape {
+     display: flex;
+     align-items: center;
+     flex: 0 0 auto;
+     gap: 1rem;
+     margin-right: 1rem;
+     min-width: 100%;
+     word-wrap: normal;
+     animation-name: marqueeData;
+     animation-duration: 60s;
+     animation-timing-function: linear;
+     animation-delay: 0s;
+     animation-iteration-count: infinite;
+     animation-play-state: running;
+     animation-direction: normal;
+ }
+
+ @keyframes marqueeData {
+     0% {
+         transform: translateY(0%);
+     }
+
+     100% {
+         transform: translateY(-100%);
+     }
+ }
 
 /* .button {
     --color: white;
