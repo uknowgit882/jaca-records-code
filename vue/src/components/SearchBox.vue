@@ -161,7 +161,7 @@ export default {
 
 .button {
   margin-top: 11px;
-  right: 18px;
+  right: 16px;
   color: white;
   background-color: black;
 }

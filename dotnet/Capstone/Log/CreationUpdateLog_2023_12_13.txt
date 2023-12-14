@@ -196,3 +196,9 @@ Trying to get record from Discogs API and build into database | For 122686 | Add
 Trying to add to library | For caleba, record: 122686 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 7:57:48 PM
 --- END OF ACTION ---
 
+Trying to get add user to db, with pw hash | For aass | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (emay@gmail.com). | 12/13/2023 9:10:46 PM
+--- END OF ACTION ---
+
+Trying to add to library | For aass, record: 90318 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/13/2023 9:12:00 PM
+--- END OF ACTION ---
+
