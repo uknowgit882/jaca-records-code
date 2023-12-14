@@ -73,7 +73,7 @@
     </div>
 
     <div v-if="errorPopup">
-        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup"></errorPopup>
+        <errorPopup v-bind:errorMessage="this.errorMessage" @click="errorPopup = !errorPopup;"></errorPopup>
     </div>
 
     <div v-if="areYouSurePopup" class="library-popup-AreYouSure-popup">

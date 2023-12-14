@@ -10,7 +10,7 @@
             style="margin: 20px; height: 550px; width: 750px; display: flex; flex-direction: column; justify-items: center;">
             <div>
                 <h2 style="text-align: center;">{{ collection.name }}</h2>
-                <button class="button2" @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Collection Options</button>
+                <button class="button2" @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection" v-if="this.$store.state.token != ''">Collection Options</button>
             </div>
             <div class="CollectionsResults-table">
                 <!-- <span class="CollectionsResults-image" style="text-align: left; color: white;">Image</span>
