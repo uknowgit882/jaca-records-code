@@ -11,7 +11,13 @@ import LibraryView from '../views/LibraryView.vue'
 import CollectionsView from '@/views/CollectionsView.vue'
 import DataView from '@/views/DataView.vue'
 import SearchResultView from '@/views/SearchResultView.vue'
-import JacaPremeView from '../views/JacaPremeView.vue'
+import ProfilePageView from '@/views/Caleb/ProfilePageView.vue'
+import HomeA from '@/views/Caleb/HomeAView.vue'
+import popupViewTest from '@/views/Aseel/popupViewTEST.vue'
+import JakeView from '@/views/Jake/JakeView.vue'
+import AseelView from '../views/Aseel/AseelView.vue'
+import AggregateDataTestView from '../views/Aliz/AggregateDataTestView.vue'
+import JacaPremeView from '../views/Aliz/JacaPremeView.vue'
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
  * inside of App.vue depending on the URL.
@@ -29,22 +35,22 @@ const routes = [
       requiresAuth: false
     }
   },
-  // {
-  //   path: "/login",
-  //   name: "login",
-  //   component: LoginView,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
-  // {
-  //   path: "/logout",
-  //   name: "logout",
-  //   component: LogoutView,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
+  {
+    path: "/login",
+    name: "login",
+    component: LoginView,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: "/logout",
+    name: "logout",
+    component: LogoutView,
+    meta: {
+      requiresAuth: false
+    }
+  },
   {
     path: "/register",
     name: "register",
@@ -53,14 +59,14 @@ const routes = [
       requiresAuth: false
     }
   },
-  // {
-  //   path: "/search",
-  //   name: "search",
-  //   component: SearchBox,
-  //   meta: {
-  //     requiresAuth: false
-  //   }
-  // },
+  {
+    path: "/search",
+    name: "search",
+    component: SearchBox,
+    meta: {
+      requiresAuth: true
+    }
+  },
   {
     path: "/Library",
     name: "Library",
@@ -94,14 +100,55 @@ const routes = [
     }
 
   },
-  // {
-  //   path: "/Profile",
-  //   name: "Profile",
-  //   component: ProfilePageView,
-  //   meta: {
-  //     requiresAuth: false,
-  //   }
-  // },
+  {
+    path: "/Profile",
+    name: "Profile",
+    component: ProfilePageView,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+
+  {
+    path: '/homeA',
+    name: 'homeA',
+    component: HomeA,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/popup",
+    name: "popup",
+    component: popupViewTest,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/JakeView",
+    name: "JakeView",
+    component: JakeView,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/data",
+    name: "data",
+    component: AggregateDataTestView,
+    meta: {
+      requiresAuth: false,
+    }
+  },
+  {
+    path: "/aseel",
+    name: "aseel",
+    component: AseelView,
+    meta: {
+      requiresAuth: true,
+    } 
+  },
   {
     path: "/jacapreme",
     name: "jacapreme",

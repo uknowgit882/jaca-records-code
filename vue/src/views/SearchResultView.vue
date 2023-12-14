@@ -287,4 +287,3 @@ p {
   grid-template-areas: Barcode;
 }
 </style>
-
