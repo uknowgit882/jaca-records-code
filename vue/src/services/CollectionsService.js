@@ -29,6 +29,6 @@ export default{
         return axios.post(`Collections/${name}/record`, discogs_id);
     },
     DeleteRecordInCollection(name, discogs_id){
-        return axios.post(`Collections/${name}/record/${discogs_id}`);
+        return axios.delete(`Collections/${name}/record/${discogs_id}`);
     }
 }
