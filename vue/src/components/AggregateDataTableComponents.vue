@@ -4,68 +4,76 @@
             <tr>
                 <th>Categories</th>
                 <th>Aggregate</th>
-                <th  v-if="$store.state.token != ''">Users</th>
+                <th v-if="$store.state.token != ''">Users</th>
             </tr>
             <tr>
                 <td>Total Artists</td>
                 <td>{{ this.$store.state.StatsAggregate.totalArtists }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalArtists }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalArtists }}</td>
             </tr>
             <tr>
                 <td>Total Collections</td>
                 <td>{{ this.$store.state.StatsAggregate.totalCollections }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalCollections }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalCollections }}</td>
             </tr>
             <tr>
                 <td>Total Formats</td>
                 <td>{{ this.$store.state.StatsAggregate.totalFormats }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalFormats }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalFormats }}</td>
             </tr>
             <tr>
                 <td>Total Genres</td>
                 <td>{{ this.$store.state.StatsAggregate.totalGenres }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalGenres }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalGenres }}</td>
             </tr>
             <tr>
                 <td>Total Images</td>
                 <td>{{ this.$store.state.StatsAggregate.totalImages }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalImages }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalImages }}</td>
             </tr>
             <tr>
                 <td>Total Labels</td>
                 <td>{{ this.$store.state.StatsAggregate.totalLabels }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalLabels }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalLabels }}</td>
             </tr>
             <tr>
                 <td>Total Records In Collections</td>
                 <td>{{ this.$store.state.StatsAggregate.totalCollections }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalCollections }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalCollections }}</td>
             </tr>
             <tr>
                 <td>Total Tracks</td>
                 <td>{{ this.$store.state.StatsAggregate.totalTracks }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalTracks }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalTracks }}</td>
             </tr>
             <tr>
                 <td>Total Users</td>
                 <td>{{ this.$store.state.StatsAggregate.totalUsers }}</td>
-                <td  v-if="$store.state.token != ''">1</td>
+                <td v-if="$store.state.token != ''">1</td>
             </tr>
             <tr>
                 <td>Total Records</td>
                 <td>{{ this.$store.state.StatsAggregate.totalRecords }}</td>
-                <td  v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalRecords }}</td>
+                <td v-if="$store.state.token != ''">{{ this.$store.state.StatsUser.totalRecords }}</td>
             </tr>
-            <tr>
-                <td>Number of Records By Artists</td>
+            <tr style="height: 100px">
+                <td class="artistTable">Number of Records By Artists</td>
                 <td>
-                    <div class="ticker-tape-container">
-                    <div class="ticker-tape">
-                        <p v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist" :key="artist"> {{ numRecords }} : {{ artist }}</p>
-                    </div>
-                    </div>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive }">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist"
+                                            :key="artist"> {{ numRecords }} : {{ artist }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist"
+                                            :key="artist"> {{ numRecords }} : {{ artist }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive }">
                         <div class="dropdown-trigger">
+                            
                             <button class="button" @click="toggleDropdown">
                                 <span>Records By Artists </span>
                                 <span class="icon is-small">
@@ -74,19 +82,35 @@
                             </button>
                         </div>
                         <div class="dropdown-menu" role="menu">
-                            <div class="dropdown-content ">
-                                <div class="dropdown-item"
+                            <div class="dropdown-content "> -->
+                                <!-- <div class="dropdown-item"
                                     v-for="(artist, numRecords) in $store.state.StatsAggregate.numRecordsByArtist"
                                     :key="artist">
                                     {{ numRecords }} : {{ artist }}
+                                    
+                                </div> -->
+                               
 
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
+                            <!-- </div>
+                        </div> -->
+                    <!-- </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
+                <td v-if="$store.state.token != ''">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container">
+                                    <div class="tickerData-tape">
+                                        <p v-for="(artist, numRecords) in $store.state.StatsUser.numRecordsByArtist" :key="artist">
+                                    {{ numRecords }} : {{ artist }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p v-for="(artist, numRecords) in $store.state.StatsUser.numRecordsByArtist" :key="artist">
+                                    {{ numRecords }} : {{ artist }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+<!-- 
                     <div class="dropdown" :class="{ 'is-active': dropdownActive2 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown2">
@@ -99,20 +123,34 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(artist, numRecords) in $store.state.StatsUser.numRecordsByArtist" :key="artist">
-                                    {{ numRecords }} : {{ artist }}
+                                    
 
-                                </div>
+                                </div> -->
 
-                            </div>
-                        </div>
-                    </div>
+                            <!-- </div> -->
+                        <!-- </div>
+                    </div> -->
                 </td>
             </tr>
             <tr>
                 <td>Number of Records By Format</td>
                 <td>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive3 }">
+
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p v-for="(format, numRecords) in $store.state.StatsAggregate.numRecordsByFormat"
+                                    :key="format">
+                                    {{ numRecords }} : {{ format }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p v-for="(format, numRecords) in $store.state.StatsAggregate.numRecordsByFormat"
+                                    :key="format">
+                                    {{ numRecords }} : {{ format }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive3 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown3">
                                 <span>Records By Format </span>
@@ -132,10 +170,23 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive4 }">
+                <td v-if="$store.state.token != ''">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p v-for="(format, numRecords) in $store.state.StatsUser.numRecordsByFormat" :key="format">
+                                    {{ numRecords }} : {{ format }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p v-for="(format, numRecords) in $store.state.StatsUser.numRecordsByFormat" :key="format">
+                                    {{ numRecords }} : {{ format }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive4 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown4">
                                 <span>Records By Format </span>
@@ -147,21 +198,34 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(format, numRecords) in $store.state.StatsUser.numRecordsByFormat"
-                                    :key="format">
+                                    v-for="(format, numRecords) in $store.state.StatsUser.numRecordsByFormat" :key="format">
                                     {{ numRecords }} : {{ format }}
 
                                 </div>
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
             <tr>
                 <td>Number of Records By Genre</td>
                 <td>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive5 }">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p  v-for="(genre, numRecords) in $store.state.StatsAggregate.numRecordsByGenre"
+                                    :key="genre">
+                                    {{ numRecords }} : {{ genre }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p  v-for="(genre, numRecords) in $store.state.StatsAggregate.numRecordsByGenre"
+                                    :key="genre">
+                                    {{ numRecords }} : {{ genre }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive5 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown5">
                                 <span>Records By Genre </span>
@@ -181,12 +245,26 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive6 }">
+                <td v-if="$store.state.token != ''">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(genre, numRecords) in $store.state.StatsUser.numRecordsByGenre" :key="genre">
+                                    {{ numRecords }} : {{ genre }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(genre, numRecords) in $store.state.StatsUser.numRecordsByGenre" :key="genre">
+                                    {{ numRecords }} : {{ genre }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive6 }">
                         <div class="dropdown-trigger">
-                            
+
                             <button class="button" @click="toggleDropdown6">
                                 <span>Records By Genre </span>
                                 <span class="icon is-small">
@@ -197,21 +275,34 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(genre, numRecords) in $store.state.StatsUser.numRecordsByGenre"
-                                    :key="genre">
+                                    v-for="(genre, numRecords) in $store.state.StatsUser.numRecordsByGenre" :key="genre">
                                     {{ numRecords }} : {{ genre }}
 
                                 </div>
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
             <tr>
                 <td>Number of Records By Label</td>
                 <td>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive7 }">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p  v-for="(label, numRecords) in $store.state.StatsAggregate.numRecordsByLabel"
+                                    :key="label">
+                                    {{ numRecords }} : {{ label }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(genre, numRecords) in $store.state.StatsUser.numRecordsByGenre" :key="genre">
+                                    {{ numRecords }} : {{ genre }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive7 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown7">
                                 <span>Records By Label </span>
@@ -231,10 +322,23 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive8 }">
+                <td v-if="$store.state.token != ''">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(label, numRecords) in $store.state.StatsUser.numRecordsByLabel" :key="label">
+                                    {{ numRecords }} : {{ label }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(label, numRecords) in $store.state.StatsUser.numRecordsByLabel" :key="label">
+                                    {{ numRecords }} : {{ label }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive8 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown8">
                                 <span>Records By Label </span>
@@ -246,22 +350,35 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(label, numRecords) in $store.state.StatsUser.numRecordsByLabel"
-                                    :key="label">
+                                    v-for="(label, numRecords) in $store.state.StatsUser.numRecordsByLabel" :key="label">
                                     {{ numRecords }} : {{ label }}
 
                                 </div>
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
 
             <tr>
                 <td>Number of Records By Year</td>
                 <td>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive9 }">
+
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p    v-for="(year, numRecords) in $store.state.StatsAggregate.numRecordsByYear" :key="year">
+                                    {{ numRecords }} : {{ year }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p   v-for="(year, numRecords) in $store.state.StatsAggregate.numRecordsByYear" :key="year">
+                                    {{ numRecords }} : {{ year }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive9 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown9">
                                 <span>Records By Year </span>
@@ -273,18 +390,30 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(year, numRecords) in $store.state.StatsAggregate.numRecordsByYear"
-                                    :key="year">
+                                    v-for="(year, numRecords) in $store.state.StatsAggregate.numRecordsByYear" :key="year">
                                     {{ numRecords }} : {{ year }}
 
                                 </div>
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive10 }">
+                <td v-if="$store.state.token != ''">
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p    v-for="(year, numRecords) in $store.state.StatsUser.numRecordsByYear" :key="year">
+                                    {{ numRecords }} : {{ year }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p    v-for="(year, numRecords) in $store.state.StatsUser.numRecordsByYear" :key="year">
+                                    {{ numRecords }} : {{ year }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive10 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown10">
                                 <span>Records By Year </span>
@@ -296,21 +425,36 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                    v-for="(year, numRecords) in $store.state.StatsUser.numRecordsByYear"
-                                    :key="year">
+                                    v-for="(year, numRecords) in $store.state.StatsUser.numRecordsByYear" :key="year">
                                     {{ numRecords }} : {{ year }}
 
                                 </div>
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
             <tr>
                 <td>Number of Records By Country</td>
                 <td>
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive11 }">
+
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p     v-for="(country, numRecords) in $store.state.StatsAggregate.numRecordsByCountry"
+                                    :key="country">
+                                    {{ numRecords }} : {{ country }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p     v-for="(country, numRecords) in $store.state.StatsAggregate.numRecordsByCountry"
+                                    :key="country">
+                                    {{ numRecords }} : {{ country }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive11 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown11">
                                 <span>Records By Country </span>
@@ -330,10 +474,26 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
-                <td  v-if="$store.state.token != ''">
-                    <div class="dropdown" :class="{ 'is-active': dropdownActive12 }">
+                <td v-if="$store.state.token != ''">
+
+                    <div class="tickerData-tape-container">
+                        <div class ="boxTape container" style="height: 100px">
+                                    <div class="tickerData-tape">
+                                        <p     v-for="(country, numRecords) in $store.state.StatsUser.numRecordsByCountry"
+                                    :key="country">
+                                    {{ numRecords }} : {{ country }}</p>
+                                    </div>
+                                    <div class="tickerData-tape">
+                                        <p      v-for="(country, numRecords) in $store.state.StatsUser.numRecordsByCountry"
+                                    :key="country">
+                                    {{ numRecords }} : {{ country }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                    <!-- <div class="dropdown" :class="{ 'is-active': dropdownActive12 }">
                         <div class="dropdown-trigger">
                             <button class="button" @click="toggleDropdown12">
                                 <span>Records By Country </span>
@@ -345,7 +505,7 @@
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <div class="dropdown-item"
-                                v-for="(country, numRecords) in $store.state.StatsUser.numRecordsByCountry"
+                                    v-for="(country, numRecords) in $store.state.StatsUser.numRecordsByCountry"
                                     :key="country">
                                     {{ numRecords }} : {{ country }}
 
@@ -353,7 +513,7 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
 
@@ -467,37 +627,52 @@ th {
 }
 
 .tickerData-tape-container {
-     overflow-x: hidden;
-     width: 100%;
-     display: flex;
- }
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    display: flex;
+    background: rgb(0, 0, 0,);
+    height: 100px;
+    
+    
+}
 
- .tickerData-tape {
-     display: flex;
-     align-items: center;
-     flex: 0 0 auto;
-     gap: 1rem;
-     margin-right: 1rem;
-     min-width: 100%;
-     word-wrap: normal;
-     animation-name: marqueeData;
-     animation-duration: 60s;
-     animation-timing-function: linear;
-     animation-delay: 0s;
-     animation-iteration-count: infinite;
-     animation-play-state: running;
-     animation-direction: normal;
- }
+.tickerData-tape {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 1rem;
+    margin-right: 1rem;
+    min-width: 100%;
+    word-wrap: normal;
+    animation-name: marqueeData;
+    animation-duration:18s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+    animation-direction: normal;
+    
+}
 
- @keyframes marqueeData {
-     0% {
-         transform: translateY(0%);
-     }
 
-     100% {
-         transform: translateY(-100%);
-     }
- }
+
+.dropdown-content {
+    background: black;
+
+}
+
+@keyframes marqueeData {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+
+}
 
 /* .button {
     --color: white;

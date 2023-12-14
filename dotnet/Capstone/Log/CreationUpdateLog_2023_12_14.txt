@@ -59,3 +59,16 @@ Trying to get record from Discogs API and build into database | For 5598 | AddRe
 Trying to add to library | For aseelt, record: 5598 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 2:50:30 AM
 --- END OF ACTION ---
 
+Trying to get add user to db, with pw hash | For ssa | CreateUser | Violation of UNIQUE KEY constraint 'UQ_email'. Cannot insert duplicate key in object 'dbo.users'. The duplicate key value is (ggh@gmail.com). | 12/14/2023 10:10:11 PM
+--- END OF ACTION ---
+
+Adding record to database - just record table | 24709877 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'notes'. Truncated value: 'Housed in a full-color single sleeve jacket.
+Includes custom inner sleeve and double-sided print wit'. | 12/14/2023 10:22:27 PM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 24709877 | AddRecordToDbById | Sql exception occured | 12/14/2023 10:22:27 PM
+--- END OF ACTION ---
+
+Trying to add to library | For caleba, record: 24709877 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 10:22:27 PM
+--- END OF ACTION ---
+

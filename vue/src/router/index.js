@@ -64,7 +64,7 @@ const routes = [
     name: "search",
     component: SearchBox,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {
@@ -72,7 +72,7 @@ const routes = [
     name: "Library",
     component: LibraryView,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {
@@ -80,7 +80,7 @@ const routes = [
     name: "Collections",
     component: CollectionsView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     }
   },
   {
@@ -96,7 +96,7 @@ const routes = [
     name: "SearchResult",
     component: SearchResultView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     }
 
   },
@@ -105,7 +105,7 @@ const routes = [
     name: "Profile",
     component: ProfilePageView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     }
   },
 
@@ -114,7 +114,7 @@ const routes = [
     name: 'homeA',
     component: HomeA,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {
@@ -122,7 +122,7 @@ const routes = [
     name: "popup",
     component: popupViewTest,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     }
   },
   {
@@ -130,7 +130,7 @@ const routes = [
     name: "JakeView",
     component: JakeView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     }
   },
   {
@@ -146,7 +146,7 @@ const routes = [
     name: "aseel",
     component: AseelView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     } 
   },
   {
@@ -154,7 +154,7 @@ const routes = [
     name: "jacapreme",
     component: JacaPremeView,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     } 
   },
 ];

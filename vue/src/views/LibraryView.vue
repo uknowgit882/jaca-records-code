@@ -28,7 +28,6 @@
           .then(response => {
             this.$store.commit('ADD_RECORDS_TO_LIBRARY', response.data)
             this.isLoading = true;
-            
           })
       } 
     },

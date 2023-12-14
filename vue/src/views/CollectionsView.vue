@@ -1,34 +1,35 @@
 <template>
-    <div class="home" v-if="!isLoading">
-        <img src="../../img/Logogif.gif" alt="">
-    </div>
-
-    <div v-else>
+    <div>
         <div>
-            <div>
-                <div class="collectionPage ">
-                    <div style="display: flex; justify-content: center; ">
-                        <div style="display: flex; flex-direction: column; ">
-                            <div style="display flex; flex-direction: row; align-items: center; flex-grow: 1 ;">
-                                <button class="button2" style="margin: 6px" @click="filterAll">All Collections</button>
-                                <button class="button2" style="margin: 6px" @click="filterPrivate">Private
-                                    Collections</button>
-                                <button class="button2" style="margin: 6px" @click="filterPublic">Public
-                                    Collections</button>
-                            </div>
-                            <div style="display: flex; flex-direction: row; justify-content: center;">
-                                <button class="button2" @click="showAddCollection = !showAddCollection">Add
-                                    Collection</button>
-                            </div>
+            <div class="collectionPage ">
+                <div style="display: flex; justify-content: center; ">
+                    <div style="display: flex; flex-direction: column; ">
+                        <div style="display flex; flex-direction: row; align-items: center; flex-grow: 1 ;">
+                            <button class="button2" style="margin: 6px" @click="filterAll">All Collections</button>
+                            <button class="button2" style="margin: 6px" @click="filterPrivate">Private
+                                Collections</button>
+                            <button class="button2" style="margin: 6px" @click="filterPublic">Public
+                                Collections</button>
+                        </div>
+                        <div style="display: flex; flex-direction: row; justify-content: center;">
+                            <button class="button2" @click="showAddCollection = !showAddCollection">Add
+                                Collection</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection"
+            @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
 
-            <AddCollectionComponent :isVisible="showAddCollection" v-if="showAddCollection" @showAddCollectionToParent="i => showAddCollection = i"></AddCollectionComponent>
-            
-            <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions" v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i"></CollectionsOptionsComponent>
-            
+        <CollectionsOptionsComponent :collection="activeCollection" :isVisible="showCollectionOptions"
+            v-if="showCollectionOptions" @showCollectionOptionsToParent="i => showCollectionOptions = i">
+        </CollectionsOptionsComponent>
+        <div class="home" v-if="!isLoading">
+            <img src="../../img/Logogif.gif" alt="">
+        </div>
+
+        <div v-else>
             <div v-for="collection in displayedCollection" v-bind:key="collection.name" class="collectionsPage">
                 <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
                     <h2
@@ -36,7 +37,8 @@
                         {{ collection.name }}</h2>
                     <div style="align-items: right;">
                         <!-- <button class="button2" @click="getVBindKey">Options</button> -->
-                        <button class="button2" @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
+                        <button class="button2"
+                            @click="showCollectionOptions = !showCollectionOptions; activeCollection = collection">Options</button>
                     </div>
                 </div>
                 <div>
@@ -60,7 +62,7 @@ import CollectionsService from '../services/CollectionsService';
 import CarouselComponent from '../components/CarouselComponent.vue';
 import AddCollectionComponent from '../components/PopUpCards/AddCollectionComponent.vue';
 import CollectionsOptionsComponent from '../components/PopUpCards/CollectionsOptionsComponent.vue';
-import {getCurrentInstance} from 'vue'
+import { getCurrentInstance } from 'vue'
 
 export default {
     data() {
@@ -183,4 +185,5 @@ export default {
  .button2:active:before {
      background: #4d437f;
      transition: background 0s;
- }</style>
+ }
+</style>

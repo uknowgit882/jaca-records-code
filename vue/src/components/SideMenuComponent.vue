@@ -1,6 +1,6 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == ''">
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
+  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == '' " ref="dropdown">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>Log in</span>
         <span class="icon is-small">
@@ -19,8 +19,8 @@
     </div>
   </div>
 
-  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-else>
-    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive" ref="dropdown">
+  <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-else ref="dropdown">
+    <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
         <span>
           <strong><i class="fa-solid fa-circle-user"></i></strong>
@@ -172,6 +172,7 @@ export default {
   }, 
   methods: {
     RegisterPagePush() {
+      this.dropdownActive = false;
       this.$router.push({ name: "register" });
     },
     UpgradeUser() {
