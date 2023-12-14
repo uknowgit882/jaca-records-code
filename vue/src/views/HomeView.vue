@@ -8,6 +8,10 @@
     <CarouselComponent v-bind:carouselRecords="filteredCollections" v-bind:carouselChooser="'searchCollections'" :autoplay="true">
       </CarouselComponent>
   </div>
+  <div>
+        <register-suggestion-comp></register-suggestion-comp>
+
+    </div>
 </template>
 
 <script>
@@ -16,6 +20,7 @@ import AuthService from '../services/AuthService';
 import CollectionsService from '../services/CollectionsService';
 import AnonymousService from '../services/AnonymousService'
 import CarouselComponent from '../components/CarouselComponent.vue';
+import RegisterSuggestionComp from '../components/RegisterSuggestionComp.vue';
 
 export default {
   data() { return {
@@ -32,7 +37,8 @@ export default {
       }
   },
   components: {
-        CarouselComponent
+        CarouselComponent,
+        RegisterSuggestionComp,
     },
   methods: {
     // logout() {
