@@ -1,3 +1,10 @@
+Adding record to database - just record table | 10821533 - New record object from API | AddRecord | String or binary data would be truncated in table 'jaca_records.dbo.records', column 'country'. Truncated value: 'USA & Cana'. | 12/14/2023 12:39:47 AM
+--- END OF ACTION ---
+
+Trying to get record from Discogs API and build into database | For 10821533 | AddRecordToDbById | Sql exception occured | 12/14/2023 12:39:47 AM
+--- END OF ACTION ---
+
+Trying to add to library | For alizg, record: 10821533 | AddRecord | The INSERT statement conflicted with the FOREIGN KEY constraint "FK_libraries_records". The conflict occurred in database "jaca_records", table "dbo.records", column 'discogs_id'. | 12/14/2023 12:39:47 AM
 Getting RecordClient from external API | Discogs Input: 5598 | GetRecord | Unsuccessful request to Discogs API | 12/14/2023 2:30:52 AM
 --- END OF ACTION ---
 

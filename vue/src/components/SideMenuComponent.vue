@@ -57,12 +57,12 @@
             <div v-if="message == ''">
               <h2>You are about to upgrade your account.
                 Click upgrade button if you want to proceed, else click exit button.</h2>
-              <button class="button2 is-warning" id="premiumButton" @click="UpgradeUser()">
+              <button class="button2"  @click="UpgradeUser()">
                 Upgrade Account</button>
               <button class="ExitButton" @click="openup">Exit</button>
             </div>
             <div v-else>
-              <h2 @click="UpgradeUser()" v-show="this.message"> {{ message }}</h2>
+              <h2 v-show="this.message"> {{ message }}</h2>
               <button class="ExitButton" @click="openup">Exit</button>
             </div>
           </div>
@@ -76,15 +76,15 @@
         </div>
         <div v-if="showPopup2" class="popup">
           <div class="popup-inner">
-            <div v-if="message == ''">
+            <div v-if="message2 == ''">
               <h2>You are about to downgrade your account.
                 Click downgrade button if you want to proceed, else click exit button.</h2>
-              <button class="button2 is-warning" id="premiumButton" @click="DowngradeUser()">
+              <button class="button2" @click="DowngradeUser()">
                 Downgrade Account</button>
               <button class="ExitButton" @click="openup2">Exit</button>
             </div>
             <div v-else>
-              <h2 @click="DowngradeUser()" v-show="this.message2"> {{ message }}</h2>
+              <h2 v-show="this.message2"> {{ message2 }}</h2>
               <button class="ExitButton" @click="openup2">Exit</button>
             </div>
           </div>
@@ -98,15 +98,15 @@
         </div>
         <div v-if="showPopup3" class="popup">
           <div class="popup-inner">
-            <div v-if="message == ''">
+            <div v-if="message3 == ''">
               <h2>You are about to deactivate your account.
                 Click deactivate button if you want to proceed, else click exit button.</h2>
-              <button class="button2 is-warning" id="premiumButton" @click="DeactivateUser()">
+              <button class="button2" @click="DeactivateUser()">
                 Deactivate Account</button>
               <button class="ExitButton" @click="openup3">Exit</button>
             </div>
             <div v-else>
-              <h2 @click="DeactivateUser()" v-show="this.message3"> {{ message }}</h2>
+              <h2  v-show="this.message3"> {{ message3 }}</h2>
               <button class="ExitButton" @click="openup3">Exit</button>
             </div>
           </div>
@@ -114,11 +114,31 @@
 
 
 
+          <button class="button2" @click="openup4">Logout</button>
+        <div v-if="showPopup4" class="popup">
+          <div class="popup-inner">
+          </div>
+        </div>
+        <div v-if="showPopup4" class="popup">
+          <div class="popup-inner">
+            <div v-if="message4 == ''">
+              <h2>You are about to logout of your account.
+                Click logout button if you want to proceed, else click exit button.</h2>
+              <button class="button2" @click="logout()">
+                Logout</button>
+              <button class="ExitButton" @click="openup4">Exit</button>
+            </div>
+            <div v-else>
+              <h2  v-show="this.message4"> {{ message4 }}</h2>
+              <button class="ExitButton" @click="openup4">Exit</button>
+            </div>
+          </div>
+          </div>
           <!-- <button class="button2 is-warning" id="premiumButton" @click="DeactivateUser()">
             Deactivate Account
           </button> -->
 
-          <button class="button3" v-on:click="logout()">Logout</button>
+          <!-- <button class="button2" v-on:click="logout()">Logout</button> -->
           <div class="latestLogin">Last Login: {{ this.$store.state.user.last_Login.substring(0, 19) }}</div>
         </div>
       </div>
@@ -145,6 +165,8 @@ export default {
       message2: "",
       showPopup3: false,
       message3: "",
+      showPopup4: false,
+      message4: "",
       totalRecords: []
     };
   },
@@ -172,8 +194,8 @@ export default {
       UserFunctionsService.upgradeUser()
         .then((response) => {
           if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
             this.message = "You have successfully upgraded your account."
+            // this.$store.commit("CHANGE_USER", this.user);
           }
         })
         .catch((error) => {
@@ -184,8 +206,8 @@ export default {
       UserFunctionsService.downgradeUser()
         .then((response) => {
           if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
             this.message2 = "You have successfully downgraded your account."
+            // this.$store.commit("CHANGE_USER", this.user);
           }
         })
         .catch((error) => {
@@ -196,7 +218,7 @@ export default {
       UserFunctionsService.deactivateUser()
         .then((response) => {
           if (response.status == 200) {
-            this.$store.commit("CHANGE_USER", this.user);
+            // this.$store.commit("CHANGE_USER", this.user);
             this.message3 = "You have successfully deactivated your account."
           }
         })
@@ -235,6 +257,9 @@ export default {
     },
     openup3() {
       this.showPopup3 = !this.showPopup3
+    },
+    openup4() {
+      this.showPopup4 = !this.showPopup4
     },
   },
   created (){
@@ -336,7 +361,7 @@ export default {
   transition: background 0s;
 }
 
-.button3 {
+.button2 {
   --color: white;
   font-family: inherit;
   display: inline-block;
@@ -356,7 +381,7 @@ export default {
   background-color: black;
 }
 
-.button3:before {
+.button2:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -366,23 +391,23 @@ export default {
   border-radius: 50%;
 }
 
-.button3:hover {
+.button2:hover {
   color: black;
 }
 
-.button3:before {
+.button2:before {
   top: 100%;
   left: -100%;
   transition: all 0.7s;
 }
 
-.button3:hover:before {
+.button2:hover:before {
   top: -30px;
   left: -30px;
   background-color: #FF3938;
 }
 
-.button3:active:before {
+.button2:active:before {
   background: #B856AB;
   transition: background 0s;
 }
@@ -390,4 +415,38 @@ export default {
 h2{
   color:black
 }
+
+.button2, .ExitButton{
+  justify-content: center;
+  align-content: center;
+}
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-inner {
+  background: #fff;
+  padding: 32px;
+  text-align: center;
+}
+
+.popup-inner button{
+  margin-top: 16px;
+  padding: 2px 16px;
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 </style>
