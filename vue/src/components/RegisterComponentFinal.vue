@@ -1,37 +1,11 @@
 <template>
     <div id="register" class="text-center">
-        <form v-on:submit.prevent="register">
+        <form class="registrationForm" v-on:submit.prevent="register">
             <h1>Create Account</h1>
             <div role="alert" v-if="registrationErrors">
                 {{ registrationErrorMsg }}
             </div>
-            <div class="boxes">
-                <div class="form-input-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" v-model="user.first_Name" required autofocus />
-                </div>
-                <div class="form-input-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" v-model="user.last_Name" required />
-                </div>
-                <div class="form-input-group">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" v-model="user.email_Address" required />
-                </div>
-                <div class="form-input-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" v-model="user.username" required />
-                </div>
-                <div class="form-input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" v-model="user.password" required />
-                </div>
-                <div class="form-input-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
-                </div>
-            </div>
-            <main id="buy-grid">
+            <div id="buy-grid">
                 <button class="box-premium">
                     <box class="box-pre">
                         <div class="media-content" @click="premiumRegistration">
@@ -49,7 +23,33 @@
                         </div>
                     </box>
                 </button>
-                <button class="box-free" >
+                <div class="boxes" style="grid-area: inputBoxes">
+                    <p style="grid-area: firstNameLabel">First Name: </p>
+                    <div class="form-input-group">
+                        <input type="text" id="firstName" v-model="user.first_Name" required autofocus />
+                    </div>
+                    <p style="grid-area: lastNameLabel">Last Name: </p>
+                    <div class="form-input-group">
+                        <input type="text" id="lastName" v-model="user.last_Name" required autofocus />
+                    </div>
+                    <p style="grid-area: emailLabel">Email: </p>
+                    <div class="form-input-group">
+                        <input type="text" id="email" v-model="user.email_Address" required />
+                    </div>
+                    <p style="grid-area:usernameLabel">Username: </p>
+                    <div class="form-input-group">
+                        <input type="text" id="username" v-model="user.username" required />
+                    </div>
+                    <p style="grid-area: passwordLabel">Password: </p>
+                    <div class="form-input-group">
+                        <input type="password" id="password" v-model="user.password" required />
+                    </div>
+                    <p style="grid-area: confirmPasswordLabel">Confirm Password: </p>
+                    <div class="form-input-group">
+                        <input type="password" id="confirmPassword" v-model="user.confirmPassword" required />
+                    </div>
+                </div>
+                <button class="box-free">
                     <box class="box-pre">
                         <div class="media-content" @click="freeRegistration">
                             <div class="content">
@@ -66,7 +66,7 @@
                         </div>
                     </box>
                 </button>
-            </main>
+            </div>
         </form>
 
     </div>
@@ -149,38 +149,72 @@ export default {
 
 }
 
+.boxes {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "firstNameLabel firstName"
+        "lastNameLabel lastName"
+        "emailLabel email"
+        "usernameLabel username"
+        "passwordLabel password"
+        "confirmPasswordLabel confirmPassword";
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    text-align: left;
+    width: 59%;
+}
+
+.registrationForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #email {
     background-color: black;
     color: white;
+    grid-area: email;
+
 
 }
 
 #firstName {
     background-color: black;
     color: white;
+    grid-area: firstName;
+
 
 }
 
 #lastName {
     background-color: black;
     color: white;
+    grid-area: lastName;
+
+}
+
+
+#username {
+    background-color: black;
+    color: white;
+    grid-area: username;
+
+
+}
+
+#password {
+    background-color: black;
+    color: white;
+    grid-area: password;
 }
 
 #confirmPassword {
     background-color: black;
     color: white;
-}
-
-#username {
-    background-color: black;
-    color: white;
-
-}
-
-#password {
-    padding-right: 10px;
-    background-color: black;
-    color: white;
+    grid-area: confirmPassword;
 
 }
 
@@ -195,15 +229,15 @@ label {
 #buy-grid {
     display: grid;
     display: flex;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
-        "box-premium box-free";
+        "box-premium inputBoxes box-free";
     row-gap: 20px;
     column-gap: 22px;
     align-items: center;
-    padding-left: 447px;
     padding-top: 20px;
     padding-bottom: 25px;
+    max-width: 1000px;
 }
 
 .box-premium {
@@ -236,7 +270,6 @@ label {
     border: 5px solid rgb(255, 255, 255);
     background-image: linear-gradient(#08A2D9, rgb(176, 221, 237));
     border-radius: 10px;
-    justify-content: left;
     text-align: left;
     transition: transform 0.3s ease;
 }
