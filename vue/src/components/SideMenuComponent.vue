@@ -1,4 +1,7 @@
 <template>
+  <audio id="recordSkip" style="display: none;" ref="player">
+    <source src="../../img/record_scratch-108233.mp3" type="audio/mpeg">
+  </audio>
   <div class="dropdown" :class="{ 'is-active': dropdownActive }" v-if="this.$store.state.token == '' " ref="dropdown">
     <div class="dropdown-trigger" @click="dropdownActive = !dropdownActive">
       <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -234,6 +237,7 @@ export default {
     logout() {
       this.$store.commit('LOGOUT');
       this.$router.push({ name: "home" });
+      this.toggleAudio();
     },
     openup() {
       this.showPopup = !this.showPopup
@@ -256,6 +260,10 @@ export default {
     openup4() {
       this.showPopup4 = !this.showPopup4
     },
+    toggleAudio(){
+        var audio = document.getElementById("recordSkip");
+        audio.play();
+    }
   },
   created (){
     this.TotalRecords();
